@@ -18,7 +18,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>Az sum zaglavie</h1>
+        <h1>Az sum zaglavie new</h1>
         <span>
           <label>Click me</label><br />
           <button onClick={this.handleClick}>I am a button</button>
