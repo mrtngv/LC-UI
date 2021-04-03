@@ -20,7 +20,7 @@ class App extends React.Component {
       <div>
         <h1>Az sum zaglavie new</h1>
         <span>
-          <label>Click me</label><br />
+          <label>Don't click me</label><br />
           <button onClick={this.handleClick}>I am a button</button>
         </span>
         <h2>{"Clicked: " + this.state.buttonClicked}</h2>
