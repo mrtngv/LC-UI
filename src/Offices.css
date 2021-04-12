@@ -1,0 +1,5 @@
+.office-card {
+    display: flex;
+    float: left;
+    padding: 3rem;
+}
