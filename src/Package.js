@@ -1,5 +1,5 @@
 import React from 'react';
-import "./App.css";
+import "./Package.css";
 import "./Data.js";
 
 import "@ui5/webcomponents-fiori/dist/SideNavigation.js";
@@ -22,7 +22,6 @@ class Package extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // people: [],
       name: "",
       lastName: "",
       phone: "",
@@ -57,10 +56,6 @@ class Package extends React.Component {
       phone: this.state.phone,
       email: this.state.email
     }
-
-    // this.setState({
-    //   people: [...this.state.people, person]
-    // })
     Data.unshift(person);
   }
 
@@ -77,9 +72,6 @@ class Package extends React.Component {
           <ui5-input id="phone" placeholder="Enter your Name" value={this.state.phone} required></ui5-input>
           <ui5-input id="email" placeholder="Enter your Name" value={this.state.email} required></ui5-input>
           <ui5-button id="submit-button" design="Emphasized">Изпрати</ui5-button>
-          {/* {this.state.titleName === "" ? null :
-            <h1>Hello, {this.state.titleName}</h1>
-          } */}
         </div>
 
         <ui5-table class="demo-table" id="table">
