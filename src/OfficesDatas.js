@@ -1,4 +1,4 @@
-const OfficesData = [
+const OfficesDatas = [
     {
         officeId: "1",
         officeLocation: "Сердика 5",
@@ -19,4 +19,4 @@ const OfficesData = [
     },
 ]
 
-export default OfficesData;
+export default OfficesDatas;
