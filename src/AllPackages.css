@@ -1,0 +1,17 @@
+.packages-header-bar {
+    display: flex;
+    padding: 3rem 5rem;
+}
+
+.packages-flexible-column-layout {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1.5rem;
+}
+
+.delivery-information {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 50px;
+}
+
