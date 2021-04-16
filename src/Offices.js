@@ -9,6 +9,7 @@ import "@ui5/webcomponents/dist/SegmentedButton";
 import "@ui5/webcomponents/dist/ToggleButton";
 import OfficesDatas from "./OfficesDatas.js";
 import "@ui5/webcomponents/dist/MessageStrip";
+import axios from 'axios';
 
 class Offices extends React.Component {
     constructor(props) {
@@ -17,7 +18,8 @@ class Offices extends React.Component {
             officesData: OfficesDatas,
             role: "Потребител",
             editOfficeDetails: {},
-            addOfficeDetails: {}
+            addOfficeDetails: {},
+            offices: []
         };
         this.onRoleChange = this.onRoleChange.bind(this);
         this.removeOffice = this.removeOffice.bind(this);
@@ -59,14 +61,24 @@ class Offices extends React.Component {
 
     componentDidMount() {
         this.addEventListeners();
+        axios.get("http://localhost:8080/api/offices").then(o => {
+            this.setState({
+                offices:o.data
+
+            });
+        })
     }
 
     render() {
         const role = this.state.role;
         const OfficesData = this.state.officesData
+        const offices = this.state.offices;
         console.log(role);
         return (
             <div>
+                 {
+                    offices.map(o =><div><h1>{o.city}</h1><h1>{o.location}</h1></div>)
+                }
                 <div>
                     <ui5-label>Нашите офиси: </ui5-label>
                     {role === "Модератор" ? <ui5-button id="openDialogButton" design="Emphasized">Добави офис</ui5-button>
