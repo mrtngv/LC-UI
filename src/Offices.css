@@ -1,5 +1,6 @@
 .office-card {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     float: left;
-    padding: 3rem;
+    padding: 3rem;   
 }
