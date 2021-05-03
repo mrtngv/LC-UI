@@ -4,6 +4,7 @@ import "./AllPackages.css";
 import PackageData from "./PackageData.js";
 
 import "@ui5/webcomponents/dist/Label";
+import "@ui5/webcomponents-fiori/dist/Timeline";
 import "@ui5/webcomponents-fiori/dist/Bar.js";
 import "@ui5/webcomponents-fiori/dist/FlexibleColumnLayout.js";
 import "@ui5/webcomponents/dist/Input.js";
@@ -13,7 +14,9 @@ import "@ui5/webcomponents/dist/Table.js";
 import "@ui5/webcomponents/dist/TableColumn.js";
 import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js"
+import "@ui5/webcomponents/dist/Badge";
 
+// TODO: -> линк към user details, който ще го има във втората колона на пратено от: {име} и пратено до {име}
 
 class AllPackages extends React.Component {
     constructor(props) {
@@ -49,28 +52,16 @@ class AllPackages extends React.Component {
 
     render() {
         const Package = PackageData.find(d => d.packageId === this.state.selectedPackageId);
-        console.log(Package);
         return (
-            <div>
-                <div className="packages-header-bar">
-                    <ui5-bar design="Header">
-                        <ui5-button icon="home" title="Go home" slot="startContent"></ui5-button>
-                        <ui5-label id="basic-label" slot="middleContent">Активни пратки:</ui5-label>
-
-                        <ui5-button icon="action-settings" title="Go to settings" slot="endContent"></ui5-button>
-                        <ui5-input id="package-search-input" placeholder="Намери пратка..."></ui5-input>
-                    </ui5-bar>
-                </div>
-
-
-                <div className="packages-flexible-column-layout">
+            <div className="packages-view-container">
+                <div className="packages-view-table">
                     <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
                         <div slot="startColumn">
-                            <ui5-list id="packageList" header-text="Packages">
+                            <ui5-list id="packageList" header-text="Пратки">
                                 {PackageData.map(m => {
                                     return (
                                         <div>
-                                            <ui5-li data-id={m.packageId} icon="navigation-right-arrow" icon-end description={"Id: " + m.packageId} info={m.status} info-state="Success">{m.shippedFrom}</ui5-li>
+                                            <ui5-li data-id={m.packageId} icon="navigation-right-arrow" icon-end description={"Id: " + m.packageId} info={m.status} info-state="Success">{m.senderName}</ui5-li>
                                         </div>
                                     )
                                 })}
@@ -80,43 +71,62 @@ class AllPackages extends React.Component {
                         {Package ?
                             <div slot="midColumn">
                                 <div class="colHeader">
-                                    <ui5-button design="Emphasized">Edit</ui5-button>
-                                    <ui5-button design="Transparent" icon="add"></ui5-button>
-                                    <ui5-button id="fullscreenEndColumn" design="Transparent" icon="full-screen"></ui5-button>
-                                    <ui5-button onClick={this.onPackageDetailsClose} id="closeEndColumn" icon="decline" design="Transparent"></ui5-button>
+                                    <ui5-bar>
+                                        <ui5-button design="Positive" slot="endContent">Agree</ui5-button>
+                                        <ui5-button design="Negative" slot="endContent">Decline</ui5-button>
+                                        <ui5-button design="Transparent" slot="endContent">Cancel</ui5-button>
+                                    </ui5-bar>
                                 </div>
-                                <div className="delivery-information">
-                                    <div className="customer-details">
-                                        <h3>Customer Details</h3>
-                                        <ui5-label>Phone Number: </ui5-label>
-                                        <h4>{Package.telephoneNumber}</h4>
-                                        <ui5-label>Name </ui5-label>
-                                        <h4>{Package.shippedFrom}</h4>
-                                    </div>
-                                    <div className="package-details">
-                                        <h3>Package Details</h3>
-                                        <ui5-label>Package Identification:</ui5-label>
-                                        <h4>{Package.packageId}</h4>
-                                        <ui5-label>Processed By </ui5-label>
-                                        <h4>{Package.processedBy}</h4>
-                                        <ui5-label>Status </ui5-label>
-                                        <h4>{Package.status}</h4>
-                                        <ui5-label>Shipped To: </ui5-label>
-                                        <h4>{Package.shippedTo}</h4>
-                                        <ui5-label>Shipping Date </ui5-label>
-                                        <h4>{Package.shippingDate}</h4>
-                                    </div>
-                                    <div className="delivery-details">
-                                        {Package.deliveredBy ?
-                                            <div>
-                                                <h3>Deivery Details</h3>
-                                                <ui5-label>Deviver By: </ui5-label>
-                                                <h4>{Package.deliveredBy.name}</h4>
-                                                <ui5-label>telephone : </ui5-label>
-                                                <h4>{Package.deliveredBy.telephone}</h4>
-                                            </div> : null}
-                                    </div>
-                                </div>
+                                <ui5-timeline>
+                                    <ui5-timeline-item id="test-item" icon="person-placeholder" item-name="Потребителски данни:">
+                                        <div className="information-row">
+                                            <div className="information-item">Пратено От:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.senderName}</b></span>
+                                        </div>
+                                        <div className="information-row">
+                                            <div className="information-item">От Адрес:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.senderAddress}</b></span>
+                                        </div>
+                                        <div className="information-row">
+                                            <div className="information-item">Пратено До:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.recipientName}</b></span>
+                                        </div>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item id="test-item" icon="locate-me" item-name="Данни за Доставка:">
+                                        <div className="information-row">
+                                            <div className="information-item">Доставка до:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>Адрес: </b>&nbsp;{Package.recipientAddress}</span>
+                                        </div>
+                                        <div className="information-row">
+                                            <div className="information-item">Доставка от Куриер:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.deliveredByName}</b>&nbsp; Тел. {Package.deliveredByPhone}</span>
+                                        </div>
+                                    </ui5-timeline-item>
+
+                                    <ui5-timeline-item id="test-item" icon="tags" item-name="Допълнителна информация към пратката:">
+                                        <div className="information-row">
+                                            <div className="information-item">Тип:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.packageType}</b></span>
+                                        </div>
+                                        <div className="information-row">
+                                            <div className="information-item">Тегло:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.packageWeight}</b></span>
+                                        </div>
+                                        <div className="information-row">
+                                            {/* <ui5-badge color-scheme="8">solution provided 8</ui5-badge> */}
+                                            <ui5-badge color-scheme="9">Чупливи предмети</ui5-badge>
+                                        </div>
+                                    </ui5-timeline-item>
+                                    <ui5-timeline-item title-text="Статус на Пратката" subtitle-text={"Обработена на " + Package.shippingDate} icon="calendar">
+                                        <div className="information-row">
+                                            <div className="information-item">Очаквана дата за Вземане/Доставка:</div> &nbsp;&nbsp;&nbsp;
+                                            <span><b>{Package.deliveryDate}</b></span>
+                                        </div>
+                                        <ui5-badge color-scheme="6">
+                                            <ui5-icon name="accept" slot="icon"></ui5-icon>Доставена
+                                        </ui5-badge>
+                                    </ui5-timeline-item>
+                                </ui5-timeline>
                             </div> : null}
                     </ui5-flexible-column-layout>
                 </div>

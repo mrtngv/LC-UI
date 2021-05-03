@@ -81,10 +81,10 @@ class Offices extends React.Component {
         const offices = this.state.offices;
         console.log(role);
         return (
-            <div>
-                 {
+            <div className="office-container">
+                 {/* {
                     offices.map(o =><div><h1>{o.city}</h1><h1>{o.location}</h1></div>)
-                }
+                } */}
                 <div>
                     <ui5-label>Нашите офиси: </ui5-label>
                     {role === "Модератор" ? <ui5-button id="openDialogButton" design="Emphasized">Добави офис</ui5-button>

@@ -1,5 +1,11 @@
-.office-card {
+.office-container {
     display: flex;
+    flex-direction: column;
+}
+
+.office-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     float: left;
     padding: 3rem;
 }
