@@ -1,4 +1,35 @@
-.packages-header-bar {
+.packages-view-container {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 3rem;
+}
+
+.packages-view-table{   
+    border: 0px solid;
+  padding: 5px;
+  box-shadow:  2px 5px rgb(233, 233, 233);
+
+}
+
+ui5-flexible-column-layout#fcl {
+    --_ui5_fcl_solid_bg: #ffffff;
+    overflow-y: auto;
+    height: 80vh;
+}
+
+.start-column {
+    overflow-y: auto;
+}
+
+.information-row {
+    padding-top: 1px;
+}
+
+.information-item {
+    display: inline-block;
+}
+
+packages-header-bar {
     display: flex;
     padding: 3rem 5rem;
 }

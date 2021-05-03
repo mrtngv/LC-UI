@@ -15,9 +15,16 @@ onNavbarSelect(event) {
     this.props.history.push(('/' + newRoute));
 }
 
+onSidebarCollapse() {
+  const sidenav = document.getElementById('side-navigation');
+  sidenav.collapsed = !sidenav.collapsed;
+}
+
 addEventListeners() {
     const navigation = document.getElementById('side-navigation');
     navigation.addEventListener("selection-change", this.onNavbarSelect);
+    const onSidebarCollapseButton = document.getElementById('startButton');
+    onSidebarCollapseButton.addEventListener('click', this.onSidebarCollapse);
 }
 
 componentDidMount() {
