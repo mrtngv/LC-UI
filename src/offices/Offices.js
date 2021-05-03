@@ -1,5 +1,11 @@
 import React from 'react';
+import axios from 'axios';
+
 import "./Offices.css";
+import OfficesDatas from "./OfficesDatas.js";
+import {DOMAIN} from ".././constants/Domain.js";
+import {OFFICES} from ".././constants/Endpoints.js";
+
 import "@ui5/webcomponents/dist/Card";
 import "@ui5/webcomponents-fiori/dist/Timeline";
 import "@ui5/webcomponents/dist/Button";
@@ -7,9 +13,8 @@ import "@ui5/webcomponents/dist/Input.js";
 import "@ui5/webcomponents/dist/Label";
 import "@ui5/webcomponents/dist/SegmentedButton";
 import "@ui5/webcomponents/dist/ToggleButton";
-import OfficesDatas from "./OfficesDatas.js";
 import "@ui5/webcomponents/dist/MessageStrip";
-import axios from 'axios';
+
 
 class Offices extends React.Component {
     constructor(props) {
@@ -60,8 +65,9 @@ class Offices extends React.Component {
     }
 
     componentDidMount() {
+        const URL = DOMAIN+OFFICES;
         this.addEventListeners();
-        axios.get("http://localhost:8080/api/offices").then(o => {
+        axios.get(URL).then(o => {
             this.setState({
                 offices:o.data
 

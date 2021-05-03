@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from './Navbar';
-import Package from './Package';
+import Navbar from './navbar/Navbar';
+import Package from './packageSubmit/Package';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import TrackPackage from './TrackPackage';
-import Offices from './Offices';
+import TrackPackage from './packageTracker/TrackPackage';
+import Offices from './offices/Offices';
 import AboutCompany from './AboutCompany';
-import AllPackages from './AllPackages';
+import AllPackages from './packageView/AllPackages';
 
 class App extends React.Component {
   constructor(props) {
