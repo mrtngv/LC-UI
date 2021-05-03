@@ -1,6 +1,7 @@
 import React from 'react';
+
 import "./Package.css";
-import "./Data.js";
+import Data from './Data.js';
 
 import "@ui5/webcomponents-fiori/dist/SideNavigation.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
@@ -16,7 +17,7 @@ import "@ui5/webcomponents/dist/Table.js";
 import "@ui5/webcomponents/dist/TableColumn.js";
 import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js";
-import Data from './Data.js';
+
 
 class Package extends React.Component {
   constructor(props) {

@@ -1,0 +1,1 @@
+export const OFFICES = "api/offices";
