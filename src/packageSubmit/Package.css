@@ -1,7 +1,7 @@
 .main-section {
-    display: inline;
-    float: left;
+    display: flex;
     padding: 3rem;
+    height: 75vh;
 }
 
 #submit-button{
