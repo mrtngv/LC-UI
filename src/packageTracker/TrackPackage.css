@@ -1,0 +1,39 @@
+.track-package-container {
+    margin: 60px 100px;
+    padding: 20px;
+    display: inline-block;
+    max-width: 480px;
+    align-content: space-between;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+#track-package-label {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+#track-package-input {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#track-package-btn {
+    width: 100%;
+}
+
+#package-info {
+    display: none;
+    max-width: 1220px;
+    margin: 0 auto 30px;
+}
+
+.package-header {
+    font-size: 20px;
+    font-family: Verdana, sans-serif;
+    margin-bottom: 20px;
+}
+
+.package-table {
+    font-size: 10px;
+}
