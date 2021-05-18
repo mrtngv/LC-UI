@@ -22,7 +22,7 @@ class AllPackages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedPackageId: ""
+            selectedPackageId: "1"
         };
         this.onPackageDetailsClose = this.onPackageDetailsClose.bind(this);
         this.onPackageListSelect = this.onPackageListSelect.bind(this);
@@ -44,6 +44,7 @@ class AllPackages extends React.Component {
     addEventListeners() {
         const packageList = document.getElementById('packageList');
         packageList.addEventListener("item-click", this.onPackageListSelect);
+  
     }
 
     componentDidMount() {
@@ -72,9 +73,9 @@ class AllPackages extends React.Component {
                             <div slot="midColumn">
                                 <div class="colHeader">
                                     <ui5-bar>
-                                        <ui5-button design="Positive" slot="endContent">Agree</ui5-button>
-                                        <ui5-button design="Negative" slot="endContent">Decline</ui5-button>
-                                        <ui5-button design="Transparent" slot="endContent">Cancel</ui5-button>
+                                        <ui5-button design="Positive" slot="endContent">Промени</ui5-button>
+                                        <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
+                                        <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
                                     </ui5-bar>
                                 </div>
                                 <ui5-timeline>
