@@ -1,4 +1,5 @@
 import React from 'react';
+
 import "./Package.css";
 import "./Data.js";
 
@@ -20,6 +21,7 @@ import "@ui5/webcomponents/dist/Option";
 import "@ui5/webcomponents/dist/CheckBox";
 import "@ui5/webcomponents/dist/TextArea";
 
+
 class Package extends React.Component {
   constructor(props) {
     super(props);
@@ -27,16 +29,28 @@ class Package extends React.Component {
       senderName: "",
       senderPhone: "",
       senderEmail: "",
+      senderCity: "",
       senderAddress: "",
+      sentFromOffice: "",
+      sentFromOfficeName: "",
       receiverName: "",
       receiverPhone: "",
       receiverEmail: "",
+      receiverCity: "",
       receiverAddress: "",
+      sentToOffice: "",
+      sentToOfficeName: "",
       packageType: "",
       packageWeight: "",
-      packagePrice: ""
+      isPackageFragile: "",
+      packagePrice: "",
+      deliveryNotPossible: "return to sender address",
+      requestComment: "",
+      paymentMethod: "cash",
+      selectedRadioButton: ""
     };
     this.handleInputValue = this.handleInputValue.bind(this);
+    this.onRadioButtonValueChange = this.onRadioButtonValueChange.bind(this);
   }
 
   getWizardStep(stepId) {
@@ -49,7 +63,7 @@ class Package extends React.Component {
     Array.from(wizard.children).forEach(step => {
       step.selected = false;
     }
-      );
+    );
   }
 
   moveToWizardStep(stepId) {
@@ -66,17 +80,23 @@ class Package extends React.Component {
     });
   }
 
-  hideButton(buttonId){
+  hideButton(buttonId) {
     const btn = document.getElementById(buttonId);
-    if(btn) {
-      btn.style.display="none";
-    }   
+    if (btn) {
+      btn.style.display = "none";
+    }
   }
 
-  declineRequest(){
+  declineRequest() {
     this.deselectAllWizardSteps();
     const firstStep = this.getWizardStep(0);
     firstStep.selected = true;
+  }
+
+  onRadioButtonValueChange(event) {
+    this.setState({
+      selectedRadioButton: event.target.text
+    });
   }
 
   addEventListeners() {
@@ -84,25 +104,29 @@ class Package extends React.Component {
     toStep2.addEventListener("click", () => {
       this.moveToWizardStep(1);
       this.hideButton("toSenderButton");
-    } );
+    });
     const toStep3 = document.getElementById("toReceiverButton");
     toStep3.addEventListener("click", () => {
       this.moveToWizardStep(2);
       this.hideButton("toReceiverButton");
-    } );
+    });
     const toStep4 = document.getElementById("toAdditioalDetailsButton");
     toStep4.addEventListener("click", () => {
       this.moveToWizardStep(3);
       this.hideButton("toAdditioalDetailsButton");
-    } );
+    });
     const toFinalStep = document.getElementById("toFinalizeButton");
     toFinalStep.addEventListener("click", () => {
       this.moveToWizardStep(4);
       this.hideButton("toFinalizeButton");
-    } );    
+    });
+    const radioButton = document.getElementById("person-radio-button");
+    radioButton.addEventListener("select", this.onRadioButtonValueChange);
+    const radioButton2 = document.getElementById("firm-radio-button");
+    radioButton2.addEventListener("select", this.onRadioButtonValueChange);
   }
 
-  removeEventListeners() {  
+  removeEventListeners() {
   }
 
   componentDidMount() {
@@ -122,9 +146,9 @@ class Package extends React.Component {
             <ui5-title>1. Данни за пратката</ui5-title>
             <div id="type-of-package-radio-buttons" className="radio-button-group">
               <ui5-title level="H3">Вид на пратката:</ui5-title>
-              <ui5-radiobutton text="Документи" selected></ui5-radiobutton>
-              <ui5-radiobutton text="Колет" value-state="None"></ui5-radiobutton>
-              <ui5-radiobutton text="Палет" value-state="None"></ui5-radiobutton>
+              <ui5-radiobutton text="Документи" selected="false" name="package-type-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Колет" value-state="None" name="package-type-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Палет" value-state="None" name="package-type-group"></ui5-radiobutton>
             </div>
             <div id="package-weight">
               <ui5-title level="H3">Тегло на пратката:</ui5-title>
@@ -140,16 +164,26 @@ class Package extends React.Component {
             <ui5-button id="toSenderButton">Напред</ui5-button>
 
           </ui5-wizard-step>
-          
+
           <ui5-wizard-step id="secondStep" icon="sap-icon://person-placeholder" heading="Подател" disabled>
             <ui5-title>2. Подател</ui5-title>
             <div id="sender-type-radio-buttons">
-              <ui5-radiobutton text="Физическо лице" selected></ui5-radiobutton>
-              <ui5-radiobutton text="Фирма" value-state="None"></ui5-radiobutton>
+              <ui5-radiobutton id="person-radio-button" text="Физическо лице" selected name="sender-type-group"></ui5-radiobutton>
+              <ui5-radiobutton id="firm-radio-button" text="Фирма" value-state="None" name="sender-type-group"></ui5-radiobutton>
             </div>
             <div className="sender-personal-information">
-              <ui5-label for="senderNameInput" required>Име и фамилия:</ui5-label><br />
-              <ui5-input id="senderNameInput" placeholder="" required></ui5-input><br />
+              {this.state.selectedRadioButton === "Фирма" ?
+                <div>
+                  <ui5-label for="firmNameInput" required>Име на фирма:</ui5-label><br />
+                  <ui5-input id="firmNameInput" placeholder="" required></ui5-input><br />
+                  <ui5-label for="senderNameInput" required>Име и фамилия на упълномощено лице:</ui5-label><br />
+                  <ui5-input id="senderNameInput" placeholder="" required></ui5-input><br />
+                </div> :
+                <div>
+                  <ui5-label for="senderNameInput" required>Име и фамилия:</ui5-label><br />
+                  <ui5-input id="senderNameInput" placeholder="" required></ui5-input><br />
+                </div>
+              }
               <ui5-label for="senderNumberInput" required>Телефон:</ui5-label><br />
               <ui5-input id="senderNumberInput" placeholder="" required></ui5-input><br />
               <ui5-label for="senderEmailInput" required>Имейл:</ui5-label><br />
@@ -159,8 +193,8 @@ class Package extends React.Component {
             </div>
             <div className="shipped-from">
               <ui5-title level="H3">Откъде изпращате пратката?</ui5-title>
-              <ui5-radiobutton text="Адрес" selected></ui5-radiobutton>
-              <ui5-radiobutton text="Офис" value-state="None"></ui5-radiobutton><br />
+              <ui5-radiobutton text="Адрес" selected name="ship-from-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Офис" value-state="None" name="ship-from-group"></ui5-radiobutton><br />
               <ui5-label for="senderAddressInput" required>Адрес:</ui5-label><br />
               <ui5-input id="senderAddressInput" placeholder="" required></ui5-input><br />
             </div>
@@ -172,8 +206,8 @@ class Package extends React.Component {
           <ui5-wizard-step id="thirdStep" icon="sap-icon://person-placeholder" heading="Получател" disabled>
             <ui5-title>3. Получател</ui5-title>
             <div id="receiver-type-radio-buttons">
-              <ui5-radiobutton text="Физическо лице" selected></ui5-radiobutton>
-              <ui5-radiobutton text="Фирма" value-state="None"></ui5-radiobutton>
+              <ui5-radiobutton text="Физическо лице" selected name="reciever-type-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Фирма" value-state="None" name="reciever-type-group"></ui5-radiobutton>
             </div>
             <div className="receiver-personal-information">
               <ui5-label for="receiverNameInput" required>Име и фамилия:</ui5-label><br />
@@ -187,8 +221,8 @@ class Package extends React.Component {
             </div>
             <div className="shipped-from">
               <ui5-title level="H3">До къде изпращате пратката?</ui5-title>
-              <ui5-radiobutton text="Адрес" selected></ui5-radiobutton>
-              <ui5-radiobutton text="Офис" value-state="None"></ui5-radiobutton><br />
+              <ui5-radiobutton text="Адрес" selected name="ship-to-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Офис" value-state="None" name="ship-to-group"></ui5-radiobutton><br />
               <ui5-label for="receiverAddressInput" required>Адрес:</ui5-label><br />
               <ui5-input id="receiverAddressInput" placeholder="" required></ui5-input><br />
             </div>
@@ -202,9 +236,9 @@ class Package extends React.Component {
             <div className="additional-package-details">
               <ui5-checkbox text="Чупливо съдържание" value-state="Error"></ui5-checkbox><br />
               <ui5-title level="H3">При невъзможност за доставка:</ui5-title>
-              <ui5-radiobutton text="Върни до адрес на подател" selected></ui5-radiobutton>
-              <ui5-radiobutton text="Върни до друг адрес"></ui5-radiobutton>
-              <ui5-radiobutton text="Върни до офис" value-state="None"></ui5-radiobutton><br />
+              <ui5-radiobutton text="Върни до адрес на подател" selected name="return-to-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Върни до друг адрес" value-state="None" name="return-to-group"></ui5-radiobutton>
+              <ui5-radiobutton text="Върни до офис" value-state="None" name="return-to-group"></ui5-radiobutton><br />
               <ui5-label for="orderComment">Коментар към заявката:</ui5-label>
               <ui5-textarea id="orderComment" placeholder="Напр. номер на звънец, указавия за доставка..."></ui5-textarea>
             </div>
@@ -218,15 +252,15 @@ class Package extends React.Component {
             <ui5-title level="H3">Крайна цена:</ui5-title>
             <ui5-title level="H4">00.00лв.</ui5-title>
 
-            <ui5-radiobutton text="Наложен платеж" selected></ui5-radiobutton>
-            <ui5-radiobutton text="Плащане с карта" value-state="None"></ui5-radiobutton>
-            <ui5-radiobutton text="Цената се поема от получателя" value-state="None"></ui5-radiobutton><br />
+            <ui5-radiobutton text="Наложен платеж" selected name="payment-group"></ui5-radiobutton>
+            <ui5-radiobutton text="Плащане с карта" value-state="None" name="payment-group"></ui5-radiobutton>
+            <ui5-radiobutton text="Цената се поема от получателя" value-state="None" name="payment-group"></ui5-radiobutton><br />
 
             <ui5-button id="sendRequestButton" design="Emphasized">Заяви пратка</ui5-button>
             <ui5-button id="declineRequestButton" design="Negative">Откажи</ui5-button>
 
-          </ui5-wizard-step>     
-        </ui5-wizard>        
+          </ui5-wizard-step>
+        </ui5-wizard>
       </div>
     )
   }

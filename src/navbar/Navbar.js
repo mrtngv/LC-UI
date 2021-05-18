@@ -40,9 +40,11 @@ componentDidMount() {
             secondary-title="Проект логистична компания"
         >
          <ui5-button icon="menu" slot="startButton" id="startButton"></ui5-button>
+         <ui5-button slot="default">Registrate</ui5-button>
         </ui5-shellbar>
         <div className="sidenav">
           <ui5-side-navigation id="side-navigation">
+              <ui5-side-navigation-item text="Вход/Регистрация" icon="sap-icon://customer" id="login"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Всички пратки" icon="sap-icon://product" id="package/all"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Заяви пратка" icon="sap-icon://product" id="package/ship"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Проследи пратка" icon="sap-icon://sys-find" id="package/track"></ui5-side-navigation-item>

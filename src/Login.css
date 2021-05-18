@@ -1,0 +1,23 @@
+.container {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center;
+    align-items: center; */
+}
+
+.submit-btn {
+    width: 10rem;
+}
+
+.inner-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#register-link {
+    padding-left: 2px;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
