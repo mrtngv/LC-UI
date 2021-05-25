@@ -10,14 +10,15 @@ import "@ui5/webcomponents/dist/Label";
 import "@ui5/webcomponents/dist/SegmentedButton";
 import "@ui5/webcomponents/dist/ToggleButton";
 
+import { login } from "./actions/auth";
+import { connect } from "react-redux";
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             username: "",
-            password: "",
-            token: "",
-            text: "",
+            password: ""
         };
         this.handleInputValue = this.handleInputValue.bind(this);
         this.getPrivateContent = this.getPrivateContent.bind(this);
@@ -39,27 +40,22 @@ class Login extends React.Component {
     }
 
     onLogin() {
-        // const URL = "https://logistics-engine.herokuapp.com/api/authenticate/login";
-        const URL = "http://localhost:8080/api/authenticate/login";
-        const userDetails = {
-            "username": this.state.username,
-            "password": this.state.password
-        }
-
-        console.log(userDetails);
-
-        axios.post(URL, userDetails).then(response => {
-            this.setState({
-                token: response.data.accessToken
-            });
-            this.getPrivateContent();
-            this.props.history.push("/");
+        this.setState({
+            loading: true,
+        });
+        const { dispatch, history } = this.props;
+        dispatch(login(this.state.username, this.state.password)).then(() => {
+          history.push("/profile");
+          window.location.reload();
+        }).catch(() => {
+          this.setState({
+            loading: false
+          });
         });
     }
 
     getPrivateContent() {
         console.log(this.state.token);
-        // const testURL = "https://logistics-engine.herokuapp.com/api/test/signed"
         const testURL = "http://localhost:8080/api/test/signed";
         const token = {
             headers: {
@@ -68,7 +64,6 @@ class Login extends React.Component {
         }
 
         axios.get(testURL, token).then(res => this.setState({ text: res.data }));
-
     }
 
     addEventListeners() {
@@ -93,25 +88,34 @@ class Login extends React.Component {
     }
 
     render() {
-        return (
-            <div className="container">
+        const { isLoggedIn } = this.props;
 
-                <div className="inner-container">
-                    <ui5-title level="H2">Вход в системата</ui5-title><br />
-
-                    <ui5-label for="usernameInput" required>Потребителско име:</ui5-label>
-                    <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
-                    <ui5-label for="passwordInput" required>Парола:</ui5-label>
-                    <ui5-input id="passwordInput" type="Password" name="password" placeholder="" required></ui5-input><br />
-                    <ui5-button class="submit-btn" id="login-submit-btn" onClick={this.onLogin}>Вход</ui5-button><br />
-                </div>
-                <span>
-                    <ui5-label>Нямате профил?</ui5-label>
-                    <ui5-label id="register-link">Регистрация</ui5-label>
-                </span>
+    return (
+        <div className="container">
+            <div className="inner-container">
+                <ui5-title level="H2">Вход в системата</ui5-title><br />
+                <ui5-label for="usernameInput" required>Потребителско име:</ui5-label>
+                <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
+                <ui5-label for="passwordInput" required>Парола:</ui5-label>
+                <ui5-input id="passwordInput" type="Password" name="password" placeholder="" required></ui5-input><br />
+                <ui5-button class="submit-btn" id="login-submit-btn" onClick={this.onLogin}>Вход</ui5-button><br />
             </div>
-        )
+            <span>
+                <ui5-label>Нямате профил?</ui5-label>
+                <ui5-label id="register-link">Регистрация</ui5-label>
+            </span>
+        </div>
+      );
     }
-}
-
-export default Login
+  }
+  
+  function mapStateToProps(state) {
+    const { isLoggedIn } = state.auth;
+    const { message } = state.message;
+    return {
+      isLoggedIn,
+      message
+    };
+  }
+  
+  export default connect(mapStateToProps)(Login);

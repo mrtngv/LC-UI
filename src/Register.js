@@ -9,13 +9,17 @@ import "@ui5/webcomponents/dist/Label";
 import "@ui5/webcomponents/dist/SegmentedButton";
 import "@ui5/webcomponents/dist/ToggleButton";
 
+import { connect } from "react-redux";
+import { register } from "./actions/auth";
+
 class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             username: "",
             email: "",
-            password: ""
+            password: "",
+            successful: false
         };
         this.handleInputValue = this.handleInputValue.bind(this);
         this.onRegister = this.onRegister.bind(this);
@@ -31,18 +35,25 @@ class Register extends React.Component {
     }
 
     onRegister() {
-        const register_url = 'http://localhost:8080/api/authenticate/register';
-        const registerUserDetails = {
-            "username": this.state.username,
-            "email": this.state.email,
-            "password": this.state.password
-        }
 
-        console.log(registerUserDetails);
+        this.setState({
+          successful: false,
+        });
 
-        axios.post(register_url, registerUserDetails).then(res => {
-            console.log("Success" + res);
-            this.props.history.push("/");
+        const { dispatch, history } = this.props;
+
+        dispatch(register(this.state.username, this.state.email, this.state.password))
+        .then(() => {
+          this.setState({
+            successful: true,
+          });
+          history.push("/profile");
+          window.location.reload();
+        })
+        .catch(() => {
+          this.setState({
+            successful: false,
+          });
         });
     }
 
@@ -74,9 +85,8 @@ class Register extends React.Component {
                     <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
                     <ui5-label for="emailInput" required>Имейл адрес:</ui5-label>
                     <ui5-input id="emailInput" name="email" placeholder="" required></ui5-input>
-                    <ui5-label for="regiPassInput" required>Парола:</ui5-label>
-                    <ui5-input id="regiPassInput" name="regiPass" placeholder="" required></ui5-input><br />
-
+                    <ui5-label for="passwordInput" required>Парола:</ui5-label>
+                    <ui5-input id="passwordInput" name="password" placeholder="" type="Password" required></ui5-input><br />
                     <ui5-button class="submit-btn" id="register-submit-btn" onClick={this.onRegister}>Регистрация</ui5-button>
                 </div>
             </div >
@@ -84,4 +94,11 @@ class Register extends React.Component {
     }
 }
 
-export default Register
+function mapStateToProps(state) {
+    const { message } = state.message;
+    return {
+      message,
+    };
+  }
+  
+  export default connect(mapStateToProps)(Register);

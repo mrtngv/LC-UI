@@ -8,7 +8,7 @@ import AboutCompany from './AboutCompany';
 import AllPackages from './packageView/AllPackages';
 import Login from './Login';
 import Register from './Register';
-
+import Profile from './Profile';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +30,7 @@ class App extends React.Component {
             <Route path="/package/all" exact component={AllPackages} />
             <Route path="/offices" exact component={Offices} />
             <Route path="/company" exact component={AboutCompany} />
+            <Route path="/profile" exact component={Profile} />
           </Switch>
         </Router>
       </div>

@@ -78,7 +78,7 @@ class Offices extends React.Component {
     render() {
         const role = this.state.role;
         const OfficesData = this.state.officesData
-        const offices = this.state.offices;
+        // const offices = this.state.offices;
         console.log(role);
         return (
             <div className="office-container">
