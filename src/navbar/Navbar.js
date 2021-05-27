@@ -60,11 +60,12 @@ componentDidMount() {
             secondary-title="Проект логистична компания"
         >
           <ui5-button icon="menu" slot="startButton" id="startButton"></ui5-button>
-          <ui5-avatar id="nav-profile" initials={user ? user.username.charAt(0).toUpperCase() : ''} icon={user ? '' : "customer"} slot="profile"></ui5-avatar>
+          { user ? <ui5-avatar id="nav-profile" initials={user.username.charAt(0).toUpperCase()} slot="profile"></ui5-avatar> : null}
 
         </ui5-shellbar>
         <div className="sidenav">
           <ui5-side-navigation id="side-navigation">
+              { user ? null : <ui5-side-navigation-item text="Вход/Регистрация" icon="sap-icon://customer" id="login"></ui5-side-navigation-item>}
               <ui5-side-navigation-item text="Всички пратки" icon="sap-icon://product" id="package/all"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Заяви пратка" icon="sap-icon://product" id="package/ship"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Проследи пратка" icon="sap-icon://sys-find" id="package/track"></ui5-side-navigation-item>
