@@ -50,7 +50,6 @@ class Login extends React.Component {
                 token: response.data.accessToken
             });
             sessionStorage.setItem("JWT",response.data.accessToken)
-            sessionStorage.setItem("USERNAME",response.data.username)
             this.getPrivateContent();
             this.props.history.push("/");
         });

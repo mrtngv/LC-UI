@@ -144,15 +144,12 @@ class Package extends React.Component {
     this.setState({
       [event.target.name]: event.target.selectedOption.value
     });
-
-    console.log(this.state.packageWeight);
   }
 
   handleCheckboxValue(event) {
     this.setState({
       [event.target.name]: event.target.checked
     });
-    //console.log(this.state.sentToOffice);
   }
 
   onRadioButtonValueChange(event) {
@@ -169,8 +166,6 @@ class Package extends React.Component {
         isFirm: "false"
       })
     }
-
-    console.log(this.state.isFirm);
   }
 
   hideButton(buttonId) {
@@ -243,31 +238,8 @@ class Package extends React.Component {
       //"dateOfRequest": this.state.requestDate
     }
 
-    //packageDetails["meow"] = this.state.deliveryDate;
-
     if(this.state.deliveryDate !== "") {packageDetails["dateOfDelivery"] = this.state.deliveryDate;}
 
-    const test = {
-      "senderFirstName": "HelloWorld",
-      "senderLastName": "Georgiev",
-      "senderTelephoneNumber": "0898989898",
-      "isFirm": "false",
-      "fromOffice": "true",
-      "fromAddress": "Stuklen Svurzan Spisuk",
-      "receiverFirstName": "Ekaterina",
-      "receiverLastName": "Gerasimova",
-      "receiverTelephoneNumber": "03820303203",
-      "toOffice": "true",
-      "toAddress": "Borovo",
-      "ePackageType": "BAG",
-      "ePayMethod": "CASH",
-      "weight": "12.2",
-      "isFragile": "true",
-      "isReturnToOffice": "false",
-      "dateOfDelivery": "2021-05-19"
-    }
-
-    console.log(packageDetails);
     axios.post(url, packageDetails).then(res => {
       this.props.history.push("/");
     });
@@ -543,7 +515,6 @@ class Package extends React.Component {
               <ui5-title class="step-title">4. Допълнителни данни за пратката</ui5-title>
               <div className="additional-package-details">
                 <ui5-title class="sub-title" level="H4">При невъзможност за доставка:</ui5-title>
-                {/* <ui5-label for="delivery-impossible-select">При невъзможност за доставка:</ui5-label> */}
                 <ui5-select class="selection" name="ifDeliveryImpossible" id="delivery-impossible-select">
                   <ui5-option value="RETURN TO OFFICE" selected>Върни до наш офис</ui5-option>
                   <ui5-option value="RETURN TO ADDRESS">Върни до адрес на подателя</ui5-option>
