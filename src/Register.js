@@ -1,4 +1,5 @@
-import React from 'react'; import axios from 'axios';
+import React from 'react'; 
+import axios from 'axios';
 
 import "./Login.css";
 
@@ -27,7 +28,6 @@ class Register extends React.Component {
         this.setState({
             [name]: value
         });
-        console.log(name + ":" + value);
     }
 
     onRegister() {
@@ -37,8 +37,6 @@ class Register extends React.Component {
             "email": this.state.email,
             "password": this.state.password
         }
-
-        console.log(registerUserDetails);
 
         axios.post(register_url, registerUserDetails).then(res => {
             console.log("Success" + res);
@@ -74,8 +72,8 @@ class Register extends React.Component {
                     <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
                     <ui5-label for="emailInput" required>Имейл адрес:</ui5-label>
                     <ui5-input id="emailInput" name="email" placeholder="" required></ui5-input>
-                    <ui5-label for="regiPassInput" required>Парола:</ui5-label>
-                    <ui5-input id="regiPassInput" name="regiPass" placeholder="" required></ui5-input><br />
+                    <ui5-label for="passwordInput" required>Парола:</ui5-label>
+                    <ui5-input id="passwordInput" name="password" type="Password" placeholder="" required></ui5-input><br />
 
                     <ui5-button class="submit-btn" id="register-submit-btn" onClick={this.onRegister}>Регистрация</ui5-button>
                 </div>

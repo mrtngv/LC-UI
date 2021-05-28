@@ -35,7 +35,6 @@ class Login extends React.Component {
         this.setState({
             [name]: value
         });
-        console.log(name + ":" + value);
     }
 
     onLogin() {
@@ -46,18 +45,19 @@ class Login extends React.Component {
             "password": this.state.password
         }
 
-        console.log(userDetails);
-
-        axios.post(URL, userDetails).then(response => {
+        axios.post(URL, userDetails).then(response => {;
             this.setState({
                 token: response.data.accessToken
             });
+            sessionStorage.setItem("JWT",response.data.accessToken)
+            sessionStorage.setItem("USERNAME",response.data.username)
             this.getPrivateContent();
             this.props.history.push("/");
         });
     }
 
     getPrivateContent() {
+        //ACCESS_TOKEN = this.state.token;
         console.log(this.state.token);
         // const testURL = "https://logistics-engine.herokuapp.com/api/test/signed"
         const testURL = "http://localhost:8080/api/test/signed";
@@ -67,7 +67,11 @@ class Login extends React.Component {
             }
         }
 
-        axios.get(testURL, token).then(res => this.setState({ text: res.data }));
+        axios.get(testURL, token).then(res => {
+            this.setState({ text: res.data });
+            console.log(this.state.text);
+    });
+        
 
     }
 
