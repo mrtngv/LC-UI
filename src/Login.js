@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import "./Login.css";
+import image from './images/login-logistic.jpg'; 
 
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";
@@ -16,18 +17,20 @@ class Login extends React.Component {
         this.state = {
             username: "",
             password: "",
-            token: "",
-            text: "",
+            formErrors: {username: '', password: ''},
+            passwordValid: false,
+            usernameValid: false,
+            formValid: false
         };
+
         this.handleInputValue = this.handleInputValue.bind(this);
         this.getPrivateContent = this.getPrivateContent.bind(this);
         this.onLogin = this.onLogin.bind(this);
-    }
-
-    onRoleChange(event) {
-        this.setState({
-            form: event.detail.selectedButton.getAttribute("id")
-        })
+        this.handleKeypress = this.handleKeypress.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.resetForm = this.resetForm.bind(this);
+        this.validateInput = this.validateInput.bind(this);
+        this.validateForm = this.validateForm.bind(this);
     }
 
     handleInputValue(event) {
@@ -46,28 +49,20 @@ class Login extends React.Component {
             "password": this.state.password
         }
 
-        console.log(userDetails);
+        if (this.state.formValid) {
+            axios.post(URL, userDetails).then(response => {
 
-        axios.post(URL, userDetails).then(response => {
-            this.setState({
-                token: response.data.accessToken
-            });
-            this.getPrivateContent();
-            this.props.history.push("/");
-        });
-    }
+                if (response.data.accessToken) {
+                    sessionStorage.setItem("user", JSON.stringify(response.data));
+                }
 
-    getPrivateContent() {
-        console.log(this.state.token);
-        // const testURL = "https://logistics-engine.herokuapp.com/api/test/signed"
-        const testURL = "http://localhost:8080/api/test/signed";
-        const token = {
-            headers: {
-                Authorization: "Bearer " + this.state.token
-            }
+                this.props.history.push("/profile");
+                window.location.reload();
+            }).catch(error => {
+                this.resetForm();
+            })
         }
-
-        axios.get(testURL, token).then(res => this.setState({ text: res.data }));
+    }
 
     }
 
@@ -92,23 +87,75 @@ class Login extends React.Component {
         this.addEventListeners();
     }
 
+    resetForm() {
+        const inputs = document.querySelectorAll(".login-input");
+        inputs.forEach(input => {
+            input.value = '';
+        });
+    }
+
+    handleSubmit() {
+        this.onLogin();
+    }
+
+    validateInput(e) {
+        var value = e.target.value;
+        var name = e.target.name;
+        this.validateField(name, value);
+    }
+    
+    validateField(fieldName, value) {
+        let fieldValidationErrors = this.state.formErrors;
+        let passwordValid = this.state.passwordValid;
+        let usernameValid = this.state.usernameValid;
+      
+        switch(fieldName) {
+          case 'password':
+            passwordValid = value.length >= 6;
+            fieldValidationErrors.password = passwordValid ? '' : 'Паролата трябва да е поне 6 символа';
+            break;
+          case 'username':
+            usernameValid = value.match(/^[a-z0-9!_-]{4,16}$/i);
+            fieldValidationErrors.username = usernameValid ? '' : 'Невалидно потребителско име';
+            break;
+          default:
+            break;
+        }
+        this.setState({formErrors: fieldValidationErrors,
+                        passwordValid: passwordValid,
+                        usernameValid: usernameValid
+                      }, this.validateForm);
+    }
+      
+    validateForm() {
+            this.setState({formValid: this.state.passwordValid && this.state.usernameValid});
+    }
+
     render() {
+        const formErrors = this.state.formErrors;
+
         return (
             <div className="container">
 
                 <div className="inner-container">
-                    <ui5-title level="H2">Вход в системата</ui5-title><br />
-
-                    <ui5-label for="usernameInput" required>Потребителско име:</ui5-label>
-                    <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
-                    <ui5-label for="passwordInput" required>Парола:</ui5-label>
-                    <ui5-input id="passwordInput" type="Password" name="password" placeholder="" required></ui5-input><br />
-                    <ui5-button class="submit-btn" id="login-submit-btn" onClick={this.onLogin}>Вход</ui5-button><br />
+                    <form onKeyPress={this.handleKeypress}>
+                        <ui5-title level="H2">Вход в системата</ui5-title><br />
+                        <ui5-label class="login-label" for="usernameInput" required>Потребителско име:</ui5-label>
+                        <ui5-input class={"login-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onBlur={(e) => {
+                            this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
+                        {formErrors.username ? <span className="error">{formErrors.username}</span> : null}
+                        <ui5-label class="login-label" for="passwordInput" required>Парола:</ui5-label>
+                        <ui5-input class={"login-input" + (formErrors.password ? ' error' : '')} id="passwordInput" value={this.state.password} type="Password" name="password" placeholder="" onBlur={(e) => {
+                            this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
+                        {formErrors.password ? <span className="error">{formErrors.password}</span> : null} <br />
+                        <ui5-button class="submit-btn" onClick={this.handleSubmit} type="submit">Вход</ui5-button>
+                        <span>
+                            <ui5-label>Нямате профил?</ui5-label>
+                            <ui5-label id="register-link">Регистрация</ui5-label>
+                        </span>
+                    </form>
+                    <img src={image} alt="Login Logistic Company" />
                 </div>
-                <span>
-                    <ui5-label>Нямате профил?</ui5-label>
-                    <ui5-label id="register-link">Регистрация</ui5-label>
-                </span>
             </div>
         )
     }
