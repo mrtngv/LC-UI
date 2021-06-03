@@ -19,15 +19,16 @@ class Register extends React.Component {
         };
         this.handleInputValue = this.handleInputValue.bind(this);
         this.onRegister = this.onRegister.bind(this);
-
-    }
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleKeypress = this.handleKeypress.bind(this);
+        this.resetForm = this.resetForm.bind(this);
+    }   
 
     handleInputValue(event) {
         const { name, value } = event.target;
         this.setState({
             [name]: value
         });
-        console.log(name + ":" + value);
     }
 
     onRegister() {
@@ -38,12 +39,22 @@ class Register extends React.Component {
             "password": this.state.password
         }
 
-        console.log(registerUserDetails);
-
         axios.post(register_url, registerUserDetails).then(res => {
-            console.log("Success" + res);
-            this.props.history.push("/");
+            this.props.history.push("/login");
+        }).catch(error => {
+            this.resetForm();
         });
+    }
+
+    handleSubmit() {
+        this.onRegister();
+    }
+
+    handleKeypress(e) {
+        //it triggers by pressing the enter key
+        if (e.charCode === 13 && this.state.username && this.state.email && this.state.password) {
+            this.handleSubmit();
+        }
     }
 
     addEventListeners() {
@@ -65,19 +76,27 @@ class Register extends React.Component {
         this.addEventListeners();
     }
 
+    resetForm() {
+        const inputs = document.querySelectorAll(".register-input");
+        inputs.forEach(input => {
+            input.value = '';
+        });
+    }
+
     render() {
         return (
             <div className="container">
                 <div className="inner-container">
-                <ui5-title level="H2">Създаване на профил</ui5-title><br/>
-                    <ui5-label for="usernameInput" required>Потребителско име:</ui5-label>
-                    <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
-                    <ui5-label for="emailInput" required>Имейл адрес:</ui5-label>
-                    <ui5-input id="emailInput" name="email" placeholder="" required></ui5-input>
-                    <ui5-label for="regiPassInput" required>Парола:</ui5-label>
-                    <ui5-input id="regiPassInput" name="regiPass" placeholder="" required></ui5-input><br />
-
-                    <ui5-button class="submit-btn" id="register-submit-btn" onClick={this.onRegister}>Регистрация</ui5-button>
+                    <form onKeyPress={this.handleKeypress}>
+                        <ui5-title level="H2">Създаване на профил</ui5-title><br/>
+                        <ui5-label class="register-label" for="usernameInput" required>Потребителско име:</ui5-label>
+                        <ui5-input class="register-input" id="usernameInput" name="username" placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>
+                        <ui5-label class="register-label" for="emailInput" required>Имейл адрес:</ui5-label>
+                        <ui5-input class="register-input" id="emailInput" name="email" placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>
+                        <ui5-label class="register-label" for="passwordInput" required>Парола:</ui5-label>
+                        <ui5-input class="register-input" id="passwordInput" type="Password" name="password" value={this.state.password} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input><br />
+                        <ui5-button class="submit-btn" id="register-submit-btn" type="submit" onClick={this.onRegister}>Регистрация</ui5-button>
+                    </form>
                 </div>
             </div >
         )
