@@ -1,4 +1,5 @@
-import React from 'react'; import axios from 'axios';
+import React from 'react'; 
+import axios from 'axios';
 
 import "./Login.css";
 import image from './images/register-logistic.jpg'; 
@@ -38,7 +39,6 @@ class Register extends React.Component {
         this.setState({
             [name]: value
         });
-        console.log(name + ":" + value);
     }
 
     onRegister() {
@@ -55,6 +55,17 @@ class Register extends React.Component {
             }).catch(error => {
                 this.resetForm();
             });
+        }
+    }
+
+    handleSubmit() {
+        this.onRegister();
+    }
+
+    handleKeypress(e) {
+        //it triggers by pressing the enter key
+        if (e.charCode === 13 && this.state.username && this.state.email && this.state.password) {
+            this.handleSubmit();
         }
     }
 

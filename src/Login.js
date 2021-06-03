@@ -24,7 +24,6 @@ class Login extends React.Component {
         };
 
         this.handleInputValue = this.handleInputValue.bind(this);
-        this.getPrivateContent = this.getPrivateContent.bind(this);
         this.onLogin = this.onLogin.bind(this);
         this.handleKeypress = this.handleKeypress.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -38,7 +37,6 @@ class Login extends React.Component {
         this.setState({
             [name]: value
         });
-        console.log(name + ":" + value);
     }
 
     onLogin() {
@@ -64,6 +62,11 @@ class Login extends React.Component {
         }
     }
 
+    handleKeypress(e) {
+        //it triggers by pressing the enter key
+        if (e.charCode === 13) {
+            this.handleSubmit();
+        }
     }
 
     addEventListeners() {
@@ -136,7 +139,6 @@ class Login extends React.Component {
 
         return (
             <div className="container">
-
                 <div className="inner-container">
                     <form onKeyPress={this.handleKeypress}>
                         <ui5-title level="H2">Вход в системата</ui5-title><br />
