@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import "./Login.css";
+import image from './images/login-logistic.jpg'; 
 
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";
@@ -15,20 +16,21 @@ class Login extends React.Component {
         super(props);
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            formErrors: {username: '', password: ''},
+            passwordValid: false,
+            usernameValid: false,
+            formValid: false
         };
+
         this.handleInputValue = this.handleInputValue.bind(this);
         this.onLogin = this.onLogin.bind(this);
         this.handleKeypress = this.handleKeypress.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.resetForm = this.resetForm.bind(this);
+        this.validateInput = this.validateInput.bind(this);
+        this.validateForm = this.validateForm.bind(this);
     }
-
-    // onRoleChange(event) {
-    //     this.setState({
-    //         form: event.detail.selectedButton.getAttribute("id")
-    //     })
-    // }
 
     handleInputValue(event) {
         const { name, value } = event.target;
@@ -44,18 +46,20 @@ class Login extends React.Component {
             "username": this.state.username,
             "password": this.state.password
         }
-        
-        axios.post(URL, userDetails).then(response => {
 
-            if (response.data.accessToken) {
-                sessionStorage.setItem("user", JSON.stringify(response.data));
-            }
+        if (this.state.formValid) {
+            axios.post(URL, userDetails).then(response => {
 
-            this.props.history.push("/profile");
-            window.location.reload();
-        }).catch(error => {
-            this.resetForm();
-         })
+                if (response.data.accessToken) {
+                    sessionStorage.setItem("user", JSON.stringify(response.data));
+                }
+
+                this.props.history.push("/profile");
+                window.location.reload();
+            }).catch(error => {
+                this.resetForm();
+            })
+        }
     }
 
     handleKeypress(e) {
@@ -97,22 +101,62 @@ class Login extends React.Component {
         this.onLogin();
     }
 
+    validateInput(e) {
+        var value = e.target.value;
+        var name = e.target.name;
+        this.validateField(name, value);
+    }
+    
+    validateField(fieldName, value) {
+        let fieldValidationErrors = this.state.formErrors;
+        let passwordValid = this.state.passwordValid;
+        let usernameValid = this.state.usernameValid;
+      
+        switch(fieldName) {
+          case 'password':
+            passwordValid = value.length >= 6;
+            fieldValidationErrors.password = passwordValid ? '' : 'Паролата трябва да е поне 6 символа';
+            break;
+          case 'username':
+            usernameValid = value.match(/^[a-z0-9!_-]{4,16}$/i);
+            fieldValidationErrors.username = usernameValid ? '' : 'Невалидно потребителско име';
+            break;
+          default:
+            break;
+        }
+        this.setState({formErrors: fieldValidationErrors,
+                        passwordValid: passwordValid,
+                        usernameValid: usernameValid
+                      }, this.validateForm);
+    }
+      
+    validateForm() {
+            this.setState({formValid: this.state.passwordValid && this.state.usernameValid});
+    }
+
     render() {
+        const formErrors = this.state.formErrors;
+
         return (
             <div className="container">
                 <div className="inner-container">
                     <form onKeyPress={this.handleKeypress}>
                         <ui5-title level="H2">Вход в системата</ui5-title><br />
                         <ui5-label class="login-label" for="usernameInput" required>Потребителско име:</ui5-label>
-                        <ui5-input class="login-input" id="usernameInput" name="username" placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>
+                        <ui5-input class={"login-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onBlur={(e) => {
+                            this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
+                        {formErrors.username ? <span className="error">{formErrors.username}</span> : null}
                         <ui5-label class="login-label" for="passwordInput" required>Парола:</ui5-label>
-                        <ui5-input class="login-input" id="passwordInput" value={this.state.password} type="Password" name="password" placeholder="" onKeyPress={this.handleKeypress} required></ui5-input><br />
+                        <ui5-input class={"login-input" + (formErrors.password ? ' error' : '')} id="passwordInput" value={this.state.password} type="Password" name="password" placeholder="" onBlur={(e) => {
+                            this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
+                        {formErrors.password ? <span className="error">{formErrors.password}</span> : null} <br />
                         <ui5-button class="submit-btn" onClick={this.handleSubmit} type="submit">Вход</ui5-button>
+                        <span>
+                            <ui5-label>Нямате профил?</ui5-label>
+                            <ui5-label id="register-link">Регистрация</ui5-label>
+                        </span>
                     </form>
-                    <span>
-                        <ui5-label>Нямате профил?</ui5-label>
-                        <ui5-label id="register-link">Регистрация</ui5-label>
-                    </span>
+                    <img src={image} alt="Login Logistic Company" />
                 </div>
             </div>
         )

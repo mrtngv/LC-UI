@@ -1,13 +1,11 @@
 .container form {
+    width: 15rem;
     display: flex;
     flex-direction: column;
-    width: 15rem;
 }
 
 .container {
     padding: 4rem;
-    display: flex;
-    flex-direction: column;
 }
 
 .submit-btn {
@@ -24,7 +22,29 @@
 
 .inner-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.inner-container img {
+    margin-left: 200px;
+    height: 350px;
+    border-radius: 5px;
+}
+
+.inner-container span.error {
+    font-size: 13px;
+    color: #fd6204;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: .2px;
+    font-family: "72override",var(--sapFontFamily);
+}
+
+.register-input.error ,
+.login-input.error {
+    box-shadow: 0 0 2px 2px rgb(253 98 3 / 25%);
+    border: 1px solid #fd6204;
 }
 
 #register-link {
