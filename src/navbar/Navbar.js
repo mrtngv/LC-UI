@@ -10,15 +10,15 @@ class Navbar extends React.Component {
     this.onLogout = this.onLogout.bind(this);
 }
 
-onNavbarSelect(event) {
+  onNavbarSelect(event) {
     const newRoute = event.detail.item.id;
     this.props.history.push(('/' + newRoute));
-}
+  }
 
-onSidebarCollapse() {
-  const sidenav = document.getElementById('side-navigation');
-  sidenav.collapsed = !sidenav.collapsed;
-}
+  onSidebarCollapse() {
+    const sidenav = document.getElementById('side-navigation');
+    sidenav.collapsed = !sidenav.collapsed;
+  }
 
 onLogin() {
   this.props.history.push(('/login'));

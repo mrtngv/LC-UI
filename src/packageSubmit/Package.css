@@ -1,11 +1,75 @@
 .main-section {
     display: flex;
     padding: 3rem;
-    height: 75vh;
+    height: 85vh;
 }
 
-#submit-button{
+.step-title {
+    padding-bottom: 2rem;
+}
+
+.sub-title {
+    padding-bottom: 0.5rem;
+}
+
+.to-step-button {
+    margin-top: 1rem;
+}
+
+.input, .selection {
+    margin-bottom: 1rem;
+    width: 20rem;
+}
+
+.flex-container-input {
+    display: flex;
+    flex-direction: row;
+}
+
+#firmNameInput, #receiverFirmNameInput, #orderComment {
+    width: 41.5rem;
+}
+
+#senderLocationInput, #receiverLocationInput, #alternativeLocationInput {
+    width: 15rem;
+}
+
+#senderAddressInput, #receiverAddressInput, #alternativeAddressInput {
+    width: 25rem;
+}
+
+/* #senderLastNameInput, #senderEmailInput {
+    width: 15rem;
+} */
+
+.second-flex-input-item {
+    padding-left: 1.5rem;
+}
+
+#submit-button {
     display: inline;
     float: right;
     margin-left: 1rem;
+}
+
+#declineRequestButton {
+    margin-left: 1rem;
+}
+
+
+.step-first-distance{
+    padding-top: 2rem;
+    padding-left: 2rem;
+}
+
+.step-distance{
+    padding: 0rem 2rem;
+}
+
+#first-message-strip {
+    padding-bottom: 0.3rem;
+}
+
+.message-strip {
+    padding-bottom: 1rem;
 }

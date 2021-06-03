@@ -7,10 +7,14 @@ class AboutCompany extends React.Component {
         };
     }
 
+
+
     render() {
+const token = sessionStorage.getItem("JWT");
+//sessionStorage.removeItem("JWT");
         return (
             <div>
-                <h1>About us....</h1>
+                <h1>{token}</h1>
             </div>
         )
     }
