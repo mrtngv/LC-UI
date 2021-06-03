@@ -1,13 +1,25 @@
-.container {
-    padding: 3rem;
+.container form {
     display: flex;
     flex-direction: column;
-    /* justify-content: center;
-    align-items: center; */
+    width: 15rem;
+}
+
+.container {
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .submit-btn {
-    width: 10rem;
+    width: 13rem;
+    margin-bottom: 10px;
+}
+
+.login-input,
+.login-label,
+.register-input,
+.register-label {
+    margin-bottom: 5px;
 }
 
 .inner-container {

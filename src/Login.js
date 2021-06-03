@@ -15,20 +15,20 @@ class Login extends React.Component {
         super(props);
         this.state = {
             username: "",
-            password: "",
-            token: "",
-            text: "",
+            password: ""
         };
         this.handleInputValue = this.handleInputValue.bind(this);
-        this.getPrivateContent = this.getPrivateContent.bind(this);
         this.onLogin = this.onLogin.bind(this);
+        this.handleKeypress = this.handleKeypress.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.resetForm = this.resetForm.bind(this);
     }
 
-    onRoleChange(event) {
-        this.setState({
-            form: event.detail.selectedButton.getAttribute("id")
-        })
-    }
+    // onRoleChange(event) {
+    //     this.setState({
+    //         form: event.detail.selectedButton.getAttribute("id")
+    //     })
+    // }
 
     handleInputValue(event) {
         const { name, value } = event.target;
@@ -44,34 +44,25 @@ class Login extends React.Component {
             "username": this.state.username,
             "password": this.state.password
         }
+        
+        axios.post(URL, userDetails).then(response => {
 
-        axios.post(URL, userDetails).then(response => {;
-            this.setState({
-                token: response.data.accessToken
-            });
-            sessionStorage.setItem("JWT",response.data.accessToken)
-            this.getPrivateContent();
-            this.props.history.push("/");
-        });
+            if (response.data.accessToken) {
+                sessionStorage.setItem("user", JSON.stringify(response.data));
+            }
+
+            this.props.history.push("/profile");
+            window.location.reload();
+        }).catch(error => {
+            this.resetForm();
+         })
     }
 
-    getPrivateContent() {
-        //ACCESS_TOKEN = this.state.token;
-        console.log(this.state.token);
-        // const testURL = "https://logistics-engine.herokuapp.com/api/test/signed"
-        const testURL = "http://localhost:8080/api/test/signed";
-        const token = {
-            headers: {
-                Authorization: "Bearer " + this.state.token
-            }
+    handleKeypress(e) {
+        //it triggers by pressing the enter key
+        if (e.charCode === 13) {
+            this.handleSubmit();
         }
-
-        axios.get(testURL, token).then(res => {
-            this.setState({ text: res.data });
-            console.log(this.state.text);
-    });
-        
-
     }
 
     addEventListeners() {
@@ -95,23 +86,34 @@ class Login extends React.Component {
         this.addEventListeners();
     }
 
+    resetForm() {
+        const inputs = document.querySelectorAll(".login-input");
+        inputs.forEach(input => {
+            input.value = '';
+        });
+    }
+
+    handleSubmit() {
+        this.onLogin();
+    }
+
     render() {
         return (
             <div className="container">
-
                 <div className="inner-container">
-                    <ui5-title level="H2">Вход в системата</ui5-title><br />
-
-                    <ui5-label for="usernameInput" required>Потребителско име:</ui5-label>
-                    <ui5-input id="usernameInput" name="username" placeholder="" required></ui5-input>
-                    <ui5-label for="passwordInput" required>Парола:</ui5-label>
-                    <ui5-input id="passwordInput" type="Password" name="password" placeholder="" required></ui5-input><br />
-                    <ui5-button class="submit-btn" id="login-submit-btn" onClick={this.onLogin}>Вход</ui5-button><br />
+                    <form onKeyPress={this.handleKeypress}>
+                        <ui5-title level="H2">Вход в системата</ui5-title><br />
+                        <ui5-label class="login-label" for="usernameInput" required>Потребителско име:</ui5-label>
+                        <ui5-input class="login-input" id="usernameInput" name="username" placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>
+                        <ui5-label class="login-label" for="passwordInput" required>Парола:</ui5-label>
+                        <ui5-input class="login-input" id="passwordInput" value={this.state.password} type="Password" name="password" placeholder="" onKeyPress={this.handleKeypress} required></ui5-input><br />
+                        <ui5-button class="submit-btn" onClick={this.handleSubmit} type="submit">Вход</ui5-button>
+                    </form>
+                    <span>
+                        <ui5-label>Нямате профил?</ui5-label>
+                        <ui5-label id="register-link">Регистрация</ui5-label>
+                    </span>
                 </div>
-                <span>
-                    <ui5-label>Нямате профил?</ui5-label>
-                    <ui5-label id="register-link">Регистрация</ui5-label>
-                </span>
             </div>
         )
     }
