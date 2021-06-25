@@ -9,14 +9,25 @@ import AllPackages from './packageView/AllPackages';
 import Login from './Login';
 import Register from './Register';
 import Profile from './Profile';
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {   
+    this.state = {  
+      role: "NO_ROLE" 
     };
   }
 
+  componentDidMount(){
+    try { 
+      const role = JSON.parse(sessionStorage.getItem('user')).role;
+      this.setState({
+        role: role
+      })
+    }
+    catch (e) {}
+  }
 
   render() {
     return (
@@ -28,7 +39,8 @@ class App extends React.Component {
             <Route path="/register" exact component={Register} />
             <Route path="/package/ship" exact component={Package} />
             <Route path="/package/track" exact component={TrackPackage} />
-            <Route path="/package/all" exact component={AllPackages} />
+            {this.state.role !== "NO_ROLE"?
+            <Route path="/package/all" exact component={AllPackages} />:null}
             <Route path="/offices" exact component={Offices} />
             <Route path="/company" exact component={AboutCompany} />
             <Route path="/profile" exact component={Profile} />

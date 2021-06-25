@@ -21,6 +21,10 @@ ui5-flexible-column-layout#fcl {
     overflow-y: auto;
 }
 
+.information-container {
+    display: flex;
+}
+
 .information-row {
     padding-top: 1px;
 }

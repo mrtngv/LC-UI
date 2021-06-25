@@ -5,6 +5,9 @@ import "./Navbar.css";
 class Navbar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      role: "NO_ROLE"
+    }
     this.onNavbarSelect = this.onNavbarSelect.bind(this);
     this.onLogin = this.onLogin.bind(this);
     this.onLogout = this.onLogout.bind(this);
@@ -47,6 +50,13 @@ addEventListeners() {
 
 componentDidMount() {
   this.addEventListeners();
+    try {
+      const role = JSON.parse(sessionStorage.getItem('user')).role;
+      this.setState({
+        role: role
+      })
+    }
+    catch (e) {}
 }
 
   render() {
@@ -66,7 +76,8 @@ componentDidMount() {
         <div className="sidenav">
           <ui5-side-navigation id="side-navigation">
               { user ? null : <ui5-side-navigation-item text="Вход/Регистрация" icon="sap-icon://customer" id="login"></ui5-side-navigation-item>}
-              <ui5-side-navigation-item text="Всички пратки" icon="sap-icon://product" id="package/all"></ui5-side-navigation-item>
+              {this.state.role !=="NO_ROLE"?
+              <ui5-side-navigation-item text="Всички пратки" icon="sap-icon://product" id="package/all"></ui5-side-navigation-item>:null}
               <ui5-side-navigation-item text="Заяви пратка" icon="sap-icon://product" id="package/ship"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Проследи пратка" icon="sap-icon://sys-find" id="package/track"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Офиси" icon="sap-icon://functional-location" id="offices"></ui5-side-navigation-item>
