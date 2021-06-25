@@ -44,7 +44,7 @@ class Package extends React.Component {
       receiverPhone: "",
       receiverEmail: "",
       receiverCity: "",
-      receiverAddress: "",
+      receiverAddress: "OFIS 1-SERDIKA",
       sentToOffice: false,
       packageType: "DOCUMENTS",
       packageWeight: 5,
@@ -52,17 +52,17 @@ class Package extends React.Component {
       returnToOffice: true,
       ifDeliveryImpossible: "RETURN TO OFFICE",
       alternativeCity: "",
-      alternativeAddress: "",
+      alternativeAddress: "OFIS 1-SERDIKA",
       requestComment: "",
       paymentMethod: "CASH",
       requestDate: this.getTodayDate(),
-      deliveryDate: ""
+      deliveryDate: this.getTodayDate()
     };
     this.handleInputValue = this.handleInputValue.bind(this);
     this.handleSuggestionInputValue = this.handleSuggestionInputValue.bind(this);
     this.handleSelectionValue = this.handleSelectionValue.bind(this);
     this.handleCheckboxValue = this.handleCheckboxValue.bind(this);
-    this.onRadioButtonValueChange = this.onRadioButtonValueChange.bind(this);
+    // this.onRadioButtonValueChange = this.onRadioButtonValueChange.bind(this);
     this.onRequestSend = this.onRequestSend.bind(this);
     this.declineRequest = this.declineRequest.bind(this);
   }
@@ -152,20 +152,24 @@ class Package extends React.Component {
     });
   }
 
-  onRadioButtonValueChange(event) {
-    this.setState({
-      selectedRadioButton: event.target.text
-    });
+  // onRadioButtonValueChange(event) {
+  //   this.setState({
+  //     selectedRadioButton: event.target.text
+  //   });
 
-    if (this.state.selectedRadioButton === "Фирма") {
-      this.setState({
-        isFirm: "true"
-      })
-    } else if (this.state.selectedRadioButton === "Физическо лице") {
-      this.setState({
-        isFirm: "false"
-      })
-    }
+  //   if (this.state.selectedRadioButton === "Фирма") {
+  //     this.setState({
+  //       isFirm: "true"
+  //     })
+  //   } else if (this.state.selectedRadioButton === "Физическо лице") {
+  //     this.setState({
+  //       isFirm: "false"
+  //     })
+  //   }
+  // }
+
+  calculatePrice() {
+
   }
 
   hideButton(buttonId) {
@@ -208,6 +212,8 @@ class Package extends React.Component {
   onRequestSend() {
     const url = 'http://localhost:8080/api/packages';
 
+    console.log("yasdyasd" + this.state.isReceiverFirm);
+
     const packageDetails = {
       "senderFirstName": this.state.senderFirstName,
       "senderLastName": this.state.senderLastName,
@@ -215,30 +221,34 @@ class Package extends React.Component {
       "firmName": this.state.senderFirmName,
       "senderTelephoneNumber": this.state.senderPhone,
       "senderEmail": this.state.senderEmail,
-      //"senderCity": this.state.senderCity,
+      "fromCity": this.state.senderCity,
+      "toFirm": true,//this.state.isReceiverFirm,
       "fromAddress": this.state.senderAddress,
       "fromOffice": this.state.sentFromOffice,
       "receiverFirstName": this.state.receiverFirstName,
       "receiverLastName": this.state.receiverLastName,
-      //"isReceiverFirm": this.state.isReceiverFirm,
-      //"receiverFirmName": this.state.receiverFirmName,
+      "toFirmName": this.state.receiverFirmName,
       "receiverTelephoneNumber": this.state.receiverPhone,
       "receiverEmail": this.state.receiverEmail,
-      // "receiverCity": this.state.receiverCity,
+      "toCity": this.state.receiverCity,
       "toAddress": this.state.receiverAddress,
       "toOffice": this.state.sentToOffice, //bool
       "ePackageType": this.state.packageType,
       "weight": this.state.packageWeight,
       "isFragile": this.state.isFragile,
-      "isReturnToOffice": this.state.returnToOffice,
-      //"alternativeCity": this.state.alternativeCity,
+      "returnToOffice": this.state.returnToOffice,
+      "alternativeCity": this.state.alternativeCity,
       "returnLocation": this.state.alternativeAddress,
       "comment": this.state.requestComment,
       "ePayMethod": this.state.paymentMethod,
-      //"dateOfRequest": this.state.requestDate
+      "dateOfDelivery": this.state.deliveryDate,
+      "dateOfSending": this.state.requestDate
     }
 
-    if(this.state.deliveryDate !== "") {packageDetails["dateOfDelivery"] = this.state.deliveryDate;}
+    console.log(packageDetails);
+    console.log("TEST" + this.state.isReceiverFirm);
+
+    //if (this.state.deliveryDate !== "") { packageDetails["dateOfDelivery"] = this.state.deliveryDate; }
 
     axios.post(url, packageDetails).then(res => {
       this.props.history.push("/");
@@ -428,19 +438,20 @@ class Package extends React.Component {
                     <ui5-label for="senderLocationInput" required>Населено място:</ui5-label><br />
                     <ui5-input class="suggestion-input" id="senderLocationInput" show-suggestions name="senderCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
                   </div>
-                  {this.state.sentFromOffice === true ? 
-                  <div className="second-flex-input-item">
-                    <ui5-label for="senderAddress" required>Офис:</ui5-label><br />
-                  <ui5-select class="selection" name="senderAddress">
-                  <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
-                  <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
-                  <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
-                </ui5-select>
-                  </div> :
-                  <div className="second-flex-input-item">
-                    <ui5-label for="senderAddressInput" required>Адрес:</ui5-label><br />
-                    <ui5-input class="input" id="senderAddressInput" name="senderAddress" placeholder="" required></ui5-input><br />
-                  </div>}
+                  {this.state.sentFromOffice === true ?
+                    <div className="second-flex-input-item">
+                      <ui5-label for="senderAddress" required>Офис:</ui5-label><br />
+                      {/* ! ще се взимат офисите от бекенда като са готови */}
+                      <ui5-select class="selection" name="senderAddress">
+                        <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
+                        <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
+                        <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
+                      </ui5-select>
+                    </div> :
+                    <div className="second-flex-input-item">
+                      <ui5-label for="senderAddressInput" required>Адрес:</ui5-label><br />
+                      <ui5-input class="input" id="senderAddressInput" name="senderAddress" placeholder="" required></ui5-input><br />
+                    </div>}
                 </div>
               </div>
 
@@ -499,10 +510,20 @@ class Package extends React.Component {
                   <ui5-label for="receiverLocationInput" required>Населено място:</ui5-label><br />
                   <ui5-input class="suggestion-input" id="receiverLocationInput" show-suggestions name="receiverCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
                 </div>
-                <div className="second-flex-input-item">
-                  <ui5-label for="receiverAddressInput" required>Адрес:</ui5-label><br />
-                  <ui5-input class="input" id="receiverAddressInput" name="receiverAddress" placeholder="" required></ui5-input><br />
-                </div>
+                {this.state.sentToOffice === true ?
+                  <div className="second-flex-input-item">
+                    <ui5-label for="receiverAddress" required>Офис:</ui5-label><br />
+                    {/* ! ще се взимат офисите от бекенда като са готови */}
+                    <ui5-select class="selection" name="receiverAddress">
+                      <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
+                      <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
+                      <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
+                    </ui5-select>
+                  </div> :
+                  <div className="second-flex-input-item">
+                    <ui5-label for="receiverAddressInput" required>Адрес:</ui5-label><br />
+                    <ui5-input class="input" id="receiverAddressInput" name="receiverAddress" placeholder="" required></ui5-input><br />
+                  </div>}
               </div>
 
               {/* <!-- Move to step 4 --> */}
@@ -526,10 +547,20 @@ class Package extends React.Component {
                       <ui5-label for="alternativeLocationInput" required>Населено място:</ui5-label><br />
                       <ui5-input class="suggestion-input" id="alternativeLocationInput" show-suggestions name="alternativeCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
                     </div>
-                    <div className="second-flex-input-item">
-                      <ui5-label for="alternativeAddressInput" required>Адрес:</ui5-label><br />
-                      <ui5-input class="input" id="alternativeAddressInput" name="alternativeAddress" placeholder="" required></ui5-input><br />
-                    </div>
+                    {this.state.ifDeliveryImpossible === "RETURN TO OFFICE" ?
+                      <div className="second-flex-input-item">
+                        <ui5-label for="alternativeAddress" required>Офис:</ui5-label><br />
+                        {/* ! ще се взимат офисите от бекенда като са готови */}
+                        <ui5-select class="selection" name="alternativeAddress">
+                          <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
+                          <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
+                          <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
+                        </ui5-select>
+                      </div> :
+                      <div className="second-flex-input-item">
+                        <ui5-label for="alternativeAddressInput" required>Адрес:</ui5-label><br />
+                        <ui5-input class="input" id="alternativeAddressInput" name="alternativeAddress" placeholder="" required></ui5-input><br />
+                      </div>}
                   </div>}
                 <ui5-title level="H4">Допълнителни грижи за пратката:</ui5-title>
                 <ui5-checkbox class="checkbox" id="is-fragile" name="isFragile" text="Чупливо съдържание" ></ui5-checkbox><br />

@@ -99,7 +99,7 @@ class TrackPackage extends React.Component {
                 <div className="track-package-container">
                     <Grid>
                         <ui5-label id="track-package-label" data-layout-span="XL12" for="track-package-input">Проследи пратка</ui5-label>
-                        <ui5-input id="track-package-input" placeholder="Въведи номер на пратка" data-layout-span="XL9" type="Number"></ui5-input>
+                        <ui5-input id="track-package-input" placeholder="Въведи номер на пратка" data-layout-span="XL9" ></ui5-input>
                         <ui5-button id="track-package-btn" data-layout-span="XL9" design="Emphasized" >Проследи</ui5-button>
                     </Grid>
                 </div>
