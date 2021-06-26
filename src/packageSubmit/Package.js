@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import "./Package.css";
 import "./Data.js";
+import { DOMAIN } from ".././constants/Domain.js";
+import { OFFICES } from ".././constants/Endpoints.js";
 
 import "@ui5/webcomponents-fiori/dist/SideNavigation.js";
 import "@ui5/webcomponents-fiori/dist/SideNavigationItem.js";
@@ -35,7 +37,7 @@ class Package extends React.Component {
       senderPhone: "",
       senderEmail: "",
       senderCity: "",
-      senderAddress: "OFIS 1-SERDIKA",
+      senderAddress: "",
       sentFromOffice: false,
       receiverFirstName: "",
       receiverLastName: "",
@@ -44,25 +46,29 @@ class Package extends React.Component {
       receiverPhone: "",
       receiverEmail: "",
       receiverCity: "",
-      receiverAddress: "OFIS 1-SERDIKA",
+      receiverAddress: "",
       sentToOffice: false,
       packageType: "DOCUMENTS",
-      packageWeight: 5,
+      packageWeight: 3,
       isFragile: false,
       returnToOffice: true,
       ifDeliveryImpossible: "RETURN TO OFFICE",
       alternativeCity: "",
-      alternativeAddress: "OFIS 1-SERDIKA",
+      alternativeAddress: "",
       requestComment: "",
       paymentMethod: "CASH",
       requestDate: this.getTodayDate(),
-      deliveryDate: this.getTodayDate()
+      deliveryDate: this.getTodayDate(),
+      allOfficeCities: [],
+      offices: [],
+      loggedUserEmail: ""
     };
     this.handleInputValue = this.handleInputValue.bind(this);
-    this.handleSuggestionInputValue = this.handleSuggestionInputValue.bind(this);
+    this.handleSenderSuggestionInputValue = this.handleSenderSuggestionInputValue.bind(this);
+    this.handleReceiverSuggestionInputValue = this.handleReceiverSuggestionInputValue.bind(this);
+    this.handleAlternativeSuggestionInputValue = this.handleAlternativeSuggestionInputValue.bind(this);
     this.handleSelectionValue = this.handleSelectionValue.bind(this);
     this.handleCheckboxValue = this.handleCheckboxValue.bind(this);
-    // this.onRadioButtonValueChange = this.onRadioButtonValueChange.bind(this);
     this.onRequestSend = this.onRequestSend.bind(this);
     this.declineRequest = this.declineRequest.bind(this);
   }
@@ -92,39 +98,240 @@ class Package extends React.Component {
     this.setState({
       [name]: value
     });
-    console.log(this.state.requestDate);
   }
 
-  handleSuggestionInputValue(event) {
-    const city_database_entries = ["Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", "Габрово", "Добрич",
-      "Кърджали", "Кюстендил", "Ловеч", "Монтана", "Пазарджик", "Перник", "Плевен", "Пловдив", "Разград", "Русе", "Силистра",
-      "Сливен", "Смолян", "София-град", "София-област", "Стара Загора", "Търговище", "Хасково", "Шумен", "Ямбол"];
+  handleSenderSuggestionInputValue(event) {
+    const isChecked = this.state.sentFromOffice;
 
-    const value = event.target.value;
+    if (isChecked) {
+      let city_database_entries = this.state.allOfficeCities;
 
-    var suggestionItems = [];
+      const value = event.target.value;
+
+      var suggestionItems = [];
 
 
-    if (value) {
-      suggestionItems = city_database_entries.filter(item => {
-        return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
       });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      const locationa = this.state.offices.find(o => o.city === event.target.value);
+      if (locationa) {
+
+        this.setState({
+          [event.target.name]: event.target.value,
+          senderAddress: locationa.location
+        });
+      } else {
+        this.setState({
+          [event.target.name]: event.target.value,
+        });
+      }
+
     }
 
-    [].slice.call(event.target.children).forEach(child => {
-      event.target.removeChild(child);
-    });
+    else {
 
-    suggestionItems.forEach(item => {
-      var li = document.createElement("ui5-suggestion-item");
-      li.icon = "world";
-      li.text = item;
-      event.target.appendChild(li);
-    });
 
-    this.setState({
-      [event.target.name]: event.target.value
-    });
+      let city_database_entries = ["Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", "Габрово", "Добрич",
+        "Кърджали", "Кюстендил", "Ловеч", "Монтана", "Пазарджик", "Перник", "Плевен", "Пловдив", "Разград", "Русе", "Силистра",
+        "Сливен", "Смолян", "София-град", "София-област", "Стара Загора", "Търговище", "Хасково", "Шумен", "Ямбол"];
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      this.setState({
+        [event.target.name]: event.target.value
+      });
+    }
+  }
+
+  handleReceiverSuggestionInputValue(event) {
+    const isChecked = this.state.sentToOffice;
+
+    if (isChecked) {
+      let city_database_entries = this.state.allOfficeCities;
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      const locationa = this.state.offices.find(o => o.city === event.target.value);
+      if (locationa) {
+
+        this.setState({
+          [event.target.name]: event.target.value,
+          receiverAddress: locationa.location
+        });
+      } else {
+        this.setState({
+          [event.target.name]: event.target.value,
+        });
+      }
+
+    }
+
+    else {
+
+
+      let city_database_entries = ["Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", "Габрово", "Добрич",
+        "Кърджали", "Кюстендил", "Ловеч", "Монтана", "Пазарджик", "Перник", "Плевен", "Пловдив", "Разград", "Русе", "Силистра",
+        "Сливен", "Смолян", "София-град", "София-област", "Стара Загора", "Търговище", "Хасково", "Шумен", "Ямбол"];
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      this.setState({
+        [event.target.name]: event.target.value
+      });
+    }
+  }
+
+  handleAlternativeSuggestionInputValue(event) {
+    const isChecked = this.state.returnToOffice;
+
+    if (isChecked) {
+      let city_database_entries = this.state.allOfficeCities;
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      const locationa = this.state.offices.find(o => o.city === event.target.value);
+      if (locationa) {
+
+        this.setState({
+          [event.target.name]: event.target.value,
+          alternativeAddress: locationa.location
+        });
+      } else {
+        this.setState({
+          [event.target.name]: event.target.value,
+        });
+      }
+
+    }
+
+    else {
+
+
+      let city_database_entries = ["Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", "Габрово", "Добрич",
+        "Кърджали", "Кюстендил", "Ловеч", "Монтана", "Пазарджик", "Перник", "Плевен", "Пловдив", "Разград", "Русе", "Силистра",
+        "Сливен", "Смолян", "София-град", "София-област", "Стара Загора", "Търговище", "Хасково", "Шумен", "Ямбол"];
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      this.setState({
+        [event.target.name]: event.target.value
+      });
+    }
   }
 
   handleSelectionValue(event) {
@@ -135,7 +342,8 @@ class Package extends React.Component {
           alternativeCity: this.state.senderCity,
           alternativeAddress: this.state.senderAddress
         });
-      } else if (event.target.selectedOption.value === "DIFFERENT ADDRESS") {
+      }
+      else if (event.target.selectedOption.value === "DIFFERENT ADDRESS") {
         this.setState({
           returnToOffice: false
         });
@@ -147,29 +355,32 @@ class Package extends React.Component {
   }
 
   handleCheckboxValue(event) {
+
     this.setState({
       [event.target.name]: event.target.checked
     });
   }
 
-  // onRadioButtonValueChange(event) {
-  //   this.setState({
-  //     selectedRadioButton: event.target.text
-  //   });
-
-  //   if (this.state.selectedRadioButton === "Фирма") {
-  //     this.setState({
-  //       isFirm: "true"
-  //     })
-  //   } else if (this.state.selectedRadioButton === "Физическо лице") {
-  //     this.setState({
-  //       isFirm: "false"
-  //     })
-  //   }
-  // }
-
   calculatePrice() {
+    const basePrice = 1.50;
+    const homeDelivery = 2.00;
+    const pricerPerKg = 0.30;
 
+    let samplePrice = basePrice + (this.state.packageWeight * pricerPerKg);
+
+    if (!this.state.sentFromOffice) {
+      samplePrice += homeDelivery;
+    }
+    if (!this.state.sentToOffice) {
+      samplePrice += homeDelivery;
+    }
+    if (this.state.ifDeliveryImpossible === "DIFFERENT ADDRESS") {
+      samplePrice += homeDelivery;
+    }
+
+    samplePrice = samplePrice.toFixed(2);
+
+    return samplePrice;
   }
 
   hideButton(buttonId) {
@@ -212,7 +423,13 @@ class Package extends React.Component {
   onRequestSend() {
     const url = 'http://localhost:8080/api/packages';
 
-    console.log("yasdyasd" + this.state.isReceiverFirm);
+    try {
+      const email = JSON.parse(sessionStorage.getItem('user')).email;
+      this.setState({
+        loggedUserEmail: email
+      })
+    }
+    catch (e) {}
 
     const packageDetails = {
       "senderFirstName": this.state.senderFirstName,
@@ -243,12 +460,39 @@ class Package extends React.Component {
       "ePayMethod": this.state.paymentMethod,
       "dateOfDelivery": this.state.deliveryDate,
       "dateOfSending": this.state.requestDate
+      //"userEmail": this.state.loggedUserEmail
     }
 
-    console.log(packageDetails);
-    console.log("TEST" + this.state.isReceiverFirm);
-
-    //if (this.state.deliveryDate !== "") { packageDetails["dateOfDelivery"] = this.state.deliveryDate; }
+    // const packageDetails = {
+    //   "senderFirstName": "Екатерина",
+    //   "senderLastName": "Герасимова",
+    //   "isFirm": false,
+    //   "firmName": "",
+    //   "senderTelephoneNumber": "0887898989",
+    //   "senderEmail": "kati@mail.bg",
+    //   "fromCity": this.state.senderCity,
+    //   "toFirm": false,//this.state.isReceiverFirm,
+    //   "fromAddress": this.state.senderAddress,
+    //   "fromOffice": this.state.sentFromOffice,
+    //   "receiverFirstName": "Martin",
+    //   "receiverLastName": "Georgiev",
+    //   "toFirmName": "",
+    //   "receiverTelephoneNumber": "088787878",
+    //   "receiverEmail": this.state.receiverEmail,
+    //   "toCity": this.state.receiverCity,
+    //   "toAddress": this.state.receiverAddress,
+    //   "toOffice": this.state.sentToOffice, //bool
+    //   "ePackageType": this.state.packageType,
+    //   "weight": this.state.packageWeight,
+    //   "isFragile": this.state.isFragile,
+    //   "returnToOffice": this.state.returnToOffice,
+    //   "alternativeCity": this.state.alternativeCity,
+    //   "returnLocation": this.state.alternativeAddress,
+    //   "comment": this.state.requestComment,
+    //   "ePayMethod": this.state.paymentMethod,
+    //   "dateOfDelivery": this.state.deliveryDate,
+    //   "dateOfSending": this.state.requestDate
+    // }
 
     axios.post(url, packageDetails).then(res => {
       this.props.history.push("/");
@@ -293,19 +537,27 @@ class Package extends React.Component {
       item.addEventListener("change", this.handleInputValue);
     })
 
-    document.querySelectorAll('.suggestion-input').forEach(item => {
-      item.addEventListener("input", this.handleSuggestionInputValue);
-    })
-
-    document.querySelectorAll('.radio').forEach(item => {
-      item.addEventListener("select", this.onRadioButtonValueChange);
-    })
-
     document.querySelectorAll("ui5-messagestrip").forEach(messageStrip => {
       messageStrip.addEventListener("close", () => {
         messageStrip.parentNode.removeChild(messageStrip);
       });
     });
+
+    const senderSuggestionInput = document.getElementById("senderLocationInput");
+    if (senderSuggestionInput) {
+      senderSuggestionInput.addEventListener("input", this.handleSenderSuggestionInputValue);
+    }
+
+    const receiverSuggestionInput = document.getElementById("receiverLocationInput");
+    if (receiverSuggestionInput) {
+      receiverSuggestionInput.addEventListener("input", this.handleReceiverSuggestionInputValue);
+    }
+
+    const alternativeSuggestionInput = document.getElementById("alternativeLocationInput");
+    if (alternativeSuggestionInput) {
+      alternativeSuggestionInput.addEventListener("input", this.handleAlternativeSuggestionInputValue);
+    }
+
 
     const sendRequestButton = document.getElementById("sendRequestButton");
     if (sendRequestButton) {
@@ -327,17 +579,25 @@ class Package extends React.Component {
       item.removeEventListener("change", this.handleInputValue);
     })
 
-    document.querySelectorAll('.suggestion-input').forEach(item => {
-      item.removeEventListener("input", this.handleSuggestionInputValue);
-    })
-
-    document.querySelectorAll('.radio').forEach(item => {
-      item.removeEventListener("select", this.onRadioButtonValueChange);
-    })
 
     document.querySelectorAll('.checkbox').forEach(item => {
       item.removeEventListener("change", this.handleCheckboxValue);
     })
+
+    const senderSuggestionInput = document.getElementById("senderLocationInput");
+    if (senderSuggestionInput) {
+      senderSuggestionInput.removeEventListener("input", this.handleSenderSuggestionInputValue);
+    }
+
+    const receiverSuggestionInput = document.getElementById("receiverLocationInput");
+    if (receiverSuggestionInput) {
+      receiverSuggestionInput.removeEventListener("input", this.handleReceiverSuggestionInputValue);
+    }
+
+    const alternativeSuggestionInput = document.getElementById("alternativeLocationInput");
+    if (alternativeSuggestionInput) {
+      alternativeSuggestionInput.removeEventListener("input", this.handleAlternativeSuggestionInputValue);
+    }
 
     const sendRequestButton = document.getElementById("sendRequestButton");
     if (sendRequestButton) {
@@ -352,6 +612,16 @@ class Package extends React.Component {
 
   componentDidMount() {
     this.addEventListeners();
+
+    const URL = DOMAIN + OFFICES;
+
+    axios.get(URL).then(o => {
+      const officesCity = [...new Set(o.data.map(c => c["city"]))];
+      this.setState({
+        allOfficeCities: officesCity,
+        offices: o.data
+      });
+    })
   }
 
   componentDidUpdate() {
@@ -360,6 +630,8 @@ class Package extends React.Component {
   }
 
   render() {
+    let averagePrice = this.calculatePrice();
+    console.log(this.state);
     return (
       <div className="main-section">
         <ui5-wizard id="request-package-wizard">
@@ -375,7 +647,7 @@ class Package extends React.Component {
               <div id="package-weight">
                 <ui5-title class="sub-title" level="H4">Тегло на пратката:</ui5-title>
                 <ui5-select class="selection" name="packageWeight" id="package-weight-select">
-                  <ui5-option value="5" selected>Под 5кг</ui5-option>
+                  <ui5-option value="3" selected>Под 5кг</ui5-option>
                   <ui5-option value="10">5-15кг</ui5-option>
                   <ui5-option value="16">Над 15кг</ui5-option>
                 </ui5-select>
@@ -436,16 +708,19 @@ class Package extends React.Component {
                 <div className="flex-container-input">
                   <div>
                     <ui5-label for="senderLocationInput" required>Населено място:</ui5-label><br />
-                    <ui5-input class="suggestion-input" id="senderLocationInput" show-suggestions name="senderCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
+                      <ui5-input class="suggestion-input" id="senderLocationInput" show-suggestions name="senderCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
                   </div>
                   {this.state.sentFromOffice === true ?
                     <div className="second-flex-input-item">
                       <ui5-label for="senderAddress" required>Офис:</ui5-label><br />
                       {/* ! ще се взимат офисите от бекенда като са готови */}
-                      <ui5-select class="selection" name="senderAddress">
-                        <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
-                        <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
-                        <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
+                      <ui5-select class="selection" name="senderAddress" placeholder="Choose office">
+                        {/* <ui5-option value="" selected></ui5-option> */}
+                        {this.state.offices.filter(o => o.city === this.state.senderCity).map(o => {
+                          return (
+                            <ui5-option value={o.location}>{o.location}</ui5-option>
+                          )
+                        })}
                       </ui5-select>
                     </div> :
                     <div className="second-flex-input-item">
@@ -515,9 +790,11 @@ class Package extends React.Component {
                     <ui5-label for="receiverAddress" required>Офис:</ui5-label><br />
                     {/* ! ще се взимат офисите от бекенда като са готови */}
                     <ui5-select class="selection" name="receiverAddress">
-                      <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
-                      <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
-                      <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
+                      {this.state.offices.filter(o => o.city === this.state.receiverCity).map(o => {
+                        return (
+                          <ui5-option value={o.location}>{o.location}</ui5-option>
+                        )
+                      })}
                     </ui5-select>
                   </div> :
                   <div className="second-flex-input-item">
@@ -552,9 +829,11 @@ class Package extends React.Component {
                         <ui5-label for="alternativeAddress" required>Офис:</ui5-label><br />
                         {/* ! ще се взимат офисите от бекенда като са готови */}
                         <ui5-select class="selection" name="alternativeAddress">
-                          <ui5-option value="OFIS 1-SERDIKA" selected>Офис 1-Сердика</ui5-option>
-                          <ui5-option value="OFIS 2-MLADOST">Офис 2-Младост</ui5-option>
-                          <ui5-option value="OFIS 3-LYULIN">Офис 3-Люлин</ui5-option>
+                          {this.state.offices.filter(o => o.city === this.state.alternativeCity).map(o => {
+                            return (
+                              <ui5-option value={o.location}>{o.location}</ui5-option>
+                            )
+                          })}
                         </ui5-select>
                       </div> :
                       <div className="second-flex-input-item">
@@ -589,11 +868,11 @@ class Package extends React.Component {
           <ui5-wizard-step id="finalStep" icon="sap-icon://accept" heading="Финализиране на заявката" disabled>
             <div className="step-distance">
               <ui5-title class="step-title">5. Финализиране на заявката:</ui5-title>
-              <ui5-messagestrip id="first-message-strip" type="Warning">Цената не е крайна и подлежи на промяна след измерване теглото на пратката.</ui5-messagestrip>
+              <ui5-messagestrip id="first-message-strip" type="Warning">Цената не е крайна и подлежи на промяна след измерване теглото на пратката (0.30лв/кг).</ui5-messagestrip>
               <ui5-messagestrip class="message-strip" type="Information">Заплащането се извършва на място (на куриер или в офис).</ui5-messagestrip>
               <span className="final-price-span">
                 <ui5-title class="sub-title" level="H4">Ориентировъчна цена:</ui5-title>
-                <ui5-title class="sub-title" id="final-price" level="H4"> 00.00лв.</ui5-title>
+                <ui5-title class="sub-title" id="final-price" level="H4"> {averagePrice}лв.</ui5-title>
               </span>
               <ui5-title class="sub-title" level="H4">Начин на плащане:</ui5-title>
               <ui5-select class="selection" name="paymentMethod" id="payment-select">
