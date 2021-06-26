@@ -30,7 +30,8 @@
     width: 41.5rem;
 }
 
-#senderLocationInput, #receiverLocationInput, #alternativeLocationInput {
+#senderLocationInput, #receiverLocationInput,
+ #alternativeLocationInput {
     width: 15rem;
 }
 
