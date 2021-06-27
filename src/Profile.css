@@ -1,7 +1,10 @@
 .profile-wrapper {
     font-size: 30px;
+    display: inline-block;
+    padding: 48px;
+    width: 50%;
 }
 
-.content {
-    padding: 20px;
+.profile-wrapper .content {
+    padding: 40px;
 } 

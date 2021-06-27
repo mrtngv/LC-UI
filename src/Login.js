@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import "./Login.css";
-import image from './images/login-logistic.jpg'; 
+import image from './images/login-logistic.jpg';
 
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";

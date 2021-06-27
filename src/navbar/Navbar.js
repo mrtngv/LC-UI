@@ -11,17 +11,18 @@ class Navbar extends React.Component {
     this.onNavbarSelect = this.onNavbarSelect.bind(this);
     this.onLogin = this.onLogin.bind(this);
     this.onLogout = this.onLogout.bind(this);
+    this.navigationBarMobile = this.navigationBarMobile.bind(this);
 }
 
-  onNavbarSelect(event) {
-    const newRoute = event.detail.item.id;
-    this.props.history.push(('/' + newRoute));
-  }
+onNavbarSelect(event) {
+  const newRoute = event.detail.item.id;
+  this.props.history.push(('/' + newRoute));
+}
 
-  onSidebarCollapse() {
-    const sidenav = document.getElementById('side-navigation');
-    sidenav.collapsed = !sidenav.collapsed;
-  }
+onSidebarCollapse() {
+  const sidenav = document.getElementById('side-navigation');
+  sidenav.collapsed = !sidenav.collapsed;
+}
 
 onLogin() {
   this.props.history.push(('/login'));
@@ -50,6 +51,7 @@ addEventListeners() {
 
 componentDidMount() {
   this.addEventListeners();
+  this.navigationBarMobile();
     try {
       const role = JSON.parse(sessionStorage.getItem('user')).role;
       this.setState({
@@ -57,6 +59,13 @@ componentDidMount() {
       })
     }
     catch (e) {}
+}
+
+navigationBarMobile() {
+  if (window.innerWidth < 1024) {
+    const sidenav = document.getElementById('side-navigation');
+    sidenav.collapsed = true;
+  }
 }
 
   render() {
@@ -74,7 +83,7 @@ componentDidMount() {
 
         </ui5-shellbar>
         <div className="sidenav">
-          <ui5-side-navigation id="side-navigation">
+          <ui5-side-navigation id="side-navigation" colapsed="false">
               { user ? null : <ui5-side-navigation-item text="Вход/Регистрация" icon="sap-icon://customer" id="login"></ui5-side-navigation-item>}
               {this.state.role !=="NO_ROLE"?
               <ui5-side-navigation-item text="Всички пратки" icon="sap-icon://product" id="package/all"></ui5-side-navigation-item>:null}

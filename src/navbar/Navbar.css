@@ -6,3 +6,15 @@ body {
     display: inline;
     float: left;
 }
+
+#side-navigation {
+    height: 220px;
+}
+
+@media only screen and (max-width: 767px) {
+    #side-navigation {
+        position: absolute;
+        top: 45px;
+        z-index: 1;
+    }
+}
