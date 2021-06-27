@@ -25,6 +25,10 @@ ui5-flexible-column-layout#fcl {
     display: flex;
 }
 
+.first-information-child {
+    padding-right: 2rem;
+}
+
 .information-row {
     padding-top: 1px;
 }

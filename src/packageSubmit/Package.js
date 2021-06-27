@@ -469,7 +469,7 @@ class Package extends React.Component {
     //   "isFirm": false,
     //   "firmName": "",
     //   "senderTelephoneNumber": "0887898989",
-    //   "senderEmail": "kati@mail.bg",
+    //   "senderEmail": this.state.senderEmail,
     //   "fromCity": this.state.senderCity,
     //   "toFirm": false,//this.state.isReceiverFirm,
     //   "fromAddress": this.state.senderAddress,
@@ -500,7 +500,41 @@ class Package extends React.Component {
   }
 
   declineRequest() {
-    console.log(this.state.senderFirmName + this.state.senderLastName);
+    this.setState({
+      senderFirstName: "",
+      senderLastName: "",
+      isSenderFirm: false,
+      senderFirmName: "",
+      senderPhone: "",
+      senderEmail: "",
+      senderCity: "",
+      senderAddress: "",
+      sentFromOffice: false,
+      receiverFirstName: "",
+      receiverLastName: "",
+      isReceiverFirm: false,
+      receiverFirmName: "",
+      receiverPhone: "",
+      receiverEmail: "",
+      receiverCity: "",
+      receiverAddress: "",
+      sentToOffice: false,
+      packageType: "DOCUMENTS",
+      packageWeight: 3,
+      isFragile: false,
+      returnToOffice: true,
+      ifDeliveryImpossible: "RETURN TO OFFICE",
+      alternativeCity: "",
+      alternativeAddress: "",
+      requestComment: "",
+      paymentMethod: "CASH",
+      requestDate: this.getTodayDate(),
+      deliveryDate: this.getTodayDate(),
+      allOfficeCities: [],
+      offices: [],
+      loggedUserEmail: ""
+    });
+    window.location.reload();
   }
 
   addEventListeners() {
@@ -845,7 +879,8 @@ class Package extends React.Component {
                 <ui5-checkbox class="checkbox" id="is-fragile" name="isFragile" text="Чупливо съдържание" ></ui5-checkbox><br />
                 <ui5-checkbox class="checkbox" id="email-notif" name="emailNotifications" text="Искам да получавам имейл известия за статуса на пратката" checked ></ui5-checkbox><br />
                 <ui5-label for="orderComment">Коментар към заявката:</ui5-label><br />
-                <ui5-textarea class="input" id="orderComment" name="requestComment" placeholder="Напр. номер на звънец, указания за доставка..."></ui5-textarea><br />
+                <ui5-textarea class="input" id="orderComment" name="requestComment" maxlength="50" show-exceeded-text
+                placeholder="Напр. номер на звънец, указания за доставка..."></ui5-textarea><br />
                 <div className="flex-container-input">
                   <div>
                     <ui5-title class="sub-title" level="H4">Дата на изпращане:</ui5-title>

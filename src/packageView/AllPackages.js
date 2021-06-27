@@ -25,7 +25,7 @@ class AllPackages extends React.Component {
         super(props);
         this.state = {
             packages: [],
-            selectedPackageId: "1",
+            selectedPackageId: 1,
             role: ""
         };
         this.onPackageDetailsClose = this.onPackageDetailsClose.bind(this);
@@ -55,137 +55,221 @@ class AllPackages extends React.Component {
 
     removeEventListeners() {
         const packageList = document.getElementById('packageList');
-        packageList.removeEventListener("item-click", this.onPackageListSelect);
+        if (packageList) {
+            packageList.removeEventListener("item-click", this.onPackageListSelect);
+        }
+    }
+
+    componentDidUpdate() {
+        this.removeEventListeners();
+        this.addEventListeners();
     }
 
     componentDidMount() {
         this.addEventListeners();
         const URL = DOMAIN + "api/packages";
-        //const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
-        axios.get(URL).then(p => {
-            this.setState({
-                packages: p.data
-            });
-        })
 
-        try {
-            const role = JSON.parse(sessionStorage.getItem('user')).role;
-            this.setState({
-                role: role
+        const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
+
+        if (accessToken) {
+
+            axios.get(URL, {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            }).then(p => {
+                this.setState({
+                    packages: p.data
+                });
+
+                if (this.state.packages.length !== 0) {
+                    this.setState({
+                        selectedPackageId: this.state.packages[0].id
+                    })
+                }
             })
+
+            try {
+                const role = JSON.parse(sessionStorage.getItem('user')).role;
+                this.setState({
+                    role: role
+                })
+            }
+            catch (e) { }
+
         }
-        catch (e) { }
+
+
     }
 
-    // componentDidUpdate() {
-    //     this.removeEventListeners();
-    //     this.addEventListeners();
-    // }
 
     render() {
         const Package = this.state.packages.find(d => d.id == this.state.selectedPackageId);
         return (
             <div className="packages-view-container">
-                <div className="packages-view-table">
-                    <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
-                        <div slot="startColumn">
-                            <ui5-list id="packageList" header-text="Пратки">
-                                {this.state.packages.map(m => {
-                                    return (
-                                        <div>
-                                            <ui5-li data-id={m.id} icon="navigation-right-arrow" icon-end description={"Id: " + m.id} info={m.ePackageStatus} info-state="Success">{m.senderFirstName + " " + m.senderLastName}</ui5-li>
-                                        </div>
-                                    )
-                                })}
-
-                            </ui5-list>
-                        </div>
-                        {Package ?
-                            <div slot="midColumn">
-                                <div class="colHeader">
-                                    {this.state.role !== "ROLE_CLIENT" ?
-                                        <ui5-bar>
-                                            <ui5-button design="Positive" slot="endContent">Промени</ui5-button>
-                                            <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
-                                            <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
-                                        </ui5-bar> :
-                                        <ui5-bar>
-                                            <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
-                                        </ui5-bar>}
-                                </div>
-                                <ui5-timeline>
-                                    <ui5-timeline-item id="test-item" icon="person-placeholder" item-name="Потребителски данни:">
-                                        <div className="information-container">
-                                            <div className="information-row">
-                                                <div className="information-item">Пратено От:</div> &nbsp;&nbsp;&nbsp;
-                                                <span> 
-                                                    {Package.firm && <b>{Package.firmName},  </b>}
-                                                    <b>{Package.senderFirstName} </b>
-                                                    <b>{Package.senderLastName}</b>
-                                                </span>
+                {this.state.packages.length !== 0 ?
+                    <div className="packages-view-table">
+                        <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
+                            <div slot="startColumn">
+                                <ui5-list id="packageList" header-text="Пратки">
+                                    {this.state.packages.map(m => {
+                                        return (
+                                            <div>
+                                                <ui5-li data-id={m.id} icon="navigation-right-arrow"
+                                                    icon-end description={"Получател: " + m.receiverFirstName + " " + m.receiverLastName}
+                                                    info={m.ePackageStatus} info-state="Success">{m.senderFirstName + " " + m.senderLastName}</ui5-li>
                                             </div>
-                                            <div className="information-row">
-                                                <div className="information-item">От Адрес:</div> &nbsp;&nbsp;&nbsp;
-                                                <span><b>{Package.fromAddress}</b></span>
-                                            </div>
-                                        </div>
-                                        <div className="information-row">
-                                            <div className="information-item">Пратено От:</div> &nbsp;&nbsp;&nbsp;
-                                            <span>
-                                                <b>{Package.senderFirstName} </b>
-                                                <b>{Package.senderLastName}</b>
-                                            </span>
-                                        </div>
-                                        <div className="information-row">
-                                            <div className="information-item">От Адрес:</div> &nbsp;&nbsp;&nbsp;
-                                            <span><b>{Package.fromAddress}</b></span>
-                                        </div>
-                                        <div className="information-row">
-                                            <div className="information-item">Пратено До:</div> &nbsp;&nbsp;&nbsp;
-                                            <span>
-                                                <b>{Package.receiverFirstName} </b>
-                                                <b>{Package.receiverLastName}</b>
-                                            </span>
-                                        </div>
-                                    </ui5-timeline-item>
-                                    <ui5-timeline-item id="test-item" icon="locate-me" item-name="Данни за Доставка:">
-                                        <div className="information-row">
-                                            <div className="information-item">Доставка до:</div> &nbsp;&nbsp;&nbsp;
-                                            <span><b>Адрес: </b>&nbsp;{Package.toAddress}</span>
-                                        </div>
-                                        <div className="information-row">
-                                            <div className="information-item">Доставка от Куриер:</div> &nbsp;&nbsp;&nbsp;
-                                            {/* <span><b>{Package.deliveredByName}</b>&nbsp; Тел. {Package.deliveredByPhone}</span> */}
-                                        </div>
-                                    </ui5-timeline-item>
+                                        )
+                                    })}
 
-                                    <ui5-timeline-item id="test-item" icon="tags" item-name="Допълнителна информация към пратката:">
-                                        <div className="information-row">
-                                            <div className="information-item">Тип:</div> &nbsp;&nbsp;&nbsp;
-                                            <span><b>{Package.ePackageType}</b></span>
-                                        </div>
-                                        <div className="information-row">
-                                            <div className="information-item">Тегло:</div> &nbsp;&nbsp;&nbsp;
-                                            <span><b>{Package.weight}</b></span>
-                                        </div>
-                                        <div className="information-row">
-                                            {/* <ui5-badge color-scheme="8">solution provided 8</ui5-badge> */}
-                                            <ui5-badge color-scheme="9">Чупливи предмети</ui5-badge>
-                                        </div>
-                                    </ui5-timeline-item>
-                                    <ui5-timeline-item title-text="Статус на Пратката" subtitle-text={"Обработена на " + Package.dateOfRegistration} icon="calendar">
-                                        <div className="information-row">
-                                            <div className="information-item">Очаквана дата за Вземане/Доставка:</div> &nbsp;&nbsp;&nbsp;
-                                            <span><b>{Package.dateOfDelivery}</b></span>
-                                        </div>
-                                        <ui5-badge color-scheme="6">
-                                            <ui5-icon name="accept" slot="icon"></ui5-icon>Доставена
-                                        </ui5-badge>
-                                    </ui5-timeline-item>
-                                </ui5-timeline>
-                            </div> : null}
-                    </ui5-flexible-column-layout>
-                </div>
+                                </ui5-list>
+                            </div>
+                            {Package ?
+                                <div slot="midColumn">
+                                    <div class="colHeader">
+                                        {this.state.role !== "ROLE_CLIENT" ?
+                                            <ui5-bar>
+                                                <ui5-button design="Positive" slot="endContent">Промени</ui5-button>
+                                                <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
+                                                <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
+                                            </ui5-bar> :
+                                            <ui5-bar>
+                                                <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
+                                            </ui5-bar>}
+                                    </div>
+                                    <ui5-timeline>
+                                        <ui5-timeline-item id="test-item" icon="person-placeholder" item-name="Потребителски данни:">
+                                            <div className="information-container">
+                                                <div className="first-information-child">
+                                                    <div className="information-row">
+                                                        <div className="information-item">Пратено От:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>
+                                                            {Package.firm && <b>{Package.firmName},  </b>}
+                                                            <b>{Package.senderFirstName} </b>
+                                                            <b>{Package.senderLastName}</b>
+                                                        </span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">От Адрес:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>
+                                                            {Package.fromOffice && <b>ОФИС: </b>}
+                                                            <b>{Package.fromCity}  {Package.fromAddress}</b>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Телефон:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.senderTelephoneNumber}</b></span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Имейл:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.senderEmail}</b></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ui5-timeline-item>
+
+                                        <ui5-timeline-item id="test-item" icon="locate-me" item-name="Данни за Доставка:">
+                                            <div className="information-container">
+                                                <div className="first-information-child">
+                                                    <div className="information-row">
+                                                        <div className="information-item">Пратено До:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>
+                                                            {Package.toFirm && <b>{Package.toFirmName},  </b>}
+                                                            <b>{Package.receiverFirstName} </b>
+                                                            <b>{Package.receiverLastName}</b>
+                                                        </span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Доставка до:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>
+                                                            {Package.toOffice && <b>ОФИС: </b>}
+                                                            <b>{Package.toCity}  {Package.toAddress}</b>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Телефон:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.receiverTelephoneNumber}</b></span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Имейл:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>{Package.receiverEmail !== "" ? <b>{Package.receiverEmail}</b>
+                                                            : <b>Няма въведен имейл</b>}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ui5-timeline-item>
+
+                                        <ui5-timeline-item id="test-item" icon="tags" item-name="Допълнителна информация към пратката:">
+                                            <div className="information-container">
+                                                <div className="first-information-child">
+                                                    <div className="information-row">
+                                                        <div className="information-item">Коментар:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>{Package.comment !== "" ? <b>{Package.comment}</b>
+                                                            : <b>Няма коментар към пратката</b>}</span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Алтернативен адрес:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span>
+                                                            {Package.returnToOffice && <b>ОФИС: </b>}
+                                                            <b>{Package.alternativeCity}  {Package.returnLocation}</b>
+                                                        </span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        {Package.fragile && <ui5-badge color-scheme="9">Чупливи предмети</ui5-badge>}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Тип:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.ePackageType}</b></span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Тегло:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.weight}</b></span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Цена:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.price}лв.</b></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ui5-timeline-item>
+
+                                        <ui5-timeline-item title-text="Статус на Пратката"
+                                            subtitle-text={Package.dateOfRegistration !== null ?
+                                                ("Обработена на " + Package.dateOfRegistration.slice(0, 10)) : "Непотвърдена"} icon="calendar">
+                                            <div className="information-container">
+                                                <div className="first-information-child">
+                                                    <div className="information-row">
+                                                        <div className="information-item">Дата на заявяване:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.dateOfRequest.slice(0, 10)}</b></span>
+                                                    </div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Дата на изпращане:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.dateOfSending}</b></span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div className="information-row">
+                                                        <div className="information-item">Очаквана дата за вземане/доставка:</div> &nbsp;&nbsp;&nbsp;
+                                                        <span><b>{Package.dateOfDelivery}</b></span>
+                                                    </div>
+                                                    <ui5-badge color-scheme="6">
+                                                        <ui5-icon name="accept" slot="icon"></ui5-icon>{Package.ePackageStatus}
+                                                    </ui5-badge>
+                                                </div>
+                                            </div>
+                                        </ui5-timeline-item>
+                                    </ui5-timeline>
+                                </div> : null}
+                        </ui5-flexible-column-layout>
+                    </div> :
+                    <ui5-messagestrip type="Information" no-close-button>Все още нямате пратки :(</ui5-messagestrip>
+                }
             </div>
         )
     }
