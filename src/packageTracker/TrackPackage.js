@@ -125,8 +125,9 @@ class TrackPackage extends React.Component {
                     </ui5-card>
 
                     <div id="package-info">
-                        <div className="package-header">
-                            <span>Информация за пратка</span>
+                        <div className="package-header-wrapper">
+                            <span class="package-header">Информация за пратка</span>
+                            <ui5-button id="edit-package" data-layout-span="XL9" design="Emphasized" >Редактирай пратка</ui5-button>
                         </div>
 
                         <ui5-table class="package-table" id="table">

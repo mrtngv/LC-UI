@@ -32,11 +32,16 @@
     margin-top: 40px;
 }
 
-.package-header {
+.package-header-wrapper {
     font-size: 20px;
     font-family: Verdana, sans-serif;
     padding-left: 10px;
+    line-height: 40px;
 }
+
+.package-header {
+    vertical-align: super;
+} 
 
 .package-table {
     font-size: 10px;
@@ -59,6 +64,14 @@
     .track-package-container img {
         display: none;
     }
+
+    .package-header {
+        display: block;
+    }
+
+    #edit-package {
+        margin-top: 20px;
+    }
 }
 
 @media only screen and (min-width: 768px) {
@@ -73,6 +86,14 @@
     .track-package-container img {
         width: 25%;
         vertical-align: baseline;
+    }
+
+    .package-header {
+        display: inline-block;
+    }
+
+    #edit-package {
+        float: right;
     }
 }
 
