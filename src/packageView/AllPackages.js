@@ -17,12 +17,14 @@ import "@ui5/webcomponents/dist/TableColumn.js";
 import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js"
 import "@ui5/webcomponents/dist/Badge";
+import Package from '../packageSubmit/Package';
 
 class AllPackages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             packages: [],
+            filteredPackages: [],
             selectedPackageId: 1,
             role: "",
             fromDate: "",
@@ -33,7 +35,7 @@ class AllPackages extends React.Component {
         this.onPackageDetailsClose = this.onPackageDetailsClose.bind(this);
         this.onPackageListSelect = this.onPackageListSelect.bind(this);
         this.onFilter = this.onFilter.bind(this);
-        this.onFilterClear = this.onFilterClear(this);
+        this.onFilterClear = this.onFilterClear.bind(this);
     }
 
     handleInputValue(event) {
@@ -56,12 +58,29 @@ class AllPackages extends React.Component {
         })
     }
 
-    onFilter(){
-         
+    onFilter() {
+        let filter = this.state.filteredPackages;
+        if (this.state.filterInput !== "") {
+            filter = filter.filter(p => p.senderFirstName === this.state.filterInput
+                || p.senderLastName === this.state.filterInput || p.receiverFirstName === this.state.filterInput
+                || p.receiverLastName === this.state.filterInput || p.senderTelephoneNumber === this.state.filterInput
+                || p.receiverTelephoneNumber === this.state.filterInput || p.senderEmail === this.state.filterInput
+                || p.receiverEmail === this.state.filterInput || p.fromAddress === this.state.filterInput
+                || p.fromCity === this.state.filterInput || p.toAddress === this.state.filterInput || p.toCity === this.state.filterInput);
+        }
+        this.setState({
+            filteredPackages: filter
+        })
     }
 
-    onFilterClear(){
-
+    onFilterClear() {
+        console.log("CLEAR");
+        this.setState({
+            filteredPackages: this.state.packages,
+            filterInput: "",
+            toDate: "",
+            fromDate: ""
+        });
     }
 
     addEventListeners() {
@@ -77,8 +96,14 @@ class AllPackages extends React.Component {
 
         const filterButton = document.getElementById('filter-search-button');
         if (filterButton) {
-            filterButton.addEventListener("click", this.onFilter());
+            filterButton.addEventListener("click", this.onFilter);
         }
+
+        // const clearButton = document.getElementById('filter-clear-button');
+        // if (clearButton) {
+        //     clearButton.addEventListener("click", this.onFilterClear);
+        //     console.log("listener added")
+        // }
     }
 
     removeEventListeners() {
@@ -93,8 +118,13 @@ class AllPackages extends React.Component {
 
         const filterButton = document.getElementById('filter-search-button');
         if (filterButton) {
-            filterButton.removeEventListener("click", this.onFilter());
+            filterButton.removeEventListener("click", this.onFilter);
         }
+
+        // const clearButton = document.getElementById('filter-clear-button');
+        // if (clearButton) {
+        //     clearButton.removeEventListener("click", this.onFilterClear);
+        // }
     }
 
     componentDidUpdate() {
@@ -116,12 +146,13 @@ class AllPackages extends React.Component {
                 }
             }).then(p => {
                 this.setState({
-                    packages: p.data
+                    packages: p.data,
+                    filteredPackages: p.data
                 });
 
-                if (this.state.packages.length !== 0) {
+                if (this.state.filteredPackages.length !== 0) {
                     this.setState({
-                        selectedPackageId: this.state.packages[0].id
+                        selectedPackageId: this.state.filteredPackages[0].id
                     })
                 }
             })
@@ -141,27 +172,27 @@ class AllPackages extends React.Component {
 
 
     render() {
-        const Package = this.state.packages.find(d => d.id == this.state.selectedPackageId);
+        const Package = this.state.filteredPackages.find(d => d.id == this.state.selectedPackageId);
         return (
             <div className="packages-view-container">
-                {this.state.packages.length !== 0 ?
+                {this.state.filteredPackages.length !== 0 ?
                     <div className="packages-view-table">
                         {this.state.role !== "ROLE_CLIENT" &&
                             <div className="filter-container">
                                 <ui5-title level="H4">Филтър</ui5-title>
                                 <div className="filter-contents">
-                                    <ui5-input class="input" name="filterInput" value="" placeholder="Подател, получател, офис, адрес"></ui5-input>
-                                    <ui5-date-picker class="input" format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
-                                    <ui5-date-picker class="input" format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
+                                    <ui5-input class="input" name="filterInput" value={this.state.filterInput} placeholder="Име, телефон, имейл, офис, адрес"></ui5-input>
+                                    <ui5-date-picker class="input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
+                                    <ui5-date-picker class="input" value={this.state.toDate} format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
                                     <ui5-button id="filter-search-button">Търси</ui5-button>
-                                    <ui5-button id="filter-clear-button">Изчисти</ui5-button>
+                                    <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
                                 </div>
                             </div>
                         }
                         <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
                             <div slot="startColumn">
                                 <ui5-list id="packageList" header-text="Пратки">
-                                    {this.state.packages.map(m => {
+                                    {this.state.filteredPackages.map(m => {
                                         return (
                                             <div>
                                                 <ui5-li data-id={m.id} icon="navigation-right-arrow"
