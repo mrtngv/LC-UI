@@ -61,12 +61,23 @@ class Package extends React.Component {
       deliveryDate: this.getTodayDate(),
       allOfficeCities: [],
       offices: [],
-      loggedUserEmail: ""
+      loggedUserEmail: "",
+      isCashOnDelivery: false,
+      cashOnDelivery: 0,
+      returnCashToOffice: true,
+      returnCash: "OFFICE",
+      IBAN: "",
+      BIC: "",
+      bank: "",
+      bankAccountOwner: "",
+      returnCashCity: "",
+      returnCashAddress: ""
     };
     this.handleInputValue = this.handleInputValue.bind(this);
     this.handleSenderSuggestionInputValue = this.handleSenderSuggestionInputValue.bind(this);
     this.handleReceiverSuggestionInputValue = this.handleReceiverSuggestionInputValue.bind(this);
     this.handleAlternativeSuggestionInputValue = this.handleAlternativeSuggestionInputValue.bind(this);
+    this.handleCashReturnSuggestionInputValue = this.handleCashReturnSuggestionInputValue.bind(this);
     this.handleSelectionValue = this.handleSelectionValue.bind(this);
     this.handleCheckboxValue = this.handleCheckboxValue.bind(this);
     this.onRequestSend = this.onRequestSend.bind(this);
@@ -334,6 +345,83 @@ class Package extends React.Component {
     }
   }
 
+  handleCashReturnSuggestionInputValue(event) {
+    const isChecked = this.state.returnCashToOffice;
+
+    if (isChecked) {
+      let city_database_entries = this.state.allOfficeCities;
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      const locationa = this.state.offices.find(o => o.city === event.target.value);
+      if (locationa) {
+
+        this.setState({
+          [event.target.name]: event.target.value,
+          returnCashAddress: locationa.location
+        });
+      } else {
+        this.setState({
+          [event.target.name]: event.target.value,
+        });
+      }
+
+    }
+
+    else {
+
+      let city_database_entries = ["Благоевград", "Бургас", "Варна", "Велико Търново", "Видин", "Враца", "Габрово", "Добрич",
+        "Кърджали", "Кюстендил", "Ловеч", "Монтана", "Пазарджик", "Перник", "Плевен", "Пловдив", "Разград", "Русе", "Силистра",
+        "Сливен", "Смолян", "София-град", "София-област", "Стара Загора", "Търговище", "Хасково", "Шумен", "Ямбол"];
+
+      const value = event.target.value;
+
+      var suggestionItems = [];
+
+
+      if (value) {
+        suggestionItems = city_database_entries.filter(item => {
+          return item.toUpperCase().indexOf(value.toUpperCase()) === 0;
+        });
+      }
+
+      [].slice.call(event.target.children).forEach(child => {
+        event.target.removeChild(child);
+      });
+
+      suggestionItems.forEach(item => {
+        var li = document.createElement("ui5-suggestion-item");
+        li.icon = "world";
+        li.text = item;
+        event.target.appendChild(li);
+      });
+
+      this.setState({
+        [event.target.name]: event.target.value
+      });
+    }
+  }
+
   handleSelectionValue(event) {
     if (event.target.name === "ifDeliveryImpossible") {
       if (event.target.selectedOption.value === "RETURN TO ADDRESS") {
@@ -347,6 +435,27 @@ class Package extends React.Component {
         this.setState({
           returnToOffice: false
         });
+      }
+    }
+
+    if (event.target.name === "returnCash") {
+      if (event.target.selectedOption.value === "SENDER ADDRESS") {
+        console.log("im in if")
+        this.setState({
+          returnCashToOffice: false,
+          returnCashCity: this.state.senderCity,
+          returnCashAddress: this.state.senderAddress
+        });
+      }
+      else if (event.target.selectedOption.value === "ANOTHER ADDRESS" || event.target.selectedOption.value === "BANK") {
+        this.setState({
+          returnCashToOffice: false
+        });
+      }
+      else {
+        this.setState({
+          returnCashToOffice: true
+        })
       }
     }
     this.setState({
@@ -421,7 +530,7 @@ class Package extends React.Component {
   }
 
   onRequestSend() {
-    const url = 'http://localhost:8080/api/packages';
+    const url = DOMAIN + 'api/packages';
 
     try {
       const email = JSON.parse(sessionStorage.getItem('user')).email;
@@ -429,7 +538,7 @@ class Package extends React.Component {
         loggedUserEmail: email
       })
     }
-    catch (e) {}
+    catch (e) { }
 
     const packageDetails = {
       "senderFirstName": this.state.senderFirstName,
@@ -494,9 +603,24 @@ class Package extends React.Component {
     //   "dateOfSending": this.state.requestDate
     // }
 
-    axios.post(url, packageDetails).then(res => {
-      this.props.history.push("/");
-    });
+    const user = sessionStorage.getItem('user');
+
+    if (user) {
+      console.log("Posting with token")
+      const token = JSON.parse(sessionStorage.getItem('user')).accessToken;
+      axios.post(url, packageDetails, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      }).then(res => {
+        this.props.history.push("/");
+      });
+    }
+    else {
+      axios.post(url, packageDetails).then(res => {
+        this.props.history.push("/");
+      });
+    }
   }
 
   declineRequest() {
@@ -571,12 +695,6 @@ class Package extends React.Component {
       item.addEventListener("change", this.handleInputValue);
     })
 
-    document.querySelectorAll("ui5-messagestrip").forEach(messageStrip => {
-      messageStrip.addEventListener("close", () => {
-        messageStrip.parentNode.removeChild(messageStrip);
-      });
-    });
-
     const senderSuggestionInput = document.getElementById("senderLocationInput");
     if (senderSuggestionInput) {
       senderSuggestionInput.addEventListener("input", this.handleSenderSuggestionInputValue);
@@ -590,6 +708,11 @@ class Package extends React.Component {
     const alternativeSuggestionInput = document.getElementById("alternativeLocationInput");
     if (alternativeSuggestionInput) {
       alternativeSuggestionInput.addEventListener("input", this.handleAlternativeSuggestionInputValue);
+    }
+
+    const returnCashSuggestionInput = document.getElementById("returnCashLocationInput");
+    if (returnCashSuggestionInput) {
+      returnCashSuggestionInput.addEventListener("input", this.handleCashReturnSuggestionInputValue);
     }
 
 
@@ -631,6 +754,11 @@ class Package extends React.Component {
     const alternativeSuggestionInput = document.getElementById("alternativeLocationInput");
     if (alternativeSuggestionInput) {
       alternativeSuggestionInput.removeEventListener("input", this.handleAlternativeSuggestionInputValue);
+    }
+
+    const returnCashSuggestionInput = document.getElementById("returnCashLocationInput");
+    if (returnCashSuggestionInput) {
+      returnCashSuggestionInput.removeEventListener("input", this.handleCashReturnSuggestionInputValue);
     }
 
     const sendRequestButton = document.getElementById("sendRequestButton");
@@ -742,13 +870,12 @@ class Package extends React.Component {
                 <div className="flex-container-input">
                   <div>
                     <ui5-label for="senderLocationInput" required>Населено място:</ui5-label><br />
-                      <ui5-input class="suggestion-input" id="senderLocationInput" show-suggestions name="senderCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
+                    <ui5-input class="suggestion-input" id="senderLocationInput" show-suggestions name="senderCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
                   </div>
                   {this.state.sentFromOffice === true ?
                     <div className="second-flex-input-item">
                       <ui5-label for="senderAddress" required>Офис:</ui5-label><br />
-                      {/* ! ще се взимат офисите от бекенда като са готови */}
-                      <ui5-select class="selection" name="senderAddress" placeholder="Choose office">
+                      <ui5-select class="selection" name="senderAddress" placeholder="Choose office" id="sender-office-select">
                         {/* <ui5-option value="" selected></ui5-option> */}
                         {this.state.offices.filter(o => o.city === this.state.senderCity).map(o => {
                           return (
@@ -823,7 +950,7 @@ class Package extends React.Component {
                   <div className="second-flex-input-item">
                     <ui5-label for="receiverAddress" required>Офис:</ui5-label><br />
                     {/* ! ще се взимат офисите от бекенда като са готови */}
-                    <ui5-select class="selection" name="receiverAddress">
+                    <ui5-select class="selection" name="receiverAddress" id="receiver-office-select">
                       {this.state.offices.filter(o => o.city === this.state.receiverCity).map(o => {
                         return (
                           <ui5-option value={o.location}>{o.location}</ui5-option>
@@ -862,7 +989,7 @@ class Package extends React.Component {
                       <div className="second-flex-input-item">
                         <ui5-label for="alternativeAddress" required>Офис:</ui5-label><br />
                         {/* ! ще се взимат офисите от бекенда като са готови */}
-                        <ui5-select class="selection" name="alternativeAddress">
+                        <ui5-select class="selection" name="alternativeAddress" id="alternative-office-select">
                           {this.state.offices.filter(o => o.city === this.state.alternativeCity).map(o => {
                             return (
                               <ui5-option value={o.location}>{o.location}</ui5-option>
@@ -880,7 +1007,7 @@ class Package extends React.Component {
                 <ui5-checkbox class="checkbox" id="email-notif" name="emailNotifications" text="Искам да получавам имейл известия за статуса на пратката" checked ></ui5-checkbox><br />
                 <ui5-label for="orderComment">Коментар към заявката:</ui5-label><br />
                 <ui5-textarea class="input" id="orderComment" name="requestComment" maxlength="50" show-exceeded-text
-                placeholder="Напр. номер на звънец, указания за доставка..."></ui5-textarea><br />
+                  placeholder="Напр. номер на звънец, указания за доставка..."></ui5-textarea><br />
                 <div className="flex-container-input">
                   <div>
                     <ui5-title class="sub-title" level="H4">Дата на изпращане:</ui5-title>
@@ -903,18 +1030,86 @@ class Package extends React.Component {
           <ui5-wizard-step id="finalStep" icon="sap-icon://accept" heading="Финализиране на заявката" disabled>
             <div className="step-distance">
               <ui5-title class="step-title">5. Финализиране на заявката:</ui5-title>
-              <ui5-messagestrip id="first-message-strip" type="Warning">Цената не е крайна и подлежи на промяна след измерване теглото на пратката (0.30лв/кг).</ui5-messagestrip>
-              <ui5-messagestrip class="message-strip" type="Information">Заплащането се извършва на място (на куриер или в офис).</ui5-messagestrip>
+              <ui5-messagestrip id="first-message-strip" type="Warning" no-close-button>Цената не е крайна и подлежи на промяна след измерване теглото на пратката (0.30лв/кг).</ui5-messagestrip>
+              <ui5-messagestrip class="message-strip" type="Information" no-close-button>Заплащането се извършва на място (на куриер или в офис).</ui5-messagestrip>
               <span className="final-price-span">
-                <ui5-title class="sub-title" level="H4">Ориентировъчна цена:</ui5-title>
-                <ui5-title class="sub-title" id="final-price" level="H4"> {averagePrice}лв.</ui5-title>
+                <ui5-title class="sub-title" level="H4">Ориентировъчна цена за доставка:</ui5-title>
+                <ui5-title class="sub-title" id="final-price" level="H4"> {averagePrice}лв.</ui5-title><br />
               </span>
               <ui5-title class="sub-title" level="H4">Начин на плащане:</ui5-title>
               <ui5-select class="selection" name="paymentMethod" id="payment-select">
-                <ui5-option value="CASH" icon="sap-icon://money-bills" selected>Наложен платеж</ui5-option>
+                <ui5-option value="CASH" icon="sap-icon://money-bills" selected>В брой</ui5-option>
                 <ui5-option value="CARD" icon="sap-icon://credit-card">Карта</ui5-option>
                 <ui5-option value="RECEIVER_CASH" icon="sap-icon://customer-and-supplier">Цената се поема от получателя</ui5-option>
               </ui5-select><br />
+              <ui5-checkbox class="checkbox" id="cash-on-delivery-checkbox" name="isCashOnDelivery" text="Наложен платеж"></ui5-checkbox><br />
+              {this.state.isCashOnDelivery &&
+                <div>
+                  <div className="flex-container-input">
+                    <div>
+                      <ui5-title level="H4" class="sub-title">Сума за изплащане:</ui5-title>
+                      <ui5-input class="input" name="cashOnDelivery" placeholder="" required></ui5-input><br />
+                    </div>
+                    <div className="second-flex-input-item">
+                      <ui5-title class="sub-title" level="H4">Къде да изплатим наложения платеж?</ui5-title>
+                      <ui5-select class="selection" name="returnCash" id="receive-cash-select">
+                        <ui5-option value="OFFICE" selected>До наш офис</ui5-option>
+                        <ui5-option value="SENDER ADDRESS" >До адрес на подателя</ui5-option>
+                        <ui5-option value="ANOTHER ADDRESS">До друг адрес</ui5-option>
+                        <ui5-option value="BANK">По банков път</ui5-option>
+                      </ui5-select><br />
+                    </div>
+                  </div>
+                  {(this.state.returnCash === "ANOTHER ADDRESS" || this.state.returnCash === "OFFICE") &&
+                    <div className="flex-container-input">
+                      <div>
+                        <ui5-label for="returnCashLocationInput" required>Населено място:</ui5-label><br />
+                        <ui5-input class="suggestion-input" id="returnCashLocationInput" show-suggestions name="returnCashCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
+                      </div>
+                      {this.state.returnCashToOffice === true ?
+                        <div className="second-flex-input-item">
+                          <ui5-label for="returnCashAddress" required>Офис:</ui5-label><br />
+                          <ui5-select class="selection" name="returnCashAddress" id="return-cash-office-select">
+                            {/* <ui5-option value="" selected></ui5-option> */}
+                            {this.state.offices.filter(o => o.city === this.state.returnCashCity).map(o => {
+                              return (
+                                <ui5-option value={o.location}>{o.location}</ui5-option>
+                              )
+                            })}
+                          </ui5-select>
+                        </div> :
+                        <div className="second-flex-input-item">
+                          <ui5-label for="returnCashAddressInput" required>Адрес:</ui5-label><br />
+                          <ui5-input class="input" id="returnCashAddressInput" name="returnCashAddress" placeholder="" required></ui5-input><br />
+                        </div>}
+                    </div>
+                  }
+                  {this.state.returnCash === "BANK" &&
+                    <div>
+                      <div className="flex-container-input">
+                        <div>
+                          <ui5-label for="IBANInput" required>IBAN:</ui5-label><br />
+                          <ui5-input class="input" id="IBANInput" name="IBAN" placeholder="" required></ui5-input><br />
+                        </div>
+                        <div className="second-flex-input-item">
+                          <ui5-label for="BICInput" required>BIC:</ui5-label><br />
+                          <ui5-input class="input" id="BICInput" name="BIC" placeholder="" required></ui5-input><br />
+                        </div>
+                      </div>
+                      <div className="flex-container-input">
+                        <div>
+                          <ui5-label for="bankInput" required>Банка:</ui5-label><br />
+                          <ui5-input class="input" id="bankInput" name="bank" placeholder="" required></ui5-input><br />
+                        </div>
+                        <div className="second-flex-input-item">
+                          <ui5-label for="bankAccountOwnerInput" required>Титуляр на сметката:</ui5-label><br />
+                          <ui5-input class="input" id="bankAccountOwnerInput" name="bankAccountOwner" placeholder="" required></ui5-input><br />
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
               <ui5-button class="to-step-button" id="sendRequestButton" design="Emphasized">Заяви пратка</ui5-button>
               <ui5-button class="to-step-button" id="declineRequestButton" design="Negative">Откажи</ui5-button>
             </div>
