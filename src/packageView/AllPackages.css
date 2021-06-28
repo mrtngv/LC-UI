@@ -54,3 +54,15 @@ packages-header-bar {
     padding: 0px 50px;
 }
 
+.filter-container {
+    padding-left: 1rem;
+}
+
+.filter-container ui5-title {
+    padding-bottom: 0.5rem;
+}
+
+.filter-contents {
+    display: flex;
+}
+

@@ -18,18 +18,29 @@ import "@ui5/webcomponents/dist/TableRow.js";
 import "@ui5/webcomponents/dist/TableCell.js"
 import "@ui5/webcomponents/dist/Badge";
 
-// TODO: -> линк към user details, който ще го има във втората колона на пратено от: {име} и пратено до {име}
-
 class AllPackages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             packages: [],
             selectedPackageId: 1,
-            role: ""
+            role: "",
+            fromDate: "",
+            toDate: "",
+            filterInput: ""
         };
+        this.handleInputValue = this.handleInputValue.bind(this);
         this.onPackageDetailsClose = this.onPackageDetailsClose.bind(this);
         this.onPackageListSelect = this.onPackageListSelect.bind(this);
+        this.onFilter = this.onFilter.bind(this);
+        this.onFilterClear = this.onFilterClear(this);
+    }
+
+    handleInputValue(event) {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
     }
 
     onPackageListSelect(event) {
@@ -45,11 +56,28 @@ class AllPackages extends React.Component {
         })
     }
 
+    onFilter(){
+         
+    }
+
+    onFilterClear(){
+
+    }
+
     addEventListeners() {
         const packageList = document.getElementById('packageList');
         if (packageList) {
 
             packageList.addEventListener("item-click", this.onPackageListSelect);
+        }
+
+        document.querySelectorAll('.input').forEach(item => {
+            item.addEventListener("change", this.handleInputValue);
+        })
+
+        const filterButton = document.getElementById('filter-search-button');
+        if (filterButton) {
+            filterButton.addEventListener("click", this.onFilter());
         }
     }
 
@@ -57,6 +85,15 @@ class AllPackages extends React.Component {
         const packageList = document.getElementById('packageList');
         if (packageList) {
             packageList.removeEventListener("item-click", this.onPackageListSelect);
+        }
+
+        document.querySelectorAll('.input').forEach(item => {
+            item.removeEventListener("change", this.handleInputValue);
+        })
+
+        const filterButton = document.getElementById('filter-search-button');
+        if (filterButton) {
+            filterButton.removeEventListener("click", this.onFilter());
         }
     }
 
@@ -109,6 +146,18 @@ class AllPackages extends React.Component {
             <div className="packages-view-container">
                 {this.state.packages.length !== 0 ?
                     <div className="packages-view-table">
+                        {this.state.role !== "ROLE_CLIENT" &&
+                            <div className="filter-container">
+                                <ui5-title level="H4">Филтър</ui5-title>
+                                <div className="filter-contents">
+                                    <ui5-input class="input" name="filterInput" value="" placeholder="Подател, получател, офис, адрес"></ui5-input>
+                                    <ui5-date-picker class="input" format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
+                                    <ui5-date-picker class="input" format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
+                                    <ui5-button id="filter-search-button">Търси</ui5-button>
+                                    <ui5-button id="filter-clear-button">Изчисти</ui5-button>
+                                </div>
+                            </div>
+                        }
                         <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
                             <div slot="startColumn">
                                 <ui5-list id="packageList" header-text="Пратки">
