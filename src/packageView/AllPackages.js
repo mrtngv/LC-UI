@@ -153,7 +153,7 @@ class AllPackages extends React.Component {
                                                         <div className="information-item">От Адрес:</div> &nbsp;&nbsp;&nbsp;
                                                         <span>
                                                             {Package.fromOffice && <b>ОФИС: </b>}
-                                                            <b>{Package.fromCity}  {Package.fromAddress}</b>
+                                                            <b>{Package.fromCity},  {Package.fromAddress}</b>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -185,7 +185,7 @@ class AllPackages extends React.Component {
                                                         <div className="information-item">Доставка до:</div> &nbsp;&nbsp;&nbsp;
                                                         <span>
                                                             {Package.toOffice && <b>ОФИС: </b>}
-                                                            <b>{Package.toCity}  {Package.toAddress}</b>
+                                                            <b>{Package.toCity},  {Package.toAddress}</b>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -215,7 +215,7 @@ class AllPackages extends React.Component {
                                                         <div className="information-item">Алтернативен адрес:</div> &nbsp;&nbsp;&nbsp;
                                                         <span>
                                                             {Package.returnToOffice && <b>ОФИС: </b>}
-                                                            <b>{Package.alternativeCity}  {Package.returnLocation}</b>
+                                                            <b>{Package.alternativeCity},  {Package.returnLocation}</b>
                                                         </span>
                                                     </div>
                                                     <div className="information-row">
@@ -229,7 +229,7 @@ class AllPackages extends React.Component {
                                                     </div>
                                                     <div className="information-row">
                                                         <div className="information-item">Тегло:</div> &nbsp;&nbsp;&nbsp;
-                                                        <span><b>{Package.weight}</b></span>
+                                                        <span><b>{Package.weight}кг</b></span>
                                                     </div>
                                                     <div className="information-row">
                                                         <div className="information-item">Цена:</div> &nbsp;&nbsp;&nbsp;

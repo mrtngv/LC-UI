@@ -31,11 +31,12 @@
 }
 
 #senderLocationInput, #receiverLocationInput,
- #alternativeLocationInput {
+ #alternativeLocationInput, #returnCashLocationInput {
     width: 15rem;
 }
 
-#senderAddressInput, #receiverAddressInput, #alternativeAddressInput {
+#senderAddressInput, #receiverAddressInput, #alternativeAddressInput, #returnCashAddressInput, 
+#sender-office-select, #receiver-office-select, #alternative-office-select, #return-cash-office-select{
     width: 25rem;
 }
 
