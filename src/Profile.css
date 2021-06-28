@@ -2,9 +2,47 @@
     font-size: 30px;
     display: inline-block;
     padding: 48px;
-    width: 50%;
+    width: 25%;
 }
 
 .profile-wrapper .content {
     padding: 40px;
-} 
+}
+
+#response-msg {
+    font-size: 14.5px;
+    width: 214px;
+}
+
+#response-msg.error {
+    font-size: 14.5px;
+}
+
+@media only screen and (max-width: 767px) {
+    .profile-wrapper {
+        padding: 10px 0 10px 48px;
+        width: 80%;
+        margin: 0px 10px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .profile-wrapper {
+        padding: 30px;
+        width: 75%;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .profile-wrapper {
+        width: 70%;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    .profile-wrapper {
+        padding: 48px;
+    }
+}
+
+

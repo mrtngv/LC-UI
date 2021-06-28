@@ -12,7 +12,9 @@
 .login-input,
 .login-label,
 .register-input,
-.register-label {
+.register-label,
+.profile-label,
+.profile-input {
     margin-bottom: 5px;
 }
 
@@ -42,7 +44,8 @@
 }
 
 .register-input.error ,
-.login-input.error {
+.login-input.error,
+.profile-input.error {
     box-shadow: 0 0 2px 2px rgb(253 98 3 / 25%);
     border: 1px solid #fd6204;
 }
@@ -52,4 +55,24 @@
     cursor: pointer;
     color: blue;
     text-decoration: underline;
+}
+
+#response-msg {
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 15px;
+    width: 190px;
+    padding: 10px 0;
+    border-radius: 5px;
+    color: white;
+    font-family: "72override",var(--sapFontFamily);
+}
+
+#response-msg.success {
+    background-color: #008000c2;
+}
+
+#response-msg.error {
+    font-size: 15px;
+    background-color: #ff0000cc;
 }
