@@ -12,7 +12,6 @@ import "./TrackPackage.css";
 import TrackPackageRow from './TrackPackageRow';
 import image from '../images/track-order.png';
 
-
 class TrackPackage extends React.Component {
     constructor(props) {
         super(props);

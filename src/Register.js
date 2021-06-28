@@ -22,7 +22,8 @@ class Register extends React.Component {
             emailValid: false,
             passwordValid: false,
             usernameValid: false,
-            formValid: false
+            formValid: false,
+            responseMsg: {}
         };
 
         this.handleInputValue = this.handleInputValue.bind(this);
@@ -51,8 +52,9 @@ class Register extends React.Component {
 
         if (this.state.formValid) {
             axios.post(register_url, registerUserDetails).then(res => {
-            this.props.history.push("/login");
+                this.props.history.push("/login");
             }).catch(error => {
+                this.setState({responseMsg: {error: true}});
                 this.resetForm();
             });
         }
@@ -130,22 +132,31 @@ class Register extends React.Component {
             break;
         }
         this.setState({formErrors: fieldValidationErrors,
-                        emailValid: emailValid,
+                        emailValid: emailValid ? true : false,
                         passwordValid: passwordValid,
-                        usernameValid: usernameValid
+                        usernameValid: usernameValid ? true : false
                       }, this.validateForm);
     }
       
     validateForm() {
-            this.setState({formValid: this.state.emailValid && this.state.passwordValid && this.state.usernameValid});
+        this.setState({formValid: this.state.emailValid && this.state.passwordValid && this.state.usernameValid});
     }
 
     render() {
         const formErrors = this.state.formErrors;
+        const responseMessage = () => {
+            const responseMsg = this.state.responseMsg;
+
+            if (responseMsg.error) {
+                return <span id="response-msg" className="error">Неуспешна регистрация</span>;
+            }
+        }
+
         return (
             <div className="container">
                 <div className="inner-container register">
                     <form onKeyPress={this.handleKeypress}>
+                        {responseMessage()}
                         <ui5-title level="H2">Създаване на профил</ui5-title><br/>
                         <ui5-label class="register-label" for="usernameInput" required>Потребителско име:</ui5-label>
                         <ui5-input class={"register-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onKeyPress={this.handleKeypress} onBlur={(e) => {

@@ -20,7 +20,8 @@ class Login extends React.Component {
             formErrors: {username: '', password: ''},
             passwordValid: false,
             usernameValid: false,
-            formValid: false
+            formValid: false,
+            responseMsg: {}
         };
 
         this.handleInputValue = this.handleInputValue.bind(this);
@@ -57,6 +58,7 @@ class Login extends React.Component {
                 this.props.history.push("/profile");
                 window.location.reload();
             }).catch(error => {
+                this.setState({responseMsg: {error: true}});
                 this.resetForm();
             })
         }
@@ -126,21 +128,30 @@ class Login extends React.Component {
         }
         this.setState({formErrors: fieldValidationErrors,
                         passwordValid: passwordValid,
-                        usernameValid: usernameValid
+                        usernameValid: usernameValid ? true : false
                       }, this.validateForm);
     }
       
     validateForm() {
-            this.setState({formValid: this.state.passwordValid && this.state.usernameValid});
+        this.setState({formValid: this.state.passwordValid && this.state.usernameValid});
     }
 
     render() {
         const formErrors = this.state.formErrors;
 
+        const responseMessage = () => {
+            const responseMsg = this.state.responseMsg;
+
+            if (responseMsg.error) {
+                return <span id="response-msg" className="error">Неуспешен вход</span>;
+            }
+        }
+
         return (
             <div className="container">
                 <div className="inner-container">
                     <form onKeyPress={this.handleKeypress}>
+                        {responseMessage()}
                         <ui5-title level="H2">Вход в системата</ui5-title><br />
                         <ui5-label class="login-label" for="usernameInput" required>Потребителско име:</ui5-label>
                         <ui5-input class={"login-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onBlur={(e) => {
