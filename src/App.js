@@ -9,7 +9,6 @@ import AllPackages from './packageView/AllPackages';
 import Login from './Login';
 import Register from './Register';
 import Profile from './Profile';
-import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import "@ui5/webcomponents/dist/Label";
 import "@ui5/webcomponents/dist/Input";
 import "@ui5/webcomponents-fiori/dist/Timeline";
@@ -8,38 +9,37 @@ import "@ui5/webcomponents/dist/TableColumn";
 import "@ui5/webcomponents/dist/TableRow";
 import "@ui5/webcomponents/dist/TableCell";
 import "./TrackPackage.css";
-import { Grid } from '@ui5/webcomponents-react';
-import PackageData from '../packageView/PackageData';
-import TrackPackageRow from './TrackPackageRow'
-let Package;
+import TrackPackageRow from './TrackPackageRow';
+import image from '../images/track-order.png';
+
 
 class TrackPackage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             packageId: '',
-            status: '',
-            packageType: '',
-            packageWeight: '',
-            isShippedFromOffice: '',
-            shippedFromOfficeName: '',
-            senderName: '',
-            senderAddress: '',
-            senderTelephone: '',
-            isShippedToOffice: '',
-            isShippedToOfficeName: '',
-            recipientName: '',
-            recipientAddress: '',
-            recipientTelephone: '',
-            processedBy: '',
-            deliveredByName: '',
-            deliveredByPhone: '',
-            shippingDate: '',
-            deliveryDate: ''
+            isFragile: '',
+            ePackageType: '',
+            weight: '',
+            fromOffice: '',
+            fromAddress: '',
+            senderFirstName: '',
+            senderLastName: '',
+            senderTelephoneNumber: '',
+            toOffice: '',
+            toAddress: '',
+            receiverFirstName: '',
+            receiverLastName: '',
+            receiverTelephoneNumber: '',
+            isReturnToOffice: '',
+            dateOfDelivery: '',
+            isFirm: '',
+            ePayMethod: ''
         };
 
         this.handleInputValue = this.handleInputValue.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.packageType = this.packageType.bind(this);
     }
 
     handleInputValue(event) {
@@ -63,33 +63,52 @@ class TrackPackage extends React.Component {
     }
 
     handleSubmit() {
-        Package = PackageData.find( element => element.packageId === this.state.packageId);
+        const URL = "http://localhost:8080/api/packages/specific";
+        const privateCode = this.state.packageId;
 
-        if (Package) {
+        axios.post(URL, {
+            code: privateCode
+        }).then(response => {
             this.setState({
-                status: Package.status,
-                packageType: Package.packageType,
-                packageWeight: Package.packageWeight,
-                isShippedFromOffice: Package.isShippedFromOffice,
-                shippedFromOfficeName: Package.shippedFromOfficeName,
-                senderName: Package.senderName,
-                senderAddress: Package.senderAddress,
-                senderTelephone: Package.senderTelephone,
-                isShippedToOffice: Package.isShippedToOffice,
-                shippedToOfficeName: Package.shippedToOfficeName,
-                recipientName: Package.recipientName,
-                recipientAddress: Package.recipientAddress,
-                recipientTelephone: Package.recipientTelephone,
-                processedBy: Package.processedBy,
-                deliveredByName: Package.deliveredByName,
-                deliveredByPhone: Package.deliveredByPhone,
-                shippingDate: Package.shippingDate,
-                deliveryDate: Package.deliveryDate
+                isFragile: response.data.isFragile,
+                ePackageType: response.data.ePackageType,
+                weight: response.data.weight,
+                fromOffice: response.data.fromOffice,
+                fromAddress: response.data.fromAddress,
+                senderFirstName: response.data.senderFirstName,
+                senderLastName: response.data.senderLastName,
+                senderTelephoneNumber: response.data.senderTelephoneNumber,
+                toOffice: response.data.toOffice,
+                toAddress: response.data.toAddress,
+                receiverFirstName: response.data.receiverFirstName,
+                receiverLastName: response.data.receiverLastName,
+                receiverTelephoneNumber: response.data.receiverTelephoneNumber,
+                isReturnToOffice: response.data.isReturnToOffice,
+                dateOfDelivery: response.data.dateOfDelivery,
+                isFirm: response.data.isFirm,
+                ePayMethod: response.data.ePayMethod
             });
-
             document.getElementById('package-info').style.display = "block";
-        } else {
+        }).catch(error => {
+            console.log("Missing package with this id");
             document.getElementById('package-info').style.display = "none";
+        });
+    }
+
+    packageType() {
+        switch (this.state.ePackageType) {
+            case 'DOCUMENTS':
+                return 'Документи'
+            case 'BOX':
+                return 'Кашон'
+            case 'PALLET':
+                return 'Палет'
+            case 'ELECTRONICS':
+                return 'Електроника'
+            case 'BAG':
+                return 'Колет'
+            default:
+                return ''
         }
     }
 
@@ -97,43 +116,35 @@ class TrackPackage extends React.Component {
         return (
             <div className="track-package">
                 <div className="track-package-container">
-                    <Grid>
-                        <ui5-label id="track-package-label" data-layout-span="XL12" for="track-package-input">Проследи пратка</ui5-label>
-                        <ui5-input id="track-package-input" placeholder="Въведи номер на пратка" data-layout-span="XL9" ></ui5-input>
-                        <ui5-button id="track-package-btn" data-layout-span="XL9" design="Emphasized" >Проследи</ui5-button>
-                    </Grid>
-                </div>
-                <div id="package-info">
-                    <div className="package-header">
-                        <span>Информация за пратка</span>
+                    <ui5-card heading="Проследи пратка" class="small">
+                        <div className="track-package-card-content">
+                            <ui5-input id="track-package-input" placeholder="Въведи номер на пратка" data-layout-span="XL9" type="String"></ui5-input>
+                            <ui5-button id="track-package-btn" data-layout-span="XL9" design="Emphasized" >Проследи</ui5-button>
+                        </div>
+                        <img src={image} alt="Track Package"/>
+                    </ui5-card>
+
+                    <div id="package-info">
+                        <div className="package-header-wrapper">
+                            <span class="package-header">Информация за пратка</span>
+                            <ui5-button id="edit-package" data-layout-span="XL9" design="Emphasized" >Редактирай пратка</ui5-button>
+                        </div>
+
+                        <ui5-table class="package-table" id="table">
+                            <TrackPackageRow title="Номер на пратка" value={this.state.packageId} />
+                            <TrackPackageRow title="Тип на пратката" value={this.packageType()} />
+                            <TrackPackageRow title="Тегло" value={this.state.weight} />
+                            <TrackPackageRow title="Чупливо" value={this.state.isFragile ? 'Да' : 'Не'} />
+                            <TrackPackageRow title="Подател" value={this.state.senderFirstName + ' ' + this.state.senderLastName} />
+                            <TrackPackageRow title="Телефон на подател" value={this.state.senderTelephoneNumber} />
+                            <TrackPackageRow title="Получател" value={this.state.receiverFirstName + ' ' + this.state.receiverLastName} />
+                            <TrackPackageRow title={this.state.fromOffice ? "Изпратено от офис" : "Изпратено от адрес"} value={this.state.fromAddress} />
+                            <TrackPackageRow title={this.state.toOffice ? "Изпратено към офис" : "Изпратено към адрес"} value={this.state.toAddress} />
+                            <TrackPackageRow title="Телефон на получател" value={this.state.receiverTelephoneNumber} />
+                        </ui5-table>
                     </div>
-
-                    <ui5-timeline>
-	                    <ui5-timeline-item title-text="Дата на изпращане" subtitle-text={this.state.shippingDate} icon="product">
-                        </ui5-timeline-item>
-                        <ui5-timeline-item title-text="Дата на получаване" subtitle-text={this.state.deliveryDate} icon="sap-icon://person-placeholder">
-                        </ui5-timeline-item>
-                    </ui5-timeline>
-
-                    <ui5-table class="package-table" id="table">
-                        <TrackPackageRow title="Номер на пратка" value={this.state.packageId} />
-                        <TrackPackageRow title="Статус" value={this.state.status} />
-                        <TrackPackageRow title="Тип на пратката" value={this.state.packageType} />
-                        <TrackPackageRow title="Тегло" value={this.state.packageWeight} />
-                        <TrackPackageRow title="Чупливо" value={this.state.isFragile ? 'yes' : 'no'} />
-                        <TrackPackageRow title="Подател" value={this.state.senderName} />
-                        <TrackPackageRow title="Адрес на подател" value={this.state.senderAddress} />
-                        <TrackPackageRow title="Телефон на подател" value={this.state.senderTelephone} />
-                        <TrackPackageRow title="Изпретено от офис" value={this.state.isShippedFromOffice ? this.state.shippedFromOfficeName : 'no'} />
-                        <TrackPackageRow title="Изпретено към офис" value={this.state.isShippedToOffice ? this.state.isShippedToOfficeName : 'no'} />
-                        <TrackPackageRow title="Получател" value={this.state.recipientName} />
-                        <TrackPackageRow title="Адрес на получател" value={this.state.recipientAddress} />
-                        <TrackPackageRow title="Телефон на получател" value={this.state.recipientTelephone} />
-                        <TrackPackageRow title="Обработил пратката" value={this.state.processedBy} />
-                        <TrackPackageRow title="Име на доставчик" value={this.state.deliveredByName} />
-                        <TrackPackageRow title="Номер на доставчик" value={this.state.deliveredByPhone} />
-                    </ui5-table>
                 </div>
+                
             </div>
         )
     }
