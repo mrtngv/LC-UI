@@ -12,7 +12,6 @@ import "@ui5/webcomponents/dist/Input.js";
 import "@ui5/webcomponents/dist/SegmentedButton";
 import "@ui5/webcomponents/dist/ToggleButton";
 
-
 class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -62,7 +61,9 @@ class Profile extends React.Component {
     }
 
     onEdit() {
-        const edit_profile_url = 'http://localhost:8080/api/authenticate/edit';
+        const editProfileUrl = 'http://localhost:8080/api/authenticate/edit';
+        const loginUrl = "http://localhost:8080/api/authenticate/login";
+
         const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
         const editUserDetails = {
             'username': this.state.username,
@@ -70,15 +71,24 @@ class Profile extends React.Component {
             'password': this.state.password
         }
 
-
         if (this.state.formValid && accessToken) {
-            axios.post(edit_profile_url, editUserDetails, {
+            axios.post(editProfileUrl, editUserDetails, {
                 headers: {
                   'Authorization': 'Bearer ' + accessToken
                 }
               }).then(res => {
-                sessionStorage.setItem('user', JSON.stringify({username: this.state.username, email: this.state.email, accessToken: accessToken}));
-                this.setState({responseMsg: {success: true, error: false}});
+                const loginDetails = {
+                    "username": this.state.username,
+                    "password": this.state.password
+                }
+
+                axios.post(loginUrl, loginDetails).then(response => {
+                    if (response.data.accessToken) {
+                        sessionStorage.setItem("user", JSON.stringify(response.data));
+                    }
+
+                    this.setState({responseMsg: {success: true, error: false}});
+                })
             }).catch(error => {
                 this.setState({responseMsg: {error: true, success: false}});
             });
