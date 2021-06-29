@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 
 import "./AllPackages.css";
-import PackageData from "./PackageData.js";
 import { DOMAIN } from ".././constants/Domain.js";
 
 import "@ui5/webcomponents/dist/Label";
@@ -36,6 +35,7 @@ class AllPackages extends React.Component {
         this.onPackageListSelect = this.onPackageListSelect.bind(this);
         this.onFilter = this.onFilter.bind(this);
         this.onFilterClear = this.onFilterClear.bind(this);
+        this.onPackageEdit = this.onPackageEdit.bind(this);
     }
 
     handleInputValue(event) {
@@ -59,20 +59,26 @@ class AllPackages extends React.Component {
     }
 
     onFilter() {
-        let filter = this.state.filteredPackages;
+        let filterApplied = this.state.packages;
         if (this.state.filterInput !== "") {
-            filter = filter.filter(p => (p.senderFirstName + " " + p.senderLastName) === this.state.filterInput
+            filterApplied = filterApplied.filter(p => (p.senderFirstName + " " + p.senderLastName) === this.state.filterInput
                 || p.senderLastName === this.state.filterInput || (p.receiverFirstName + " " + p.receiverLastName) === this.state.filterInput
                 || p.receiverLastName === this.state.filterInput || p.senderTelephoneNumber === this.state.filterInput
                 || p.receiverTelephoneNumber === this.state.filterInput || p.senderEmail === this.state.filterInput
                 || p.receiverEmail === this.state.filterInput || p.fromAddress === this.state.filterInput
-                || p.fromCity === this.state.filterInput || p.toAddress === this.state.filterInput || p.toCity === this.state.filterInput);
+                || p.fromCity === this.state.filterInput || p.toAddress === this.state.filterInput || p.toCity === this.state.filterInput
+                || p.ePackageStatus === this.state.filterInput);
+            console.log(filterApplied);
         }
-        if (this.state.fromDate !== ""){
-            filter = filter.filter(p => p.dateOfSending === this.state.fromDate);
+        if (this.state.fromDate !== "" && this.state.toDate === "") {
+            filterApplied = filterApplied.filter(p => p.dateOfSending === this.state.fromDate);
+        }
+        if (this.state.fromDate !== "" && this.state.toDate !== "") {
+            filterApplied = filterApplied.filter(p => Date.parse(p.dateOfSending) >= Date.parse(this.state.fromDate)
+                && Date.parse(p.dateOfSending) <= Date.parse(this.state.toDate));
         }
         this.setState({
-            filteredPackages: filter
+            filteredPackages: filterApplied
         })
     }
 
@@ -84,6 +90,13 @@ class AllPackages extends React.Component {
             toDate: "",
             fromDate: ""
         });
+    }
+
+    onPackageEdit() {
+        this.props.history.push({
+            pathname: '/package/edit',
+            state: this.state.selectedPackageId
+        })
     }
 
     addEventListeners() {
@@ -101,12 +114,6 @@ class AllPackages extends React.Component {
         if (filterButton) {
             filterButton.addEventListener("click", this.onFilter);
         }
-
-        // const clearButton = document.getElementById('filter-clear-button');
-        // if (clearButton) {
-        //     clearButton.addEventListener("click", this.onFilterClear);
-        //     console.log("listener added")
-        // }
     }
 
     removeEventListeners() {
@@ -124,10 +131,6 @@ class AllPackages extends React.Component {
             filterButton.removeEventListener("click", this.onFilter);
         }
 
-        // const clearButton = document.getElementById('filter-clear-button');
-        // if (clearButton) {
-        //     clearButton.removeEventListener("click", this.onFilterClear);
-        // }
     }
 
     componentDidUpdate() {
@@ -148,6 +151,7 @@ class AllPackages extends React.Component {
                     'Authorization': 'Bearer ' + accessToken
                 }
             }).then(p => {
+                console.log(p.data);
                 this.setState({
                     packages: p.data,
                     filteredPackages: p.data
@@ -185,7 +189,7 @@ class AllPackages extends React.Component {
                                 <ui5-title level="H4">Филтър</ui5-title>
                                 <div className="filter-contents">
                                     <ui5-input class="input" name="filterInput" value={this.state.filterInput} placeholder="Име, телефон, имейл, офис, адрес"></ui5-input>
-                                    <ui5-date-picker class="input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
+                                    <ui5-date-picker class="input" id="from-date-input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
                                     <ui5-date-picker class="input" value={this.state.toDate} format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
                                     <ui5-button id="filter-search-button" design="Emphasized">Търси</ui5-button>
                                     <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
@@ -212,7 +216,7 @@ class AllPackages extends React.Component {
                                     <div class="colHeader">
                                         {this.state.role !== "ROLE_CLIENT" ?
                                             <ui5-bar>
-                                                <ui5-button design="Positive" slot="endContent">Промени</ui5-button>
+                                                <ui5-button design="Positive" slot="endContent" onClick={this.onPackageEdit}>Промени</ui5-button>
                                                 <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
                                                 <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
                                             </ui5-bar> :
@@ -247,7 +251,8 @@ class AllPackages extends React.Component {
                                                     </div>
                                                     <div className="information-row">
                                                         <div className="information-item">Имейл:</div> &nbsp;&nbsp;&nbsp;
-                                                        <span><b>{Package.senderEmail}</b></span>
+                                                        <span>{Package.senderEmail !== "" ? <b>{Package.senderEmail}</b>
+                                                            : <b>Няма въведен имейл</b>}</span>
                                                     </div>
                                                 </div>
                                             </div>

@@ -563,7 +563,16 @@ class Package extends React.Component {
     //   "comment": this.state.requestComment,
     //   "ePayMethod": this.state.paymentMethod,
     //   "dateOfDelivery": this.state.deliveryDate,
-    //   "dateOfSending": this.state.requestDate
+    //   "dateOfSending": this.state.requestDate,
+    // "isCashOnDelivery": this.state.isCashOnDelivery,
+    // "cashOnDelivery": this.state.cashOnDelivery,
+    // "returnCashToOffice": this.state.returnCashToOffice,
+    // "iban": this.state.IBAN,
+    // "bic": this.state.BIC,
+    // "bank": this.state.bank,
+    // "bankAccountOwner": this.state.bankAccountOwner,
+    // "returnCashCity": this.state.returnCashCity,
+    // "returnCashAddress": this.state.returnCashAddress,
     // }
 
     const packageDetails = {
@@ -574,7 +583,6 @@ class Package extends React.Component {
       "senderTelephoneNumber": "0887898989",
       "senderEmail": this.state.senderEmail,
       "fromCity": this.state.senderCity,
-      "toFirm": this.state.isReceiverFirm,
       "fromAddress": this.state.senderAddress,
       "fromOffice": this.state.sentFromOffice,
       "receiverFirstName": this.state.receiverFirstName,
@@ -582,6 +590,7 @@ class Package extends React.Component {
       "toFirmName": this.state.receiverFirmName,
       "receiverTelephoneNumber": "088787878",
       "receiverEmail": this.state.receiverEmail,
+      "toFirm": this.state.isReceiverFirm,
       "toCity": this.state.receiverCity,
       "toAddress": this.state.receiverAddress,
       "toOffice": this.state.sentToOffice, //bool
@@ -594,9 +603,50 @@ class Package extends React.Component {
       "comment": this.state.requestComment,
       "ePayMethod": this.state.paymentMethod,
       "dateOfDelivery": this.state.deliveryDate,
-      "dateOfSending": this.state.requestDate
+      "dateOfSending": this.state.requestDate,
+      "isCashOnDelivery": this.state.isCashOnDelivery,
+      "cashOnDelivery": this.state.cashOnDelivery,
+      "returnCashToOffice": this.state.returnCashToOffice,
+      "iban": this.state.IBAN,
+      "bic": this.state.BIC,
+      "bank": this.state.bank,
+      "bankAccountOwner": this.state.bankAccountOwner,
+      "returnCashCity": this.state.returnCashCity,
+      "returnCashAddress": this.state.returnCashAddress,
     }
 
+    // const packageDetails = {
+    //   "senderFirstName": "Ekaterina",
+    //   "senderLastName": "Gerasimova",
+    //   "isFirm": true,
+    //   "firmName": "SAP",
+    //   "senderTelephoneNumber": "0879594839",
+    //   "senderEmail": "test4@abv.bg",
+    //   "fromAddress": "IMETO NA OFICA",
+    //   "fromOffice": true,
+    //   "receiverFirstName": "Marta",
+    //   "receiverLastName": "Gyurova",
+    //   "receiverTelephoneNumber": "0879573986",
+    //   "receiverEmail": "test5@abv.bg",
+    //   "toAddress": "IME NA OFISA DET",
+    //   "toOffice": true,
+    //   "ePackageType": "BOX",
+    //   "weight": "2.00",
+    //   "isFragile": true,
+    //   "returnToOffice": true,
+    //   "returnLocation": "ADRES NA VRUSHTANE",
+    //   "comment": "KOMENTAR",
+    //   "ePayMethod": "CASH",
+    //   "dateOfDelivery": "1999-09-14",
+    //   "toFirm" : true,
+    //   "toFirmName" : "IRobot",
+    //   "fromCity": "Sofia",
+    //   "toCity": "Plovdiv",
+    //   "alternativeCity": "Pazardjik",
+    //   "dateOfSending": "2021-10-10"
+    // }
+
+    console.log(this.state);
     const user = sessionStorage.getItem('user');
 
     if (user) {
@@ -874,7 +924,7 @@ class Package extends React.Component {
                       <ui5-input class="input" id="senderNumberInput" name="senderPhone" placeholder="" required></ui5-input><br />
                     </div>
                     <div className="second-flex-input-item">
-                      <ui5-label for="senderEmailInput" required>Имейл:</ui5-label><br />
+                      <ui5-label for="senderEmailInput">Имейл:</ui5-label><br />
                       <ui5-input class="input" id="senderEmailInput" name="senderEmail" value={this.state.loggedUserEmail} required></ui5-input><br />
                     </div>
                   </div>
