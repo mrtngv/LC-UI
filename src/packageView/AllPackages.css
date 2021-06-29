@@ -14,7 +14,7 @@
 ui5-flexible-column-layout#fcl {
     --_ui5_fcl_solid_bg: #ffffff;
     overflow-y: auto;
-    height: 80vh;
+    height: 70vh;
 }
 
 .start-column {
@@ -66,3 +66,6 @@ packages-header-bar {
     display: flex;
 }
 
+#filter-search-button, #from-date-input {
+    margin: 0 0.5rem 0 0.5rem;
+}

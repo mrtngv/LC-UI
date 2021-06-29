@@ -71,7 +71,8 @@ class Package extends React.Component {
       bank: "",
       bankAccountOwner: "",
       returnCashCity: "",
-      returnCashAddress: ""
+      returnCashAddress: "",
+      requestPosted: false
     };
     this.handleInputValue = this.handleInputValue.bind(this);
     this.handleSenderSuggestionInputValue = this.handleSenderSuggestionInputValue.bind(this);
@@ -532,30 +533,64 @@ class Package extends React.Component {
   onRequestSend() {
     const url = DOMAIN + 'api/packages';
 
-    try {
-      const email = JSON.parse(sessionStorage.getItem('user')).email;
-      this.setState({
-        loggedUserEmail: email
-      })
-    }
-    catch (e) { }
+    
+
+    // const packageDetails = {
+    //   "senderFirstName": this.state.senderFirstName,
+    //   "senderLastName": this.state.senderLastName,
+    //   "isFirm": this.state.isSenderFirm,
+    //   "firmName": this.state.senderFirmName,
+    //   "senderTelephoneNumber": this.state.senderPhone,
+    //   "senderEmail": this.state.senderEmail,
+    //   "fromCity": this.state.senderCity,
+    //   "toFirm": this.state.isReceiverFirm,
+    //   "fromAddress": this.state.senderAddress,
+    //   "fromOffice": this.state.sentFromOffice,
+    //   "receiverFirstName": this.state.receiverFirstName,
+    //   "receiverLastName": this.state.receiverLastName,
+    //   "toFirmName": this.state.receiverFirmName,
+    //   "receiverTelephoneNumber": this.state.receiverPhone,
+    //   "receiverEmail": this.state.receiverEmail,
+    //   "toCity": this.state.receiverCity,
+    //   "toAddress": this.state.receiverAddress,
+    //   "toOffice": this.state.sentToOffice, 
+    //   "ePackageType": this.state.packageType,
+    //   "weight": this.state.packageWeight,
+    //   "isFragile": this.state.isFragile,
+    //   "returnToOffice": this.state.returnToOffice,
+    //   "alternativeCity": this.state.alternativeCity,
+    //   "returnLocation": this.state.alternativeAddress,
+    //   "comment": this.state.requestComment,
+    //   "ePayMethod": this.state.paymentMethod,
+    //   "dateOfDelivery": this.state.deliveryDate,
+    //   "dateOfSending": this.state.requestDate,
+    // "isCashOnDelivery": this.state.isCashOnDelivery,
+    // "cashOnDelivery": this.state.cashOnDelivery,
+    // "returnCashToOffice": this.state.returnCashToOffice,
+    // "iban": this.state.IBAN,
+    // "bic": this.state.BIC,
+    // "bank": this.state.bank,
+    // "bankAccountOwner": this.state.bankAccountOwner,
+    // "returnCashCity": this.state.returnCashCity,
+    // "returnCashAddress": this.state.returnCashAddress,
+    // }
 
     const packageDetails = {
-      "senderFirstName": this.state.senderFirstName,
-      "senderLastName": this.state.senderLastName,
-      "isFirm": this.state.isSenderFirm,
-      "firmName": this.state.senderFirmName,
-      "senderTelephoneNumber": this.state.senderPhone,
+      "senderFirstName": "Ekaterina",
+      "senderLastName": "Gerasimova",
+      "isFirm": false,
+      "firmName": "",
+      "senderTelephoneNumber": "0887898989",
       "senderEmail": this.state.senderEmail,
       "fromCity": this.state.senderCity,
-      "toFirm": true,//this.state.isReceiverFirm,
       "fromAddress": this.state.senderAddress,
       "fromOffice": this.state.sentFromOffice,
       "receiverFirstName": this.state.receiverFirstName,
       "receiverLastName": this.state.receiverLastName,
       "toFirmName": this.state.receiverFirmName,
-      "receiverTelephoneNumber": this.state.receiverPhone,
+      "receiverTelephoneNumber": "088787878",
       "receiverEmail": this.state.receiverEmail,
+      "toFirm": this.state.isReceiverFirm,
       "toCity": this.state.receiverCity,
       "toAddress": this.state.receiverAddress,
       "toOffice": this.state.sentToOffice, //bool
@@ -568,41 +603,50 @@ class Package extends React.Component {
       "comment": this.state.requestComment,
       "ePayMethod": this.state.paymentMethod,
       "dateOfDelivery": this.state.deliveryDate,
-      "dateOfSending": this.state.requestDate
-      //"userEmail": this.state.loggedUserEmail
+      "dateOfSending": this.state.requestDate,
+      "isCashOnDelivery": this.state.isCashOnDelivery,
+      "cashOnDelivery": this.state.cashOnDelivery,
+      "returnCashToOffice": this.state.returnCashToOffice,
+      "iban": this.state.IBAN,
+      "bic": this.state.BIC,
+      "bank": this.state.bank,
+      "bankAccountOwner": this.state.bankAccountOwner,
+      "returnCashCity": this.state.returnCashCity,
+      "returnCashAddress": this.state.returnCashAddress,
     }
 
     // const packageDetails = {
-    //   "senderFirstName": "Екатерина",
-    //   "senderLastName": "Герасимова",
-    //   "isFirm": false,
-    //   "firmName": "",
-    //   "senderTelephoneNumber": "0887898989",
-    //   "senderEmail": this.state.senderEmail,
-    //   "fromCity": this.state.senderCity,
-    //   "toFirm": false,//this.state.isReceiverFirm,
-    //   "fromAddress": this.state.senderAddress,
-    //   "fromOffice": this.state.sentFromOffice,
-    //   "receiverFirstName": "Martin",
-    //   "receiverLastName": "Georgiev",
-    //   "toFirmName": "",
-    //   "receiverTelephoneNumber": "088787878",
-    //   "receiverEmail": this.state.receiverEmail,
-    //   "toCity": this.state.receiverCity,
-    //   "toAddress": this.state.receiverAddress,
-    //   "toOffice": this.state.sentToOffice, //bool
-    //   "ePackageType": this.state.packageType,
-    //   "weight": this.state.packageWeight,
-    //   "isFragile": this.state.isFragile,
-    //   "returnToOffice": this.state.returnToOffice,
-    //   "alternativeCity": this.state.alternativeCity,
-    //   "returnLocation": this.state.alternativeAddress,
-    //   "comment": this.state.requestComment,
-    //   "ePayMethod": this.state.paymentMethod,
-    //   "dateOfDelivery": this.state.deliveryDate,
-    //   "dateOfSending": this.state.requestDate
+    //   "senderFirstName": "Ekaterina",
+    //   "senderLastName": "Gerasimova",
+    //   "isFirm": true,
+    //   "firmName": "SAP",
+    //   "senderTelephoneNumber": "0879594839",
+    //   "senderEmail": "test4@abv.bg",
+    //   "fromAddress": "IMETO NA OFICA",
+    //   "fromOffice": true,
+    //   "receiverFirstName": "Marta",
+    //   "receiverLastName": "Gyurova",
+    //   "receiverTelephoneNumber": "0879573986",
+    //   "receiverEmail": "test5@abv.bg",
+    //   "toAddress": "IME NA OFISA DET",
+    //   "toOffice": true,
+    //   "ePackageType": "BOX",
+    //   "weight": "2.00",
+    //   "isFragile": true,
+    //   "returnToOffice": true,
+    //   "returnLocation": "ADRES NA VRUSHTANE",
+    //   "comment": "KOMENTAR",
+    //   "ePayMethod": "CASH",
+    //   "dateOfDelivery": "1999-09-14",
+    //   "toFirm" : true,
+    //   "toFirmName" : "IRobot",
+    //   "fromCity": "Sofia",
+    //   "toCity": "Plovdiv",
+    //   "alternativeCity": "Pazardjik",
+    //   "dateOfSending": "2021-10-10"
     // }
 
+    console.log(this.state);
     const user = sessionStorage.getItem('user');
 
     if (user) {
@@ -613,12 +657,20 @@ class Package extends React.Component {
           'Authorization': 'Bearer ' + token
         }
       }).then(res => {
-        this.props.history.push("/");
+        this.setState({
+          requestPosted: true
+        })
+        this.props.history.push("/package/ship");
+        setTimeout(this.declineRequest, 5000);
       });
     }
     else {
       axios.post(url, packageDetails).then(res => {
-        this.props.history.push("/");
+        this.setState({
+          requestPosted: true
+        })
+        this.props.history.push("/package/ship");
+        setTimeout(this.declineRequest, 5000);
       });
     }
   }
@@ -775,6 +827,15 @@ class Package extends React.Component {
   componentDidMount() {
     this.addEventListeners();
 
+    try {
+      const email = JSON.parse(sessionStorage.getItem('user')).email;
+      this.setState({
+        loggedUserEmail: email,
+        senderEmail: email
+      })
+    }
+    catch (e) { }
+
     const URL = DOMAIN + OFFICES;
 
     axios.get(URL).then(o => {
@@ -796,6 +857,9 @@ class Package extends React.Component {
     console.log(this.state);
     return (
       <div className="main-section">
+        {this.state.requestPosted && 
+        <ui5-messagestrip class="message-strip" 
+        type="Positive" no-close-button>Пратката е създадена успешно!</ui5-messagestrip>}
         <ui5-wizard id="request-package-wizard">
           <ui5-wizard-step id="firstStep" icon="product" heading="Данни за пратката" selected>
             <div className="step-first-distance">
@@ -860,8 +924,8 @@ class Package extends React.Component {
                       <ui5-input class="input" id="senderNumberInput" name="senderPhone" placeholder="" required></ui5-input><br />
                     </div>
                     <div className="second-flex-input-item">
-                      <ui5-label for="senderEmailInput" required>Имейл:</ui5-label><br />
-                      <ui5-input class="input" id="senderEmailInput" name="senderEmail" placeholder="" required></ui5-input><br />
+                      <ui5-label for="senderEmailInput">Имейл:</ui5-label><br />
+                      <ui5-input class="input" id="senderEmailInput" name="senderEmail" value={this.state.loggedUserEmail} required></ui5-input><br />
                     </div>
                   </div>
                 </div>

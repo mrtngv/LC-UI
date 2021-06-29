@@ -1,0 +1,33 @@
+.packages-view-container {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 3rem;
+}
+
+ui5-card {
+    width: 80%;
+}
+
+.edit-package-card-container {
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
+    padding-top: 1rem;
+}
+
+.container-box {
+    padding: 1rem 0 1rem 0;
+}
+
+.second-container-item {
+    padding-left: 8rem;
+}
+
+.information-row {
+    padding-bottom: 0.5rem;
+}
+
+
+#editReceiverLocationInput, #editAlternativeLocationInput {
+    margin-bottom: 1rem;
+}
