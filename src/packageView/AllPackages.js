@@ -61,12 +61,15 @@ class AllPackages extends React.Component {
     onFilter() {
         let filter = this.state.filteredPackages;
         if (this.state.filterInput !== "") {
-            filter = filter.filter(p => p.senderFirstName === this.state.filterInput
-                || p.senderLastName === this.state.filterInput || p.receiverFirstName === this.state.filterInput
+            filter = filter.filter(p => (p.senderFirstName + " " + p.senderLastName) === this.state.filterInput
+                || p.senderLastName === this.state.filterInput || (p.receiverFirstName + " " + p.receiverLastName) === this.state.filterInput
                 || p.receiverLastName === this.state.filterInput || p.senderTelephoneNumber === this.state.filterInput
                 || p.receiverTelephoneNumber === this.state.filterInput || p.senderEmail === this.state.filterInput
                 || p.receiverEmail === this.state.filterInput || p.fromAddress === this.state.filterInput
                 || p.fromCity === this.state.filterInput || p.toAddress === this.state.filterInput || p.toCity === this.state.filterInput);
+        }
+        if (this.state.fromDate !== ""){
+            filter = filter.filter(p => p.dateOfSending === this.state.fromDate);
         }
         this.setState({
             filteredPackages: filter
@@ -184,7 +187,7 @@ class AllPackages extends React.Component {
                                     <ui5-input class="input" name="filterInput" value={this.state.filterInput} placeholder="Име, телефон, имейл, офис, адрес"></ui5-input>
                                     <ui5-date-picker class="input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
                                     <ui5-date-picker class="input" value={this.state.toDate} format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
-                                    <ui5-button id="filter-search-button">Търси</ui5-button>
+                                    <ui5-button id="filter-search-button" design="Emphasized">Търси</ui5-button>
                                     <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
                                 </div>
                             </div>
@@ -348,7 +351,8 @@ class AllPackages extends React.Component {
                                 </div> : null}
                         </ui5-flexible-column-layout>
                     </div> :
-                    <ui5-messagestrip type="Information" no-close-button>Все още нямате пратки :(</ui5-messagestrip>
+                    this.state.role === "ROLE_CLIENT" ? <ui5-messagestrip type="Information" no-close-button>Все още нямате пратки :(</ui5-messagestrip> :
+                        <ui5-messagestrip type="Information" no-close-button>Не съществува такава пратка :(</ui5-messagestrip>
                 }
             </div>
         )
