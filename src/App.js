@@ -10,6 +10,7 @@ import Login from './Login';
 import Register from './Register';
 import Profile from './Profile';
 import EditAllPackages from './packageView/EditAllPackages';
+import AllUsers from './AllUsers';
 
 class App extends React.Component {
   constructor(props) {
@@ -43,6 +44,8 @@ class App extends React.Component {
             <Route path="/package/all" exact component={AllPackages} />:null}
             {this.state.role !== "ROLE_CLIENT" ?
             <Route path="/package/edit" exact component={EditAllPackages} />:null}
+            {this.state.role === "ROLE_MODERATOR" ?
+            <Route path="/users" exact component={AllUsers} />:null}
             <Route path="/offices" exact component={Offices} />
             <Route path="/company" exact component={AboutCompany} />
             <Route path="/profile" exact component={Profile} />

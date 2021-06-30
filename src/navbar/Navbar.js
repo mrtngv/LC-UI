@@ -89,6 +89,8 @@ navigationBarMobile() {
               <ui5-side-navigation-item text="Всички пратки" icon="sap-icon://product" id="package/all"></ui5-side-navigation-item>:null}
               <ui5-side-navigation-item text="Заяви пратка" icon="sap-icon://product" id="package/ship"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="Проследи пратка" icon="sap-icon://sys-find" id="package/track"></ui5-side-navigation-item>
+              {this.state.role ==="ROLE_MODERATOR"?
+              <ui5-side-navigation-item text="Потребители" icon="sap-icon://employee" id="users"></ui5-side-navigation-item>:null}
               <ui5-side-navigation-item text="Офиси" icon="sap-icon://functional-location" id="offices"></ui5-side-navigation-item>
               <ui5-side-navigation-item text="За компанията" icon="sap-icon://building" id="company"></ui5-side-navigation-item>
           </ui5-side-navigation>          

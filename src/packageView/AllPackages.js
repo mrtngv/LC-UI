@@ -42,6 +42,7 @@ class AllPackages extends React.Component {
         this.onFilterClear = this.onFilterClear.bind(this);
         this.onPackageEdit = this.onPackageEdit.bind(this);
         this.onStatusChange = this.onStatusChange.bind(this);
+        this.firstTime = this.firstTime.bind(this);
     }
 
     handleInputValue(event) {
@@ -70,7 +71,7 @@ class AllPackages extends React.Component {
             'Authorization': 'Bearer ' + this.state.accessToken
         }
     }).then(res => {
-        console.log("success");
+        this.firstTime();
     });
     }
 
@@ -204,6 +205,11 @@ class AllPackages extends React.Component {
 
     componentDidMount() {
         this.addEventListeners();
+        this.firstTime();
+
+    }
+
+    firstTime() {
         const URL = DOMAIN + "api/packages";
 
         const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
@@ -238,7 +244,6 @@ class AllPackages extends React.Component {
             catch (e) { }
 
         }
-
     }
 
     render() {
