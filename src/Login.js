@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import "./Login.css";
 import image from './images/login-logistics.png';
+import { DOMAIN } from "./constants/Domain.js";
 
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";
@@ -41,8 +42,7 @@ class Login extends React.Component {
     }
 
     onLogin() {
-        // const URL = "https://logistics-engine.herokuapp.com/api/authenticate/login";
-        const URL = "http://localhost:8080/api/authenticate/login";
+        const URL = DOMAIN + "api/authenticate/login";
         const userDetails = {
             "username": this.state.username,
             "password": this.state.password
@@ -55,7 +55,7 @@ class Login extends React.Component {
                     sessionStorage.setItem("user", JSON.stringify(response.data));
                 }
 
-                this.props.history.push("/profile");
+                this.props.history.push("/package/ship");
                 window.location.reload();
             }).catch(error => {
                 this.setState({responseMsg: {error: true}});

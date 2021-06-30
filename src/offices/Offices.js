@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import "./Offices.css";
+import { DOMAIN } from ".././constants/Domain.js";
 
 import "@ui5/webcomponents/dist/Card";
 import "@ui5/webcomponents-fiori/dist/Timeline";
@@ -136,7 +137,7 @@ class Offices extends React.Component {
     }
 
     removeOffice(id) {
-        const removeOfficesURL = 'http://localhost:8080/api/offices/';
+        const removeOfficesURL = DOMAIN + 'api/offices/';
         const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
 
         axios.delete(removeOfficesURL + id, {
@@ -150,7 +151,7 @@ class Offices extends React.Component {
     }
 
     addOffice() {
-        const addOfficesURL = 'http://localhost:8080/api/offices';
+        const addOfficesURL = DOMAIN + 'api/offices';
         const addOfficeDialog = document.getElementById("add-office-dialog");
 
         const addOfficeDetails = {
@@ -184,7 +185,7 @@ class Offices extends React.Component {
     }
 
     editOffice() {
-        const editOfficesURL = 'http://localhost:8080/api/offices';
+        const editOfficesURL = DOMAIN + 'api/offices';
         const editOfficeDialog = document.getElementById("edit-office-dialog");
 
         const editOfficeDetails = {
@@ -250,7 +251,7 @@ class Offices extends React.Component {
     }
 
     componentDidMount() {
-        const getOfficesURL = 'http://localhost:8080/api/offices';
+        const getOfficesURL = DOMAIN + 'api/offices';
 
         this.addEventListeners();
 
@@ -309,7 +310,7 @@ class Offices extends React.Component {
     }
 
     onFilterClear() {
-        const getOfficesURL = 'http://localhost:8080/api/offices';
+        const getOfficesURL = DOMAIN + 'api/offices';
         
         axios.get(getOfficesURL).then(o => {
             this.setState({

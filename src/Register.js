@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import "./Login.css";
 import image from './images/register-logistics.png';
+import { DOMAIN } from "./constants/Domain.js";
+
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";
 import "@ui5/webcomponents/dist/Input.js";
@@ -43,7 +45,7 @@ class Register extends React.Component {
     }
 
     onRegister() {
-        const register_url = 'http://localhost:8080/api/authenticate/register';
+        const register_url = DOMAIN + 'api/authenticate/register';
         const registerUserDetails = {
             "username": this.state.username,
             "email": this.state.email,
