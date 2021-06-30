@@ -11,11 +11,35 @@ class Statistics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            role: "",
+            accessToken: "",
+            info: {},
             dashboardDetails: {},
             seriesSystems: [2.5,5],
             cc: {},
-            optionsSystems: {
-                labels: ['Завършени', 'Да се направят'],
+            options1: {
+                labels: ['Офис служители', 'Куриери', 'Клиенти'],
+                colors: ['#4CAF50', '#F9C80E', '#F9110E'],
+                chart: {
+                    type: 'donut',
+                },
+            },
+            options2: {
+                labels: ['От Офис служител', 'От Клиент'],
+                colors: ['#4CAF50', '#F9C80E'],
+                chart: {
+                    type: 'donut',
+                },
+            },
+            options3: {
+                labels: ['Регистрирани', 'Анулирани', 'Доставени', 'В Процес', 'В изчакване'],
+                colors: ['#4CAF50', '#F9C80E', '#11C877', '#A1C833', '#F91111'],
+                chart: {
+                    type: 'donut',
+                },
+            },
+            options4: {
+                labels: ['7 дена назад', 'Остатък'],
                 colors: ['#4CAF50', '#F9C80E'],
                 chart: {
                     type: 'donut',
@@ -35,38 +59,65 @@ class Statistics extends React.Component {
     }
 
     componentDidMount(){
+        const URL = DOMAIN + "api/authenticate/statistics";
 
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        if (user) {
+            const role = user.role;
+
+            if (role === "ROLE_MODERATOR") {
+                this.setState({
+                    role: role,
+                    accessToken: user.accessToken,
+                })
+            }
+        }
+
+        axios.get(URL, {
+            headers: {
+                'Authorization': 'Bearer ' + user.accessToken
+            }}).then(p => {
+            this.setState({
+                info: p.data,
+            });
+        });
     }
 
 
 
     render() {
+        console.log(this.state.info);
+        const a = [this.state.info.statistic1,this.state.info.statistic2,this.state.info.statistic3];
+        const b = [this.state.info.statistic4,this.state.info.statistic5];
+        const c = [this.state.info.statistic6,this.state.info.statistic7,this.state.info.statistic8,this.state.info.statistic9,this.state.info.statistic10];
+        const d = [this.state.info.statistics17,this.state.info.statistics18];
+        
         return (
             <div className="statistics-container">
                 <div className="titlee">
-                <p>Content goes here</p>
+                <p>Статистики, за потребители, регистрация на пратки, статуси на пратки и приходи.</p>
                 </div>
                 <div className="dashboard">
                 <div className="dashboard-card">
-                    <ui5-card  heading="Общо задачи" subheading={ "(" + (this.state.cc.finished+this.state.cc.todo)+ ")"}>
-                        <ReactApexChart options={this.state.optionsSystems} series={this.state.s1} type="donut"  />
+                    <ui5-card  heading="Потребители" subheading="Разпределение на потребителите, спрямо техните роли">
+                        <ReactApexChart options={this.state.options1} series={a} type="donut"  />
                     </ui5-card>
                 </div>
                 <div className="dashboard-card">
-                <ui5-card heading="Задачи за седем дена назад от днес" subheading={"(" + (this.state.cc.dateTodo+this.state.cc.dateFinished)+  ")"}>
-                    <ReactApexChart options={this.state.optionsInstances} series={this.state.s2} type="donut"  />
+                <ui5-card heading="Пратки" subheading="Разпределение на пратките по регистрация за 3 дена назад по ауторизация">
+                    <ReactApexChart options={this.state.options2} series={b} type="donut"  />
                 </ui5-card>
                 </div>
             </div>
             <div className="dashboard">
                 <div className="dashboard-card">
-                    <ui5-card  heading="Общо задачи" subheading={ "(" + (this.state.cc.finished+this.state.cc.todo)+ ")"}>
-                        <ReactApexChart options={this.state.optionsSystems} series={this.state.s1} type="donut"  />
+                    <ui5-card  heading="Статуси" subheading="Разпределение на всички пратки спрямо техните статуси">
+                        <ReactApexChart options={this.state.options3} series={c} type="donut"  />
                     </ui5-card>
                 </div>
                 <div className="dashboard-card">
-                <ui5-card heading="Задачи за седем дена назад от днес" subheading={"(" + (this.state.cc.dateTodo+this.state.cc.dateFinished)+  ")"}>
-                    <ReactApexChart options={this.state.optionsInstances} series={this.state.s2} type="donut"  />
+                <ui5-card heading="Приходи" subheading="Съпоставка на прихода от последните 7 дена спрямо общия">
+                    <ReactApexChart options={this.state.options4} series={d} type="donut"  />
                 </ui5-card>
                 </div>
             </div>
