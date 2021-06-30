@@ -1,0 +1,7 @@
+.about-company-container {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
+    font-family: "72override",var(--sapFontFamily);
+    font-size: var(--sapFontSize);
+}
