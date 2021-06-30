@@ -3,7 +3,7 @@
     flex-direction: column;
     margin: 48px 0 40px;
     padding-left: 50px;
-    height: 60vh;
+    height: 70vh;
     overflow-x: auto;
     max-width: 1200px;
     max-height: 800px;
@@ -11,7 +11,10 @@
 
 .offices-header {
     max-width: 896px;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
 }
 
 .buttons-container {
