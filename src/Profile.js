@@ -207,7 +207,7 @@ class Profile extends React.Component {
                                     this.validateInput(e);}} value={this.state.password} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.password ? <span className="error">{formErrors.password}</span> : null}
                                 <ui5-label class="profile-label" for="passwordInput" required>Потвърди парола:</ui5-label>
                                 <ui5-input class={"profile-input" + (formErrors.confirmPassword ? ' error' : '')} id="confirmPasswordInput" type="Password" name="confirmPassword" onBlur={(e) => {
-                                    this.validateInput(e);}} value={this.state.confirmPassword} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.confirmPassword ? <span className="error">{formErrors.confirmPassword}</span> : null}<br/>
+                                    this.validateInput(e);}} value={this.state.confirmPassword} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.confirmPassword ? <span className="error">{formErrors.confirmPassword}</span> : null}
                                 <ui5-button class="submit-btn" type="submit" icon="activate" onClick={this.onEdit}>Промяна на данни</ui5-button>
                             </form>
                         </div>

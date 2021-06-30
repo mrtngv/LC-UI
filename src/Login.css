@@ -7,10 +7,12 @@
 .submit-btn {
     width: 13rem;
     margin-bottom: 10px;
-    margin-top: 12px;
+    margin-top: 20px;
 }
 
 .login-label,
+.login-input,
+.register-input,
 .register-label,
 .profile-label,
 .profile-input {
@@ -52,13 +54,7 @@
 
 .register form {
     padding-right: 35px;
-    min-height: 355px;
-    max-height: 450px;
-}
-
-.login form {
-    min-height: 255px;
-    max-height: 300px;
+    padding-bottom: 30px;
 }
 
 .inner-container span.error {
@@ -163,6 +159,9 @@
 
     .login form, .register form {
         padding: 48px 30px 48px 58px;
+    }
+
+    .log-form, .reg-form {
         margin-right: 10%;
     }
 }

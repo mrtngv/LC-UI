@@ -155,31 +155,25 @@ class Register extends React.Component {
         return (
             <div className="container register">
                 <div className="inner-container">
-                    <form onKeyPress={this.handleKeypress}>
-                        {responseMessage()}
-                        <ui5-title level="H2">Създаване на профил</ui5-title><br/>
-                        <div class="register-form-element">
+                    <div class="reg-form">
+                        <form onKeyPress={this.handleKeypress}>
+                            {responseMessage()}
+                            <ui5-title level="H2">Създаване на профил</ui5-title><br/>
                             <ui5-label class="register-label" for="usernameInput" required>Потребителско име:</ui5-label>
                             <ui5-input class={"register-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onKeyPress={this.handleKeypress} onBlur={(e) => {
                                 this.validateInput(e);}} value={this.state.username} required></ui5-input> {formErrors.username ? <span className="error">{formErrors.username}</span> : null}
-                        </div>
-                        <div class="register-form-element">
                             <ui5-label class="register-label" for="emailInput" required>Имейл адрес:</ui5-label>
                             <ui5-input class={"register-input" + (formErrors.email ? ' error' : '')} id="emailInput" name="email" placeholder="" onKeyPress={this.handleKeypress} onBlur={(e) => {
                                 this.validateInput(e);}}value={this.state.email} required></ui5-input> {formErrors.email ? <span className="error">{formErrors.email}</span> : null}
-                        </div>
-                        <div class="register-form-element">
                             <ui5-label class="register-label" for="passwordInput" required>Парола:</ui5-label>
                             <ui5-input class={"register-input" + (formErrors.password ? ' error' : '')} id="passwordInput" type="Password" name="password" onBlur={(e) => {
                                 this.validateInput(e);}} value={this.state.password} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.password ? <span className="error">{formErrors.password}</span> : null}
-                        </div>
-                        <div class="register-form-element">
                             <ui5-label class="register-label" for="passwordInput" required>Потвърди парола:</ui5-label>
                             <ui5-input class={"register-input" + (formErrors.confirmPassword ? ' error' : '')} id="confirmPasswordInput" type="Password" name="confirmPassword" onBlur={(e) => {
-                                this.validateInput(e);}} value={this.state.confirmPassword} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.confirmPassword ? <span className="error">{formErrors.confirmPassword}</span> : null}<br/>
-                        </div>
-                        <ui5-button class="submit-btn" id="register-submit-btn" type="submit" onClick={this.onRegister}>Регистрация</ui5-button>
-                    </form>
+                                this.validateInput(e);}} value={this.state.confirmPassword} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.confirmPassword ? <span className="error">{formErrors.confirmPassword}</span> : null}
+                            <ui5-button class="submit-btn" id="register-submit-btn" type="submit" onClick={this.onRegister}>Регистрация</ui5-button>
+                        </form>
+                    </div>
                     <div className="image-container">
                         <img src={image} alt="Register Logistic Company"/>
                     </div>
