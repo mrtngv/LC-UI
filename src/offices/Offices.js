@@ -81,6 +81,12 @@ class Offices extends React.Component {
             addOfficeCityInput.addEventListener("change", this.handleInputValue);
         }
 
+        const filterOfficeCityInput = document.getElementById("filterOfficeCityInput");
+        if (filterOfficeCityInput) {
+            filterOfficeCityInput.addEventListener("input", this.handleOfficeLocationInput);
+            filterOfficeCityInput.addEventListener("change", this.handleInputValue);
+        }
+
         const addOfficeNameInput = document.getElementById("addOfficeNameInput");
         if (addOfficeNameInput) {
             addOfficeNameInput.addEventListener("change", this.handleInputValue);
@@ -355,10 +361,10 @@ class Offices extends React.Component {
                     <ui5-title class="offices-label" level="H1">Нашите офиси</ui5-title>
                     {addOfficeBtn()}
                     <div className="filter-offices-container">
-                    <div className="filter-contents">
-                        <ui5-input class="suggestion-input add-office-input" id="addOfficeCityInput" show-suggestions value={this.state.filterCity} name="filterCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
-                        <ui5-button id="filter-search-button" onClick={this.onFilter} design="Emphasized">Търси</ui5-button>
-                        <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
+                    <div className="filter-offices-contents">
+                        <ui5-input class="suggestion-input filter-office-input" id="filterOfficeCityInput" show-suggestions value={this.state.filterCity} name="filterCity" placeholder="Търсене по град"></ui5-input>
+                        <ui5-button id="filter-office-search-button" onClick={this.onFilter} design="Emphasized">Търси</ui5-button>
+                        <ui5-button id="filter-office-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
                     </div>
                 </div>
                 </div>

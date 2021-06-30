@@ -3,6 +3,9 @@
     flex-direction: column;
     margin: 48px 0 40px;
     padding-left: 50px;
+    overflow-x: scroll;
+    max-width: 1200px;
+    max-height: 800px;
 }
 
 .offices-header {
@@ -108,4 +111,56 @@
 
 .filter-contents #addOfficeCityInput {
     width: 300px;
+}
+
+.filter-offices-contents {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1.8rem;
+}
+
+#filter-office-search-button {
+    margin: 0 0.5rem 0 0.5rem;
+}
+
+@media only screen and (max-width: 767px) {
+    .offices-container {
+        margin: 48px 5px 40px;
+    }
+
+    .filter-offices-contents {
+        display: block;
+        position: initial;
+    }
+    
+    .buttons-container {
+        display: block;
+        position: initial;
+        margin-bottom: 10px;
+    }
+
+    #filter-office-search-button {
+        margin-left: 0;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .filter-office-input {
+        margin-bottom: 10px;
+    }
+
+    #addOfficeCityInput {
+        margin-bottom: 10px;
+    }
+
+    #filter-office-clear-button {
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .offices-container {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }
