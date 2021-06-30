@@ -153,14 +153,18 @@ class Login extends React.Component {
                     <form onKeyPress={this.handleKeypress}>
                         {responseMessage()}
                         <ui5-title level="H2">Вход в системата</ui5-title><br />
-                        <ui5-label class="login-label" for="usernameInput" required>Потребителско име:</ui5-label>
-                        <ui5-input class={"login-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onBlur={(e) => {
-                            this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
-                        {formErrors.username ? <span className="error">{formErrors.username}</span> : null}
-                        <ui5-label class="login-label" for="passwordInput" required>Парола:</ui5-label>
-                        <ui5-input class={"login-input" + (formErrors.password ? ' error' : '')} id="passwordInput" value={this.state.password} type="Password" name="password" placeholder="" onBlur={(e) => {
-                            this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
-                        {formErrors.password ? <span className="error">{formErrors.password}</span> : null} <br />
+                        <div class="login-form-element">
+                            <ui5-label class="login-label" for="usernameInput" required>Потребителско име:</ui5-label>
+                            <ui5-input class={"login-input" + (formErrors.username ? ' error' : '')} id="usernameInput" name="username" placeholder="" onBlur={(e) => {
+                                this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
+                            {formErrors.username ? <span className="error">{formErrors.username}</span> : null}
+                        </div>
+                        <div class="login-form-element">
+                            <ui5-label class="login-label" for="passwordInput" required>Парола:</ui5-label>
+                            <ui5-input class={"login-input" + (formErrors.password ? ' error' : '')} id="passwordInput" value={this.state.password} type="Password" name="password" placeholder="" onBlur={(e) => {
+                                this.validateInput(e);}} onKeyPress={this.handleKeypress} required></ui5-input>
+                            {formErrors.password ? <span className="error">{formErrors.password}</span> : null} <br />
+                        </div>
                         <ui5-button class="submit-btn" onClick={this.handleSubmit} type="submit">Вход</ui5-button>
                         <span>
                             <ui5-label>Нямате профил?</ui5-label>
