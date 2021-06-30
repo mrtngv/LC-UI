@@ -14,12 +14,10 @@ export function mapPackageStatus(status) {
             return 'ДОСТАВЕНА';
         case 'DECLINED':
             return 'ОТКАЗАНА';
-        case 'ANULLED':
+        case 'ANNULLED':
             return 'АНУЛИРАНА';
         case 'AWAITING_PICK_UP':
             return 'ПОЛУЧАВАНЕ В ОФИС';
-        case 'LOADING_PACKAGE_TO_TRUCK':
-            return 'В ПРОЦЕС НА ДОСТАВЯНЕ ДО АДРЕС';
         default:
             break;
     }
