@@ -1,0 +1,48 @@
+.all-users-container {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 0 0 3rem;
+    margin-right: 3rem;    
+}
+
+.all-users-container ui5-title {
+    padding-bottom: 1rem;
+}
+
+.list-container {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.19);
+    height: 74vh;
+    overflow-y: auto;
+    border-radius: 4px;
+}
+
+.dialog {
+    margin: 2rem 2rem 2rem 3rem;
+}
+
+.dialog ui5-label {
+    padding-bottom: 0.5rem;
+}
+
+ui5-select {
+    width: 23vw;
+}
+
+.dialog-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+ui5-dialog {
+    width: 30%;
+}
+
+/* #deleteUser, #editUserRole {
+    margin: 0 0.5rem;
+} */
+
+.filter-user-container {
+    display: flex;
+    justify-content: space-between;
+}

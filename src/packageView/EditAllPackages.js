@@ -539,6 +539,7 @@ class EditAllPackages extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                            {Package.isCashOnDelivery && <div>
                             <hr />
                             <div className="edit-package-card-container">
                                 <div className="first-edit-container-item">
@@ -580,6 +581,8 @@ class EditAllPackages extends React.Component {
                                 </div> : <div></div>}
 
                             </div>
+                            <br/>
+                            </div>}
                         </div> : null
                 }
             </div>
