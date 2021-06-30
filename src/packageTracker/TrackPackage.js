@@ -112,6 +112,12 @@ class TrackPackage extends React.Component {
     }
 
     render() {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        const editPackage = () => {
+           if (user && user.role !== "NO_ROLE" && user.role !== "ROLE_CLIENT") {
+                return <ui5-button id="edit-package" data-layout-span="XL9" design="Emphasized" >Редактирай пратка</ui5-button>
+           } 
+        }
         return (
             <div className="track-package">
                 <div className="track-package-container">
@@ -126,7 +132,7 @@ class TrackPackage extends React.Component {
                     <div id="package-info">
                         <div className="package-header-wrapper">
                             <span class="package-header">Информация за пратка</span>
-                            <ui5-button id="edit-package" data-layout-span="XL9" design="Emphasized" >Редактирай пратка</ui5-button>
+                            {editPackage()}
                         </div>
 
                         <ui5-table class="package-table" id="table">

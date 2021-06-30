@@ -80,7 +80,7 @@
     }
 
     .track-package-container {
-        margin-left: 48px;
+        margin-left: 105px;
     }
     
     .track-package-container img {
@@ -100,7 +100,7 @@
 @media only screen and (min-width: 1024px) {
     .track-package-container {
         width: 55%;
-        margin-left: 30px;
+        margin-left: 85px;
         margin-top: 30px;
     }
 
@@ -116,6 +116,11 @@
 @media only screen and (min-width: 1280px) {
     .track-package-container img {
         vertical-align: top;
+    }
+
+    .track-package-container {
+        margin-top: 40px;
+        margin-left: 40px;
     }
 }
 

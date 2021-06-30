@@ -24,14 +24,40 @@
     flex-direction: row;
 }
 
-.inner-container img {
-    margin-left: 80px;
-    height: 280px;
-    border-radius: 5px;
+.login, .register {
+    padding: 0;
 }
 
-.inner-container.register img {
+.image-container {
+    margin-top: -135px;
+}
+
+.register .image-container {
+    margin-top: -50px;
+}
+
+.image-container img {
+    width: 600px;
+}
+
+.login img, .register img {
+    opacity: 0.9;
+}
+
+.login form, .register form {
+    padding: 48px 20px 48px 48px;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+}
+
+.register form {
+    padding-right: 35px;
     height: 355px;
+}
+
+.login form {
+    height: 255px;
 }
 
 .inner-container span.error {
@@ -75,4 +101,63 @@
 #response-msg.error {
     font-size: 15px;
     background-color: #ff0000cc;
+}
+
+@media only screen and (max-width: 767px) {
+    .login form, .register form {
+        padding: 30px;
+    }
+
+    .inner-container {
+        padding: 30px 70px;
+    }
+
+    .register .inner-container {
+        padding: 30px 65px;
+    }
+
+    .image-container img {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .inner-container {
+        padding: 80px 0 0 250px;
+    }
+
+    .image-container img {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .inner-container {
+        padding: 110px 0 0 400px;
+    }
+}
+
+@media only screen and (min-width: 1280px) {
+    .inner-container {
+        padding: 100px 0 0 60px;
+    }
+
+    .image-container img {
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    .inner-container {
+        padding: 110px 0 0 200px;
+    }
+
+    .register .inner-container {
+        padding-top: 80px;
+    }
+
+    .login form, .register form {
+        padding: 48px 30px 48px 58px;
+        margin-right: 10%;
+    }
 }

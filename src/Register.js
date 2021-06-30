@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import "./Login.css";
-import image from './images/register-logistic.jpg'; 
+import image from './images/register-logistics.png';
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";
 import "@ui5/webcomponents/dist/Input.js";
@@ -153,8 +153,8 @@ class Register extends React.Component {
         }
 
         return (
-            <div className="container">
-                <div className="inner-container register">
+            <div className="container register">
+                <div className="inner-container">
                     <form onKeyPress={this.handleKeypress}>
                         {responseMessage()}
                         <ui5-title level="H2">Създаване на профил</ui5-title><br/>
@@ -172,7 +172,9 @@ class Register extends React.Component {
                         this.validateInput(e);}} value={this.state.confirmPassword} placeholder="" onKeyPress={this.handleKeypress} required></ui5-input>{formErrors.confirmPassword ? <span className="error">{formErrors.confirmPassword}</span> : null}<br/>
                         <ui5-button class="submit-btn" id="register-submit-btn" type="submit" onClick={this.onRegister}>Регистрация</ui5-button>
                     </form>
-                    <img src={image} alt="Sign up Logistic Company" />;
+                    <div className="image-container">
+                        <img src={image} alt="Register Logistic Company"/>
+                    </div>
                 </div>
             </div>
         )

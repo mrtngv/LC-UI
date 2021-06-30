@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import "./Login.css";
-import image from './images/login-logistic.jpg';
+import image from './images/login-logistics.png';
 
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents/dist/Button";
@@ -148,7 +148,7 @@ class Login extends React.Component {
         }
 
         return (
-            <div className="container">
+            <div className="container login">
                 <div className="inner-container">
                     <form onKeyPress={this.handleKeypress}>
                         {responseMessage()}
@@ -167,7 +167,9 @@ class Login extends React.Component {
                             <ui5-label id="register-link">Регистрация</ui5-label>
                         </span>
                     </form>
-                    <img src={image} alt="Login Logistic Company" />
+                    <div className="image-container">
+                        <img src={image} alt="Login Logistic Company" />
+                    </div>
                 </div>
             </div>
         )

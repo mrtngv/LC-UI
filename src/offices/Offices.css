@@ -1,11 +1,98 @@
-.office-container {
+.offices-container {
     display: flex;
     flex-direction: column;
+    margin: 60px 0 40px;
+    padding-left: 50px;
+}
+
+.offices-header {
+    max-width: 896px;
+    height: 80px;
+    position: relative;
+    padding-left: 10px;
+}
+
+.buttons-container {
+    position: absolute;
+    top: 0;
+    right: 15px;
+}
+
+.offices-label {
+    font-size: 24px;
+    color: darkslategray;
+    display: block;
 }
 
 .office-card {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    float: left;
-    padding: 3rem;
+    padding: 0 0 50px;
+    max-width: 900px;
+}
+
+.dialog-footer .offices-button {
+    margin-right: 15px;
+}
+
+.office-card-timeline {
+    padding: 15px 10px;
+}
+
+.offices-buttons-wrapper {
+    padding: 0 30px 30px 50px;
+}
+
+.offices-buttons-wrapper .offices-button {
+    margin-left: 10px;
+}
+
+.working-hours {
+    line-height: 20px;
+}
+
+.working-hours .closed {
+    color: rgb(177, 7, 7);
+}
+
+.add-office-label, .add-office-input {
+    display: block;
+}
+
+.add-office-input {
+    margin-bottom: 5px;
+}
+
+.add-office-label#addWorkingHours {
+    margin-top: 20px;
+    font-size: 17px;
+    color: darkslategray;
+}
+
+.add-office-label#addWorkingHoursExample {
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+#add-office-dialog form {
+    padding-left: 45px;
+}
+
+.dialog-footer {
+    padding: 15px 0;
+}
+
+#response-msg {
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 15px;
+    width: 190px;
+    padding: 10px 0;
+    border-radius: 5px;
+    color: white;
+    font-family: "72override",var(--sapFontFamily);
+    display: block;
+}
+
+#response-msg.error {
+    font-size: 15px;
+    background-color: #ff0000cc;
 }
