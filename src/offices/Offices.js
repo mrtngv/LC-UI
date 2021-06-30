@@ -303,16 +303,20 @@ class Offices extends React.Component {
     }
 
     onFilter() {
-        let filteredOffices = this.state.offices;
-        if (this.state.filterCity) {
-            filteredOffices = filteredOffices.filter(o => o.city === this.state.filterCity);
+        const getOfficesURL = DOMAIN + 'api/offices';
+        
+        axios.get(getOfficesURL).then(o => {
+            let filteredOffices = o.data;
+            if (this.state.filterCity) {
+                filteredOffices = filteredOffices.filter(o => o.city === this.state.filterCity);
 
-            this.setState({
-                offices: filteredOffices
-            })
-        } else {
-            this.onFilterClear();
-        }
+                this.setState({
+                    offices: filteredOffices
+                })
+            } else {
+                this.onFilterClear();
+            }
+        });
     }
 
     onFilterClear() {
