@@ -12,7 +12,8 @@
 
 .login-label,
 .register-label,
-.profile-label {
+.profile-label,
+.profile-input {
     margin-bottom: 5px;
 }
 
