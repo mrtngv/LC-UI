@@ -18,36 +18,55 @@ class Offices extends React.Component {
         super(props);
         this.state = {
             offices: [],
-            editOfficeDetails: {},
             addOfficeDetailsName: '',
             addOfficeDetailsLocation: '',
             addOfficeDetailsCity: '',
             addOfficeDetailsWeekdayHours: null,
             addOfficeDetailsSaturdayHours: null,
             addOfficeDetailsSundayHours: null,
-            addOfficeError: false
+            addOfficeError: false,
+            editOfficeDetailsId: '',
+            editOfficeDetailsName: '',
+            editOfficeDetailsLocation: '',
+            editOfficeDetailsCity: '',
+            editOfficeDetailsWeekdayHours: null,
+            editOfficeDetailsSaturdayHours: null,
+            editOfficeDetailsSundayHours: null,
+            editOfficeError: false
         };
         this.removeOffice = this.removeOffice.bind(this);
         this.handleInputValue = this.handleInputValue.bind(this);
         this.handleOfficeLocationInput = this.handleOfficeLocationInput.bind(this);
         this.addOffice = this.addOffice.bind(this);
+        this.editOffice = this.editOffice.bind(this);
         this.addOfficeResetForm = this.addOfficeResetForm.bind(this);
+        this.editOfficeResetForm = this.editOfficeResetForm.bind(this);
+        this.populateEditValues = this.populateEditValues.bind(this);
     }
 
     addEventListeners() {
         const openAddDialogButton = document.getElementById("openAddDialogButton");
         const addOfficeDialog = document.getElementById("add-office-dialog");
-        const buttonCloseDialog = document.getElementById("closeAddOfficeDialog");
+        const editOfficeDialog = document.getElementById("edit-office-dialog");
+        const buttonCloseAddDialog = document.getElementById("closeAddOfficeDialog");
+        const buttonCloseEditDialog = document.getElementById("closeЕditOfficeDialog");
         const addOfficeButton = document.getElementById("addOffice");
+        const editOfficeButton = document.getElementById("editOffice");
 
         if (openAddDialogButton) {
             openAddDialogButton.addEventListener("click", function () {
                 addOfficeDialog.open();
             });
-            buttonCloseDialog.addEventListener("click", function () {
+            buttonCloseAddDialog.addEventListener("click", function () {
                 addOfficeDialog.close();
             });
         }
+
+        buttonCloseEditDialog.addEventListener("click", function () {
+            editOfficeDialog.close();
+        });
+
+        editOfficeButton.addEventListener("click", this.editOffice);
 
         addOfficeButton.addEventListener("click", this.addOffice);
 
@@ -80,23 +99,50 @@ class Offices extends React.Component {
         if (addOfficeSundayHours) {
             addOfficeSundayHours.addEventListener("change", this.handleInputValue);
         }
-    }
 
-    handleAddOfficeSubmit() {
-        this.onRegister();
-    }
-
-    removeOffice(event) {
-        const id = event.target.getAttribute("value");
-        let offices = this.state.offices;
-        const officeToRemove = offices.find(o => o.id === id);
-        const index = offices.indexOf(officeToRemove);
-        if (index > -1) {
-            offices.splice(index, 1);
+        const editOfficeCityInput = document.getElementById("editOfficeCityInput");
+        if (editOfficeCityInput) {
+            editOfficeCityInput.addEventListener("input", this.handleOfficeLocationInput);
+            editOfficeCityInput.addEventListener("change", this.handleInputValue);
         }
-        this.setState({
-            offices: offices
-        })
+
+        const editOfficeNameInput = document.getElementById("editOfficeNameInput");
+        if (editOfficeNameInput) {
+            editOfficeNameInput.addEventListener("change", this.handleInputValue);
+        }
+
+        const editOfficeLocationInput = document.getElementById("editOfficeLocationInput");
+        if (editOfficeLocationInput) {
+            editOfficeLocationInput.addEventListener("change", this.handleInputValue);
+        }
+
+        const editOfficeWeekdayHours = document.getElementById("editOfficeWeekdayHours");
+        if (editOfficeWeekdayHours) {
+            editOfficeWeekdayHours.addEventListener("change", this.handleInputValue);
+        }
+
+        const editOfficeSaturdayHours = document.getElementById("editOfficeSaturdayHours");
+        if (editOfficeSaturdayHours) {
+            editOfficeSaturdayHours.addEventListener("change", this.handleInputValue);
+        }
+        const editOfficeSundayHours = document.getElementById("editOfficeSundayHours");
+        if (editOfficeSundayHours) {
+            editOfficeSundayHours.addEventListener("change", this.handleInputValue);
+        }
+    }
+
+    removeOffice(id) {
+        const removeOfficesURL = 'http://localhost:8080/api/offices/';
+        const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
+
+        axios.delete(removeOfficesURL + id, {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        }
+        ).then(res => {
+            window.location.reload();
+        });
     }
 
     addOffice() {
@@ -115,7 +161,13 @@ class Offices extends React.Component {
         if (this.state.addOfficeDetailsName &&
             this.state.addOfficeDetailsCity && 
             this.state.addOfficeDetailsLocation) {
-            axios.post(addOfficesURL, addOfficeDetails).then(res => {
+            const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
+
+            axios.post(addOfficesURL, addOfficeDetails, {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            }).then(res => {
                 this.setState({addOfficeError: false});
                 addOfficeDialog.close();
                 this.addOfficeResetForm();
@@ -124,6 +176,42 @@ class Offices extends React.Component {
             });
         } else {
             this.setState({addOfficeError: true});
+        }
+    }
+
+    editOffice() {
+        const editOfficesURL = 'http://localhost:8080/api/offices';
+        const editOfficeDialog = document.getElementById("edit-office-dialog");
+
+        const editOfficeDetails = {
+            id: this.state.editOfficeDetailsId,
+            name: this.state.editOfficeDetailsName,
+            location: this.state.editOfficeDetailsLocation,
+            city: this.state.editOfficeDetailsCity,
+            weekdayHours: this.state.editOfficeDetailsWeekdayHours,
+            saturdayHours: this.state.editOfficeDetailsSaturdayHours,
+            sundayHours: this.state.editOfficeDetailsSundayHours
+        };
+
+        if (this.state.editOfficeDetailsName &&
+            this.state.editOfficeDetailsCity && 
+            this.state.editOfficeDetailsLocation) {
+            const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
+            
+            axios.put(editOfficesURL, editOfficeDetails, {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            }).then(res => {
+                this.setState({editOfficeError: false});
+                editOfficeDialog.close();
+                this.editOfficeResetForm();
+                window.location.reload();
+            }).catch(error => {
+                this.setState({editOfficeError: true});
+            });
+        } else {
+            this.setState({editOfficeError: true});
         }
     }
 
@@ -183,6 +271,26 @@ class Offices extends React.Component {
         });
     }
 
+    editOfficeResetForm() {
+        const inputs = document.querySelectorAll(".edit-office-input");
+        inputs.forEach(input => {
+            input.value = '';
+        });
+    }
+
+    populateEditValues(id) {
+        const office = this.state.offices.filter(o => o.id === id)[0];
+        this.setState({editOfficeDetailsId: office.id,
+                        editOfficeDetailsName: office.name,
+                        editOfficeDetailsLocation: office.location,
+                        editOfficeDetailsCity: office.city,
+                        editOfficeDetailsWeekdayHours: office.weekdayHours,
+                        editOfficeDetailsSaturdayHours: office.saturdayHours,
+                        editOfficeDetailsSundayHours: office.sundayHours});
+
+        document.getElementById("edit-office-dialog").open();
+    }
+
     render() {
         const user = JSON.parse(sessionStorage.getItem('user'));
         const userRole = user ? user.role : "NO_ROLE";
@@ -203,6 +311,14 @@ class Offices extends React.Component {
             }
         }
 
+        const editOfficeError = () => {
+            const editOfficeError = this.state.editOfficeError;
+
+            if (editOfficeError) {
+                return <span id="response-msg" className="error">Неуспешно редактиране на офис</span>;
+            }
+        }
+        
         const offices = this.state.offices;
         return (
             <div className="offices-container">
@@ -226,8 +342,8 @@ class Offices extends React.Component {
                                 </ui5-timeline>
                                 {userRole === "ROLE_MODERATOR" ?
                                     <div class="offices-buttons-wrapper">
-                                        <ui5-button class="offices-button">Промени</ui5-button>
-                                        <ui5-button class="offices-button" value={o.id} onClick={this.removeOffice} design="Negative">Изтрий</ui5-button>
+                                        <ui5-button class="offices-button" onClick={this.populateEditValues.bind(null, o.id)}>Промени</ui5-button>
+                                        <ui5-button class="offices-button" onClick={this.removeOffice.bind(null, o.id)} design="Negative">Изтрий</ui5-button>
                                     </div>
                                     : ''
                                 }
@@ -264,6 +380,38 @@ class Offices extends React.Component {
                         <div slot="footer" class="dialog-footer">
                             <ui5-button class="offices-button" id="addOffice" type="submit" onClick={this.addOffice} design="Emphasized">Добави</ui5-button>
                             <ui5-button class="offices-button" id="closeAddOfficeDialog">Откажи</ui5-button>
+                        </div>
+                    </form>
+                </ui5-dialog>
+
+                <ui5-dialog id="edit-office-dialog" header-text="Редактирай Офис">
+                    <form>
+                        {editOfficeError()}
+                        <div >
+                            <ui5-label class="edit-office-label" for="editOfficeDetailsName" required>Име: </ui5-label>
+                            <ui5-input id="editOfficeNameInput" class="edit-office-input" name="editOfficeDetailsName" value={this.state.editOfficeDetailsName}></ui5-input>
+                        </div>
+                        <div>
+                            <ui5-label class="edit-office-label" for="editOfficeDetailsCity" required>Град: </ui5-label>
+                            <ui5-input class="suggestion-input edit-office-input" id="editOfficeCityInput" show-suggestions value={this.state.editOfficeDetailsCity} name="editOfficeDetailsCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
+                        </div>
+                        <div>
+                            <ui5-label class="edit-office-label" for="editOfficeDetailsLocation" required>Адрес: </ui5-label>
+                            <ui5-input id="editOfficeLocationInput" class="edit-office-input" name="editOfficeDetailsLocation" value={this.state.editOfficeDetailsLocation}></ui5-input>
+                        </div>
+                        <div>
+                            <ui5-label class="edit-office-label" id="editWorkingHours" >Въведи работно време</ui5-label>
+                            <ui5-label class="edit-office-label" id="editWorkingHoursExample">Пример: 9:30 - 18:00</ui5-label>
+                            <ui5-label class="edit-office-label" for="editOfficeDetailsWeekdayHours">Делнични дни: </ui5-label>
+                            <ui5-input class="edit-office-input" name="editOfficeDetailsWeekdayHours" id="editOfficeWeekdayHours" value={this.state.editOfficeDetailsWeekdayHours}></ui5-input>
+                            <ui5-label class="edit-office-label" for="editOfficeDetailsSaturdayHours">Събота: </ui5-label>
+                            <ui5-input class="edit-office-input" name="editOfficeDetailsSaturdayHours" id="editOfficeSaturdayHours" value={this.state.editOfficeDetailsSaturdayHours}></ui5-input>
+                            <ui5-label class="edit-office-label" for="editOfficeDetailsSundayHours">Неделя: </ui5-label>
+                            <ui5-input class="edit-office-input" name="editOfficeDetailsSundayHours" id="editOfficeSundayHours" value={this.state.editOfficeDetailsSundayHours}></ui5-input>
+                        </div>
+                        <div slot="footer" class="dialog-footer">
+                            <ui5-button class="offices-button" id="editOffice" type="submit" design="Emphasized">Редактирай</ui5-button>
+                            <ui5-button class="offices-button" id="closeЕditOfficeDialog">Откажи</ui5-button>
                         </div>
                     </form>
                 </ui5-dialog>
