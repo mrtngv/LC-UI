@@ -12,7 +12,7 @@ class Statistics extends React.Component {
         super(props);
         this.state = {
             dashboardDetails: {},
-            seriesSystems: [1,5],
+            seriesSystems: [2.5,5],
             cc: {},
             optionsSystems: {
                 labels: ['Завършени', 'Да се направят'],
@@ -22,7 +22,7 @@ class Statistics extends React.Component {
                 },
             },
             s1: [4,4],
-            s2: [5,9],
+            s2: [2.5,5],
             seriesInstances: [1,5],
             optionsInstances: {
                 labels: ['Завършени', 'Да се направят'],

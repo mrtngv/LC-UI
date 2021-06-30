@@ -74,7 +74,6 @@ packages-header-bar {
     padding-right: 1.8rem;
 }
 
-#filter-search-button,
-#from-date-input {
-    margin: 0 0.5rem 0 0.5rem;
+.filter-contents .input {
+    width: 25%;
 }
