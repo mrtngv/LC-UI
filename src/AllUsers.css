@@ -16,25 +16,25 @@
     border-radius: 4px;
 }
 
-.dialog {
+#edit-dialog .dialog {
     margin: 2rem 2rem 2rem 3rem;
 }
 
-.dialog ui5-label {
+#edit-dialog .dialog ui5-label {
     padding-bottom: 0.5rem;
 }
 
-ui5-select {
+#edit-dialog ui5-select {
     width: 23vw;
 }
 
-.dialog-footer {
+#edit-dialog .dialog-footer {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
 }
 
-ui5-dialog {
+#edit-dialog ui5-dialog {
     width: 30%;
 }
 
