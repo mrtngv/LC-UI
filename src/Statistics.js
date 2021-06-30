@@ -1,5 +1,8 @@
 import React from "react"
 import ReactApexChart from 'react-apexcharts';
+
+import { DOMAIN } from "./constants/Domain.js";
+
 import "@ui5/webcomponents/dist/Card";
 import axios from 'axios';
 import "./Statistics.css";

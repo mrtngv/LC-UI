@@ -1,5 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+
+import { DOMAIN } from ".././constants/Domain.js";
+
 import "@ui5/webcomponents/dist/Label";
 import "@ui5/webcomponents/dist/Input";
 import "@ui5/webcomponents-fiori/dist/Timeline";
@@ -70,7 +73,7 @@ class TrackPackage extends React.Component {
     }
 
     handleSubmit() {
-        const URL = "http://localhost:8080/api/packages/specific";
+        const URL = DOMAIN + "api/packages/specific";
         const privateCode = this.state.privateCode;
 
         axios.post(URL, {

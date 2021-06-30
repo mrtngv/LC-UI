@@ -531,9 +531,7 @@ class Package extends React.Component {
   }
 
   onRequestSend() {
-    const url = DOMAIN + 'api/packages';
-
-    
+    const url = DOMAIN + 'api/packages';    
 
     const packageDetails = {
       "senderFirstName": this.state.senderFirstName,
@@ -574,77 +572,6 @@ class Package extends React.Component {
     "returnCashCity": this.state.returnCashCity,
     "returnCashAddress": this.state.returnCashAddress,
     }
-
-    // const packageDetails = {
-    //   "senderFirstName": "Ekaterina",
-    //   "senderLastName": "Gerasimova",
-    //   "isFirm": false,
-    //   "firmName": "",
-    //   "senderTelephoneNumber": "0887898989",
-    //   "senderEmail": this.state.senderEmail,
-    //   "fromCity": this.state.senderCity,
-    //   "fromAddress": this.state.senderAddress,
-    //   "fromOffice": this.state.sentFromOffice,
-    //   "receiverFirstName": this.state.receiverFirstName,
-    //   "receiverLastName": this.state.receiverLastName,
-    //   "toFirmName": this.state.receiverFirmName,
-    //   "receiverTelephoneNumber": "088787878",
-    //   "receiverEmail": this.state.receiverEmail,
-    //   "toFirm": this.state.isReceiverFirm,
-    //   "toCity": this.state.receiverCity,
-    //   "toAddress": this.state.receiverAddress,
-    //   "toOffice": this.state.sentToOffice, //bool
-    //   "ePackageType": this.state.packageType,
-    //   "weight": this.state.packageWeight,
-    //   "isFragile": this.state.isFragile,
-    //   "returnToOffice": this.state.returnToOffice,
-    //   "alternativeCity": this.state.alternativeCity,
-    //   "returnLocation": this.state.alternativeAddress,
-    //   "comment": this.state.requestComment,
-    //   "ePayMethod": this.state.paymentMethod,
-    //   "dateOfDelivery": this.state.deliveryDate,
-    //   "dateOfSending": this.state.requestDate,
-    //   "isCashOnDelivery": this.state.isCashOnDelivery,
-    //   "cashOnDelivery": this.state.cashOnDelivery,
-    //   "returnCashToOffice": this.state.returnCashToOffice,
-    //   "iban": this.state.IBAN,
-    //   "bic": this.state.BIC,
-    //   "bank": this.state.bank,
-    //   "bankAccountOwner": this.state.bankAccountOwner,
-    //   "returnCashCity": this.state.returnCashCity,
-    //   "returnCashAddress": this.state.returnCashAddress,
-    // }
-
-    // const packageDetails = {
-    //   "senderFirstName": "Ekaterina",
-    //   "senderLastName": "Gerasimova",
-    //   "isFirm": true,
-    //   "firmName": "SAP",
-    //   "senderTelephoneNumber": "0879594839",
-    //   "senderEmail": "test4@abv.bg",
-    //   "fromAddress": "IMETO NA OFICA",
-    //   "fromOffice": true,
-    //   "receiverFirstName": "Marta",
-    //   "receiverLastName": "Gyurova",
-    //   "receiverTelephoneNumber": "0879573986",
-    //   "receiverEmail": "test5@abv.bg",
-    //   "toAddress": "IME NA OFISA DET",
-    //   "toOffice": true,
-    //   "ePackageType": "BOX",
-    //   "weight": "2.00",
-    //   "isFragile": true,
-    //   "returnToOffice": true,
-    //   "returnLocation": "ADRES NA VRUSHTANE",
-    //   "comment": "KOMENTAR",
-    //   "ePayMethod": "CASH",
-    //   "dateOfDelivery": "1999-09-14",
-    //   "toFirm" : true,
-    //   "toFirmName" : "IRobot",
-    //   "fromCity": "Sofia",
-    //   "toCity": "Plovdiv",
-    //   "alternativeCity": "Pazardjik",
-    //   "dateOfSending": "2021-10-10"
-    // }
 
     console.log(this.state);
     const user = sessionStorage.getItem('user');

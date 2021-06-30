@@ -1,5 +1,7 @@
 import React from 'react'; 
 import { Redirect } from 'react-router-dom';
+
+import { DOMAIN } from "./constants/Domain.js";
 import "./Profile.css";
 import axios from 'axios';
 
@@ -61,8 +63,8 @@ class Profile extends React.Component {
     }
 
     onEdit() {
-        const editProfileUrl = 'http://localhost:8080/api/authenticate/edit';
-        const loginUrl = "http://localhost:8080/api/authenticate/login";
+        const editProfileUrl = DOMAIN + 'api/authenticate/edit';
+        const loginUrl = DOMAIN + "api/authenticate/login";
 
         const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
         const editUserDetails = {
