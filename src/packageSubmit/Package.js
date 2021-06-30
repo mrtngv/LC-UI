@@ -650,7 +650,6 @@ class Package extends React.Component {
     const user = sessionStorage.getItem('user');
 
     if (user) {
-      console.log("Posting with token")
       const token = JSON.parse(sessionStorage.getItem('user')).accessToken;
       axios.post(url, packageDetails, {
         headers: {
@@ -942,7 +941,6 @@ class Package extends React.Component {
                     <div className="second-flex-input-item">
                       <ui5-label for="senderAddress" required>Офис:</ui5-label><br />
                       <ui5-select class="selection" name="senderAddress" placeholder="Choose office" id="sender-office-select">
-                        {/* <ui5-option value="" selected></ui5-option> */}
                         {this.state.offices.filter(o => o.city === this.state.senderCity).map(o => {
                           return (
                             <ui5-option value={o.location}>{o.location}</ui5-option>

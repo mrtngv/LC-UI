@@ -27,16 +27,21 @@ class AllPackages extends React.Component {
             filteredPackages: [],
             selectedPackageId: 1,
             role: "",
+            accessToken: "",
             fromDate: "",
             toDate: "",
-            filterInput: ""
+            filterInput: "",
+            statuses: [],
+            packageStatus: ""
         };
         this.handleInputValue = this.handleInputValue.bind(this);
+        this.handleSelectionValue = this.handleSelectionValue.bind(this);
         this.onPackageDetailsClose = this.onPackageDetailsClose.bind(this);
         this.onPackageListSelect = this.onPackageListSelect.bind(this);
         this.onFilter = this.onFilter.bind(this);
         this.onFilterClear = this.onFilterClear.bind(this);
         this.onPackageEdit = this.onPackageEdit.bind(this);
+        this.onStatusChange = this.onStatusChange.bind(this);
     }
 
     handleInputValue(event) {
@@ -52,11 +57,42 @@ class AllPackages extends React.Component {
         });
     }
 
+    onStatusChange() {
+       const URL = DOMAIN + "api/packages/status";
+
+       const statusDetails = {
+           "id": this.state.selectedPackageId,
+           "ePackageStatus": this.state.packageStatus
+       }
+
+       axios.put(URL, statusDetails, {
+        headers: {
+            'Authorization': 'Bearer ' + this.state.accessToken
+        }
+    }).then(res => {
+        console.log("success");
+    });
+    }
+
     onPackageListSelect(event) {
         const id = event.detail.item.getAttribute("data-id");
         this.setState({
             selectedPackageId: id
         })
+
+        const URL = DOMAIN + 'api/packages/status/' + id;
+
+        axios.get(URL, {
+            headers: {
+                'Authorization': 'Bearer ' + this.state.accessToken
+            }
+        }).then(s => {
+            const statuses = s.data;
+            this.setState({
+                statuses: statuses,
+                packageStatus: statuses[0]
+            });
+        });
     }
 
     onPackageDetailsClose() {
@@ -109,7 +145,6 @@ class AllPackages extends React.Component {
     addEventListeners() {
         const packageList = document.getElementById('packageList');
         if (packageList) {
-
             packageList.addEventListener("item-click", this.onPackageListSelect);
         }
 
@@ -121,6 +156,17 @@ class AllPackages extends React.Component {
         if (filterButton) {
             filterButton.addEventListener("click", this.onFilter);
         }
+
+        const statusSelect = document.getElementById("status-change-select");
+        if (statusSelect) {
+            statusSelect.addEventListener("change", this.handleSelectionValue);
+        }
+
+        const statusButton = document.getElementById("change-status-button");
+        if (statusButton) {
+            statusButton.addEventListener("click", this.onStatusChange);
+        }
+       
     }
 
     removeEventListeners() {
@@ -137,6 +183,17 @@ class AllPackages extends React.Component {
         if (filterButton) {
             filterButton.removeEventListener("click", this.onFilter);
         }
+
+        const statusSelect = document.getElementById("status-change-select");
+        if (statusSelect) {
+            statusSelect.removeEventListener("change", this.handleSelectionValue);
+        }
+
+        const statusButton = document.getElementById("change-status-button");
+        if (statusButton) {
+            statusButton.removeEventListener("click", this.onStatusChange);
+        }
+       
 
     }
 
@@ -161,7 +218,8 @@ class AllPackages extends React.Component {
                 console.log(p.data);
                 this.setState({
                     packages: p.data,
-                    filteredPackages: p.data
+                    filteredPackages: p.data,
+                    accessToken: accessToken
                 });
 
                 if (this.state.filteredPackages.length !== 0) {
@@ -181,9 +239,7 @@ class AllPackages extends React.Component {
 
         }
 
-
     }
-
 
     render() {
         const Package = this.state.filteredPackages.find(d => d.id == this.state.selectedPackageId);
@@ -192,16 +248,16 @@ class AllPackages extends React.Component {
                 {this.state.filteredPackages.length !== 0 && this.state.packages.length !== 0 ?
                     <div className="packages-view-table">
                         {/* {this.state.role !== "ROLE_CLIENT" && */}
-                            <div className="filter-container">
-                                <ui5-title level="H4">Филтър</ui5-title>
-                                <div className="filter-contents">
-                                    <ui5-input class="input" name="filterInput" value={this.state.filterInput} placeholder="Име, телефон, имейл, офис, адрес"></ui5-input>
-                                    <ui5-date-picker class="input" id="from-date-input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
-                                    <ui5-date-picker class="input" value={this.state.toDate} format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
-                                    <ui5-button id="filter-search-button" design="Emphasized">Търси</ui5-button>
-                                    <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
-                                </div>
+                        <div className="filter-container">
+                            <ui5-title level="H4">Филтър</ui5-title>
+                            <div className="filter-contents">
+                                <ui5-input class="input" name="filterInput" value={this.state.filterInput} placeholder="Име, телефон, имейл, офис, адрес"></ui5-input>
+                                <ui5-date-picker class="input" id="from-date-input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
+                                <ui5-date-picker class="input" value={this.state.toDate} format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
+                                <ui5-button id="filter-search-button" design="Emphasized">Търси</ui5-button>
+                                <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
                             </div>
+                        </div>
                         {/* } */}
                         <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
                             <div slot="startColumn">
@@ -223,10 +279,14 @@ class AllPackages extends React.Component {
                                     <div class="colHeader">
                                         {this.state.role !== "ROLE_CLIENT" ?
                                             <ui5-bar>
-                                                <ui5-select slot="startContent">
-                                                    <ui5-option selected value="j">j</ui5-option>
+                                                <ui5-select id="status-change-select" name="packageStatus" slot="startContent">
+                                                    {this.state.statuses.map(s => {
+                                                        return (
+                                                            <ui5-option value={s}>{mapPackageStatus(s)}</ui5-option>
+                                                        )
+                                                    })}
                                                 </ui5-select>
-                                                <ui5-button slot="startContent">Промени</ui5-button>
+                                                <ui5-button id="change-status-button" slot="startContent">Промени</ui5-button>
                                                 <ui5-button design="Positive" slot="endContent" onClick={this.onPackageEdit}>Редактирай</ui5-button>
                                                 <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
                                                 <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
@@ -412,7 +472,7 @@ class AllPackages extends React.Component {
                                 </div> : null}
                         </ui5-flexible-column-layout>
                     </div> :
-                    this.state.packages.length === 0  ? <ui5-messagestrip type="Information" no-close-button>Няма налични пратки до момента.</ui5-messagestrip> :
+                    this.state.packages.length === 0 ? <ui5-messagestrip type="Information" no-close-button>Няма налични пратки до момента.</ui5-messagestrip> :
                         <ui5-messagestrip type="Information" no-close-button>Не съществуват пратки с избраните филтри.</ui5-messagestrip>
                 }
             </div>
