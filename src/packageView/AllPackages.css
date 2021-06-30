@@ -4,10 +4,15 @@
     padding: 3rem 3rem;
 }
 
-.packages-view-table{   
+.colHeader {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.packages-view-table {
     border: 0px solid;
-  padding: 5px;
-  box-shadow:  2px 5px rgb(233, 233, 233);
+    box-shadow: 2px 5px rgb(233, 233, 233);
 
 }
 
@@ -55,17 +60,21 @@ packages-header-bar {
 }
 
 .filter-container {
-    padding-left: 1rem;
+    width: 100%;
 }
 
 .filter-container ui5-title {
     padding-bottom: 0.5rem;
+    padding-left: 1rem;
 }
 
 .filter-contents {
     display: flex;
+    justify-content: space-between;
+    padding-right: 1.8rem;
 }
 
-#filter-search-button, #from-date-input {
+#filter-search-button,
+#from-date-input {
     margin: 0 0.5rem 0 0.5rem;
 }

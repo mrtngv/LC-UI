@@ -189,9 +189,9 @@ class AllPackages extends React.Component {
         const Package = this.state.filteredPackages.find(d => d.id == this.state.selectedPackageId);
         return (
             <div className="packages-view-container">
-                {this.state.filteredPackages.length !== 0 ?
+                {this.state.filteredPackages.length !== 0 && this.state.packages.length !== 0 ?
                     <div className="packages-view-table">
-                        {this.state.role !== "ROLE_CLIENT" &&
+                        {/* {this.state.role !== "ROLE_CLIENT" && */}
                             <div className="filter-container">
                                 <ui5-title level="H4">Филтър</ui5-title>
                                 <div className="filter-contents">
@@ -202,7 +202,7 @@ class AllPackages extends React.Component {
                                     <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
                                 </div>
                             </div>
-                        }
+                        {/* } */}
                         <ui5-flexible-column-layout id="fcl" layout="TwoColumnsMidExpanded">
                             <div slot="startColumn">
                                 <ui5-list id="packageList" header-text="Пратки">
@@ -412,8 +412,8 @@ class AllPackages extends React.Component {
                                 </div> : null}
                         </ui5-flexible-column-layout>
                     </div> :
-                    this.state.role === "ROLE_CLIENT" ? <ui5-messagestrip type="Information" no-close-button>Все още нямате пратки :(</ui5-messagestrip> :
-                        <ui5-messagestrip type="Information" no-close-button>Не съществува такава пратка :(</ui5-messagestrip>
+                    this.state.packages.length === 0  ? <ui5-messagestrip type="Information" no-close-button>Няма налични пратки до момента.</ui5-messagestrip> :
+                        <ui5-messagestrip type="Information" no-close-button>Не съществуват пратки с избраните филтри.</ui5-messagestrip>
                 }
             </div>
         )
