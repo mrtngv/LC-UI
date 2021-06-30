@@ -46,6 +46,7 @@
 .package-table {
     font-size: 10px;
     max-height: 495px;
+    height: 60vh;
     overflow-x: scroll;
 }
 
