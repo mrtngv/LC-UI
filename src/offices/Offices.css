@@ -53,26 +53,33 @@
     color: rgb(177, 7, 7);
 }
 
-.add-office-label, .add-office-input {
+.add-office-label,
+.add-office-input,
+.edit-office-label,
+.edit-office-input  {
     display: block;
 }
 
-.add-office-input {
+.add-office-input,
+.edit-office-input {
     margin-bottom: 5px;
 }
 
-.add-office-label#addWorkingHours {
+.add-office-label#addWorkingHours,
+.edit-office-label#editWorkingHours {
     margin-top: 20px;
     font-size: 17px;
     color: darkslategray;
 }
 
-.add-office-label#addWorkingHoursExample {
+.add-office-label#addWorkingHoursExample,
+.edit-office-label#editWorkingHoursExample {
     margin-bottom: 10px;
     font-size: 12px;
 }
 
-#add-office-dialog form {
+#add-office-dialog form,
+#edit-office-dialog form {
     padding-left: 45px;
 }
 
