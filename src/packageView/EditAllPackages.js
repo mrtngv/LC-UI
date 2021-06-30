@@ -394,7 +394,6 @@ class EditAllPackages extends React.Component {
                                     <ui5-button design="Negative" onClick={this.onCancel}>Откажи</ui5-button>
                                 </div>
                             </div>
-                            <hr />
                             <div className="edit-package-card-container">
                                 <div className="first-edit-container-item">
                                     <div className="container-box">

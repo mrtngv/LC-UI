@@ -1,7 +1,7 @@
 .main-section {
     display: flex;
     padding: 3rem;
-    height: 85vh;
+    height: 80vh;
     flex-direction: column;
 }
 
@@ -40,10 +40,6 @@
 #sender-office-select, #receiver-office-select, #alternative-office-select, #return-cash-office-select{
     width: 25rem;
 }
-
-/* #senderLastNameInput, #senderEmailInput {
-    width: 15rem;
-} */
 
 .second-flex-input-item {
     padding-left: 1.5rem;

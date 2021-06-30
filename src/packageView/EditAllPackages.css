@@ -7,9 +7,10 @@
 .ui5-card-replica {
     font-family: "72override",var(--sapFontFamily);
     font-size: var(--sapFontSize);
-    width: 80%;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2), 0 0 3px rgba(0, 0, 0, 0.19);
     border-radius: 4px;
+    height: 80vh;
+    overflow-y: auto;
 }
 
 .edit-package-card-container {
@@ -47,6 +48,11 @@
     display: flex;
     justify-content: space-between;
     padding: 1rem 1rem 0.5rem 1rem;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom:solid 1px gray;
+    z-index: 1;
 }
 
 #approve-edit-package-button {
