@@ -7,15 +7,7 @@
 .submit-btn {
     width: 13rem;
     margin-bottom: 10px;
-}
-
-.login-input,
-.login-label,
-.register-input,
-.register-label,
-.profile-label,
-.profile-input {
-    margin-bottom: 5px;
+    margin-top: 12px;
 }
 
 .inner-container {
@@ -53,11 +45,13 @@
 
 .register form {
     padding-right: 35px;
-    height: 355px;
+    min-height: 355px;
+    max-height: 450px;
 }
 
 .login form {
-    height: 255px;
+    min-height: 255px;
+    max-height: 300px;
 }
 
 .inner-container span.error {
@@ -101,6 +95,10 @@
 #response-msg.error {
     font-size: 15px;
     background-color: #ff0000cc;
+}
+
+.login-form-element, .register-form-element {
+    min-height: 78px;
 }
 
 @media only screen and (max-width: 767px) {
