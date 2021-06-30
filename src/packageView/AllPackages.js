@@ -332,7 +332,7 @@ class AllPackages extends React.Component {
                                                     </div>
                                                     <div className="information-row">
                                                         <div className="information-item">Цена:</div> &nbsp;&nbsp;&nbsp;
-                                                        <span><b>{Package.price}лв.</b></span>
+                                                        <span><b>{Package.price.toFixed(2)}лв.</b></span>
                                                     </div>
                                                 </div>
                                             </div>

@@ -4,23 +4,30 @@
     padding: 3rem 3rem;
 }
 
-ui5-card {
+.ui5-card-replica {
+    font-family: "72override",var(--sapFontFamily);
+    font-size: var(--sapFontSize);
     width: 80%;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2), 0 0 3px rgba(0, 0, 0, 0.19);
+    border-radius: 4px;
 }
 
 .edit-package-card-container {
     display: flex;
     flex-direction: row;
-    padding-left: 1rem;
-    padding-top: 1rem;
+    padding: 1rem;
 }
 
 .container-box {
     padding: 1rem 0 1rem 0;
 }
 
+.first-edit-container-item {
+    padding-right: 8rem;
+}
+
 .second-container-item {
-    padding-left: 8rem;
+    padding-left: 11rem;
 }
 
 .information-row {
@@ -30,4 +37,18 @@ ui5-card {
 
 #editReceiverLocationInput, #editAlternativeLocationInput {
     margin-bottom: 1rem;
+}
+
+.input-field {
+    padding: 0.5rem 0 0.5rem 0;
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1rem 0.5rem 1rem;
+}
+
+#approve-edit-package-button {
+    margin-right: 0.5rem;
 }
