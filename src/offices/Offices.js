@@ -32,8 +32,10 @@ class Offices extends React.Component {
             editOfficeDetailsWeekdayHours: null,
             editOfficeDetailsSaturdayHours: null,
             editOfficeDetailsSundayHours: null,
-            editOfficeError: false
+            editOfficeError: false,
+            filterCity: ''
         };
+
         this.removeOffice = this.removeOffice.bind(this);
         this.handleInputValue = this.handleInputValue.bind(this);
         this.handleOfficeLocationInput = this.handleOfficeLocationInput.bind(this);
@@ -42,6 +44,8 @@ class Offices extends React.Component {
         this.addOfficeResetForm = this.addOfficeResetForm.bind(this);
         this.editOfficeResetForm = this.editOfficeResetForm.bind(this);
         this.populateEditValues = this.populateEditValues.bind(this);
+        this.onFilter= this.onFilter.bind(this);
+        this.onFilterClear= this.onFilterClear.bind(this);
     }
 
     addEventListeners() {
@@ -291,6 +295,30 @@ class Offices extends React.Component {
         document.getElementById("edit-office-dialog").open();
     }
 
+    onFilter() {
+        let filteredOffices = this.state.offices;
+        if (this.state.filterCity) {
+            filteredOffices = filteredOffices.filter(o => o.city === this.state.filterCity);
+
+            this.setState({
+                offices: filteredOffices
+            })
+        } else {
+            this.onFilterClear();
+        }
+    }
+
+    onFilterClear() {
+        const getOfficesURL = 'http://localhost:8080/api/offices';
+        
+        axios.get(getOfficesURL).then(o => {
+            this.setState({
+                offices: o.data,
+                filterCity: ''
+            });
+        });
+    }
+
     render() {
         const user = JSON.parse(sessionStorage.getItem('user'));
         const userRole = user ? user.role : "NO_ROLE";
@@ -323,9 +351,17 @@ class Offices extends React.Component {
         return (
             <div className="offices-container">
                 <div className="offices-header">
-                    <ui5-label class="offices-label">Нашите офиси</ui5-label>
+                    <ui5-title class="offices-label" level="H1">Нашите офиси</ui5-title>
                     {addOfficeBtn()}
+                    <div className="filter-offices-container">
+                    <div className="filter-contents">
+                        <ui5-input class="suggestion-input add-office-input" id="addOfficeCityInput" show-suggestions value={this.state.filterCity} name="filterCity" placeholder="Започнете да въвеждате населено място"></ui5-input>
+                        <ui5-button id="filter-search-button" onClick={this.onFilter} design="Emphasized">Търси</ui5-button>
+                        <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
+                    </div>
                 </div>
+                </div>
+
                 {offices.map(o => {
                     return (
                         <div className="office-card">
