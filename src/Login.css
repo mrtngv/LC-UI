@@ -10,6 +10,12 @@
     margin-top: 12px;
 }
 
+.login-label,
+.register-label,
+.profile-label {
+    margin-bottom: 5px;
+}
+
 .inner-container {
     padding: 48px;
     display: flex;
