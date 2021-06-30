@@ -38,9 +38,9 @@ ui5-dialog {
     width: 30%;
 }
 
-/* #deleteUser, #editUserRole {
-    margin: 0 0.5rem;
-} */
+#filter-search-button {
+    margin: 0 0.5rem 0 0.5rem;
+}
 
 .filter-user-container {
     display: flex;

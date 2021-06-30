@@ -32,7 +32,8 @@ class AllPackages extends React.Component {
             toDate: "",
             filterInput: "",
             statuses: [],
-            packageStatus: ""
+            packageStatus: "",
+            counter: 2
         };
         this.handleInputValue = this.handleInputValue.bind(this);
         this.handleSelectionValue = this.handleSelectionValue.bind(this);
@@ -41,8 +42,11 @@ class AllPackages extends React.Component {
         this.onFilter = this.onFilter.bind(this);
         this.onFilterClear = this.onFilterClear.bind(this);
         this.onPackageEdit = this.onPackageEdit.bind(this);
+        this.onPackageDelete = this.onPackageDelete.bind(this);
         this.onStatusChange = this.onStatusChange.bind(this);
         this.firstTime = this.firstTime.bind(this);
+        this.onMy = this.onMy.bind(this);
+        this.onMine = this.onMine.bind(this);
     }
 
     handleInputValue(event) {
@@ -102,6 +106,18 @@ class AllPackages extends React.Component {
         })
     }
 
+    onPackageDelete() {
+        const URL = DOMAIN + 'api/packages/' + this.state.selectedPackageId;
+
+        axios.delete(URL, {
+            headers: {
+                'Authorization': 'Bearer ' + this.state.accessToken
+            }
+        }).then(res => {
+            this.firstTime();
+        });
+    }
+
     onFilter() {
         let filterApplied = this.state.packages;
         if (this.state.filterInput !== "") {
@@ -153,7 +169,7 @@ class AllPackages extends React.Component {
             item.addEventListener("change", this.handleInputValue);
         })
 
-        const filterButton = document.getElementById('filter-search-button');
+        const filterButton = document.getElementById('filter-search-button-add-package');
         if (filterButton) {
             filterButton.addEventListener("click", this.onFilter);
         }
@@ -180,7 +196,7 @@ class AllPackages extends React.Component {
             item.removeEventListener("change", this.handleInputValue);
         })
 
-        const filterButton = document.getElementById('filter-search-button');
+        const filterButton = document.getElementById('filter-search-button-add-package');
         if (filterButton) {
             filterButton.removeEventListener("click", this.onFilter);
         }
@@ -209,6 +225,43 @@ class AllPackages extends React.Component {
 
     }
 
+    onMine() {
+        if(this.state.counter % 2 === 0) {
+            this.firstTime();
+        }else{
+            this.onMy();
+        }
+    }
+
+    onMy() {
+        const URL = DOMAIN + "api/packages/mine";
+
+        const accessToken = JSON.parse(sessionStorage.getItem('user')).accessToken;
+
+        if (accessToken) {
+
+            axios.get(URL, {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            }).then(p => {
+                console.log(p.data);
+                this.setState({
+                    packages: p.data,
+                    filteredPackages: p.data,
+                    accessToken: accessToken,
+                    counter: this.state.counter + 1
+                });
+
+                if (this.state.filteredPackages.length !== 0) {
+                    this.setState({
+                        selectedPackageId: this.state.filteredPackages[0].id
+                    })
+                }
+            })
+        }
+    }
+
     firstTime() {
         const URL = DOMAIN + "api/packages";
 
@@ -225,7 +278,8 @@ class AllPackages extends React.Component {
                 this.setState({
                     packages: p.data,
                     filteredPackages: p.data,
-                    accessToken: accessToken
+                    accessToken: accessToken,
+                    counter: this.state.counter + 1
                 });
 
                 if (this.state.filteredPackages.length !== 0) {
@@ -259,8 +313,9 @@ class AllPackages extends React.Component {
                                 <ui5-input class="input" name="filterInput" value={this.state.filterInput} placeholder="Име, телефон, имейл, офис, адрес"></ui5-input>
                                 <ui5-date-picker class="input" id="from-date-input" value={this.state.fromDate} format-pattern='yyyy-MM-dd' name="fromDate" placeholder="От дата"></ui5-date-picker>
                                 <ui5-date-picker class="input" value={this.state.toDate} format-pattern='yyyy-MM-dd' name="toDate" placeholder="До дата"></ui5-date-picker>
-                                <ui5-button id="filter-search-button" design="Emphasized">Търси</ui5-button>
+                                <ui5-button id="filter-search-button-add-package" design="Emphasized">Търси</ui5-button>
                                 <ui5-button id="filter-clear-button" onClick={this.onFilterClear}>Изчисти</ui5-button>
+                                <ui5-button id="filter-mine" icon="activities" onClick={this.onMine}>Моите пратки</ui5-button>
                             </div>
                         </div>
                         {/* } */}
@@ -293,7 +348,7 @@ class AllPackages extends React.Component {
                                                 </ui5-select>
                                                 <ui5-button id="change-status-button" slot="startContent">Промени</ui5-button>
                                                 <ui5-button design="Positive" slot="endContent" onClick={this.onPackageEdit}>Редактирай</ui5-button>
-                                                <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
+                                                <ui5-button design="Negative" slot="endContent" onClick={this.onPackageDelete}>Изтрий</ui5-button>
                                                 <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
                                             </ui5-bar> :
                                             <ui5-bar>
