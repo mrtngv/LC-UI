@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import "./AllPackages.css";
 import { DOMAIN } from ".././constants/Domain.js";
+import { mapPackageStatus } from ".././constants/MapPackageStatus";
 
 import "@ui5/webcomponents/dist/Label";
 import "@ui5/webcomponents-fiori/dist/Timeline";
@@ -42,6 +43,12 @@ class AllPackages extends React.Component {
         const { name, value } = event.target;
         this.setState({
             [name]: value
+        });
+    }
+
+    handleSelectionValue(event) {
+        this.setState({
+            [event.target.name]: event.target.selectedOption.value
         });
     }
 
@@ -204,7 +211,7 @@ class AllPackages extends React.Component {
                                             <div>
                                                 <ui5-li data-id={m.id} icon="navigation-right-arrow"
                                                     icon-end description={"Получател: " + m.receiverFirstName + " " + m.receiverLastName}
-                                                    info={m.ePackageStatus} info-state="Success">{m.senderFirstName + " " + m.senderLastName}</ui5-li>
+                                                    info={mapPackageStatus(m.ePackageStatus)} info-state="Success">{m.senderFirstName + " " + m.senderLastName}</ui5-li>
                                             </div>
                                         )
                                     })}
@@ -216,7 +223,11 @@ class AllPackages extends React.Component {
                                     <div class="colHeader">
                                         {this.state.role !== "ROLE_CLIENT" ?
                                             <ui5-bar>
-                                                <ui5-button design="Positive" slot="endContent" onClick={this.onPackageEdit}>Промени</ui5-button>
+                                                <ui5-select slot="startContent">
+                                                    <ui5-option selected value="j">j</ui5-option>
+                                                </ui5-select>
+                                                <ui5-button slot="startContent">Промени</ui5-button>
+                                                <ui5-button design="Positive" slot="endContent" onClick={this.onPackageEdit}>Редактирай</ui5-button>
                                                 <ui5-button design="Negative" slot="endContent">Изтрий</ui5-button>
                                                 <ui5-button id="mid-column-close-button" design="Transparent" slot="endContent" onClick={this.onPackageDetailsClose}>Затвори</ui5-button>
                                             </ui5-bar> :
@@ -327,6 +338,51 @@ class AllPackages extends React.Component {
                                             </div>
                                         </ui5-timeline-item>
 
+                                        {Package.isCashOnDelivery &&
+
+                                            <ui5-timeline-item id="test-item" icon="sap-icon://money-bills" item-name="Наложен платеж">
+                                                <div className="information-container">
+                                                    <div className="first-information-child">
+                                                        <div className="information-row">
+                                                            <div className="information-item">Сума:</div> &nbsp;&nbsp;&nbsp;
+                                                            <span><b>{Package.cashOnDelivery}лв.</b></span>
+                                                        </div>
+                                                        <div className="information-row">
+                                                            <div className="information-item">Изплащане до:</div> &nbsp;&nbsp;&nbsp;
+                                                            {Package.iban === "" ?
+                                                                <span>
+                                                                    {Package.isReturnCashToOffice && <b>ОФИС: </b>}
+                                                                    <b>{Package.returnCashCity},  {Package.returnCashAddress}</b>
+                                                                </span>
+                                                                :
+                                                                <span>
+                                                                    <b>Банков превод</b>
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    {Package.iban !== "" ? <div>
+                                                        <div className="information-row">
+                                                            <div className="information-item">Титуляр:</div> &nbsp;&nbsp;&nbsp;
+                                                            <span><b>{Package.bankAccountOwner}</b></span>
+                                                        </div>
+                                                        <div className="information-row">
+                                                            <div className="information-item">IBAN:</div> &nbsp;&nbsp;&nbsp;
+                                                            <span><b>{Package.iban}</b></span>
+                                                        </div>
+                                                        <div className="information-row">
+                                                            <div className="information-item">BIC:</div> &nbsp;&nbsp;&nbsp;
+                                                            <span><b>{Package.bic}</b></span>
+                                                        </div>
+                                                        <div className="information-row">
+                                                            <div className="information-item">Банка:</div> &nbsp;&nbsp;&nbsp;
+                                                            <span><b>{Package.bank}</b></span>
+                                                        </div>
+                                                    </div> : <div></div>}
+
+                                                </div>
+                                            </ui5-timeline-item>}
+
                                         <ui5-timeline-item title-text="Статус на Пратката"
                                             subtitle-text={Package.dateOfRegistration !== null ?
                                                 ("Обработена на " + Package.dateOfRegistration.slice(0, 10)) : "Непотвърдена"} icon="calendar">
@@ -347,7 +403,7 @@ class AllPackages extends React.Component {
                                                         <span><b>{Package.dateOfDelivery}</b></span>
                                                     </div>
                                                     <ui5-badge color-scheme="6">
-                                                        <ui5-icon name="accept" slot="icon"></ui5-icon>{Package.ePackageStatus}
+                                                        <ui5-icon name="accept" slot="icon"></ui5-icon>{mapPackageStatus(Package.ePackageStatus)}
                                                     </ui5-badge>
                                                 </div>
                                             </div>
