@@ -5,14 +5,18 @@ body {
 .sidenav {
     display: inline;
     float: left;
+    height: calc(100vh - 44px);
+    background-color: white;
 }
 
 #side-navigation {
     height: 220px;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1279px) {
     #side-navigation {
+        height: calc(100vh - 44px);
+        background-color: white;
         position: absolute;
         top: 45px;
         z-index: 1;
