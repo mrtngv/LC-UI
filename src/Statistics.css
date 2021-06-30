@@ -1,0 +1,22 @@
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 3rem;
+}
+
+.titlee {
+    padding-left: 3rem;
+}
+
+
+
+.dashboard {
+    display: flex;
+    justify-content: row;
+    padding-bottom: 2rem;
+   }
+   
+   .dashboard-card {
+    padding-left: 3rem;
+    width: 370px;
+   }
