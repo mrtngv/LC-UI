@@ -33,7 +33,7 @@ class Statistics extends React.Component {
             },
             options3: {
                 labels: ['Регистрирани', 'Анулирани', 'Доставени', 'В Процес', 'В изчакване'],
-                colors: ['#4CAF50', '#F9C80E', '#11C877', '#A1C833', '#F91111'],
+                colors: ['#4CAF50', '#F9C80E', '#FB13F3', '#3700FF', '#F91111'],
                 chart: {
                     type: 'donut',
                 },
@@ -95,7 +95,7 @@ class Statistics extends React.Component {
         return (
             <div className="statistics-container">
                 <div className="titlee">
-                <p>Статистики, за потребители, регистрация на пратки, статуси на пратки и приходи.</p>
+                <ui5-title level="h4">Статистики, за потребители, регистрация на пратки, статуси на пратки и приходи.</ui5-title>
                 </div>
                 <div className="dashboard">
                 <div className="dashboard-card">
