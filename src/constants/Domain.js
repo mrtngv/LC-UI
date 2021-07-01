@@ -5,10 +5,10 @@
 
 
 
- export const DOMAIN = "http://localhost:8080/";
+//  export const DOMAIN = "http://localhost:8080/";
 
 // When it comes to deployment you must commit changes with the production domain to the master branch
 
 
 
-//export const DOMAIN = "https://logistics-engine.herokuapp.com/";
+export const DOMAIN = "https://logistics-engine.herokuapp.com/";
