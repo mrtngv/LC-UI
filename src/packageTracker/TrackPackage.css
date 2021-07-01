@@ -46,8 +46,8 @@
 .package-table {
     font-size: 10px;
     max-height: 495px;
-    height: 60vh;
-    overflow-x: scroll;
+    height: 38vh;
+    overflow-x: auto;
 }
 
 @media only screen and (max-width: 767px) {
